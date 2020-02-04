@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_weight="10"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="4"
+        android:background="#10316b"
+        android:layout_height="0dp">
+        <!--android:background="#10316b" -->
+        <!--android:background="#910f3b" -->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/tsl"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:backgroundTint="#838A72B4"
+        android:backgroundTintMode="screen"
+        android:background="@drawable/ts"
+        android:layout_width="match_parent"
+        android:layout_weight="5"
+        android:layout_height="0dp"
+        android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="#10316B"
+        android:text="Welcome" />
+
+        <EditText
+            android:id="@+id/lid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="15"
+            android:gravity="center"
+            android:hint="Enter Id"
+            android:inputType="number"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/lpwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="15"
+            android:gravity="center"
+            android:hint="Enter Password"
+            android:inputType="number"
+            android:textSize="25sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:layout_marginStart="80dp"
+            android:gravity="center|start"
+            android:text="Login"
+            android:textStyle="bold"
+            android:textColor="#10316B"
+            android:textSize="40sp" />
+
+        <Button
+            android:id="@+id/btn_regis"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_weight="2"
+            android:background="@drawable/round_button"
+            android:ems="10"
+            android:layout_marginEnd="80dp"
+            android:text="➜"
+            android:textColor="#f8de7e"
+            android:textSize="40sp" />
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="2">
+
+            <TextView
+                android:gravity="top|center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textColor="#E94848"
+                android:textStyle="italic"
+                android:text="Forgot Password?"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="20dp"
+                android:layout_height="0dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="20sp"
+                    android:layout_height="match_parent"
+                    android:text="Admin Register"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:textSize="20sp"
+                    android:layout_marginStart="20dp"
+                    android:layout_height="match_parent"
+                    android:text="Student Register"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
