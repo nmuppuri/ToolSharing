@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ToolSharing</string>
+    <string name="app_name">Tool Sharing</string>
 
     <string name="nav_exchange">Exchange</string>
     <string name="nav_library">Library</string>
@@ -42,6 +42,8 @@
     <!-- String related to sign up -->
     <string name="sign_up_request">Sign Up Request</string>
     <string name="sign_up">Sign Up </string>
+    <string name="admin"><u>Admin Register</u></string>
+    <string name="student"><u>Student Register</u></string>
 
     <!-- String related to login -->
     <string name="login">Login</string>

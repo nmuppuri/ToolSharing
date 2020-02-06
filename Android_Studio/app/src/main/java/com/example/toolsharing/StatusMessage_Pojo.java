@@ -3,7 +3,7 @@ package com.example.toolsharing;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class NewRegis_Pojo {
+public class StatusMessage_Pojo {
 
     @SerializedName("Status")
     @Expose

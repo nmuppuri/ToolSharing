@@ -64,17 +64,17 @@ public class NewRegis extends AppCompatActivity {
 
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
 
-        Call<NewRegis_Pojo> call = service.getAdminRegister(Integer.parseInt(aid1), pwd1, fn1, ln1, email1);
+        Call<StatusMessage_Pojo> call = service.getAdminRegister(Integer.parseInt(aid1), pwd1, fn1, ln1, email1);
 
         System.out.println("URL: " + call);
 
-        call.enqueue(new Callback<NewRegis_Pojo>() {
+        call.enqueue(new Callback<StatusMessage_Pojo>() {
             @Override
-            public void onResponse(Call<NewRegis_Pojo> call, Response<NewRegis_Pojo> response) {
+            public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
 
 
-                NewRegis_Pojo newRegis_pojo = response.body();
-                String status = newRegis_pojo.getStatus();
+                StatusMessage_Pojo statusMessage_pojo = response.body();
+                String status = statusMessage_pojo.getStatus();
                 System.out.println("URL Status Called!: " + status);
 
                 if(status.equalsIgnoreCase("error")){
@@ -89,7 +89,7 @@ public class NewRegis extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<NewRegis_Pojo> call, Throwable t) {
+            public void onFailure(Call<StatusMessage_Pojo> call, Throwable t) {
 
                 System.out.println("URL Failure Called! :" + t.getMessage());
 
