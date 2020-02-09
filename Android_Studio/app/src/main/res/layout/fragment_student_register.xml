@@ -9,51 +9,52 @@
     android:backgroundTint="#838A72B4"
     android:backgroundTintMode="screen"
     android:orientation="vertical"
-    tools:context=".NewRegis">
+    android:gravity="top|center"
+    tools:context=".StudentRegister">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/sign_up_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#10316B"
-        app:popupTheme="@style/CustomPopupStyle">
+        android:background="#CE10316B"
+        android:id="@+id/regis_tool"
+        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:fontFamily="sans-serif-light"
-            android:gravity="center"
+            android:gravity="start|center"
             android:text="REGISTER"
             android:textColor="#f8de7e"
-            android:textSize="35sp"
+            android:textSize="30sp"
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
     <EditText
-        android:id="@+id/fn"
-        android:background="@drawable/rounded_edittext"
+        android:id="@+id/sfn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="150dp"
-        android:layout_marginEnd="30dp"
-        android:ems="15"
+        android:background="@drawable/rounded_edittext"
+        android:ems="12"
         android:gravity="center"
         android:hint="First Name"
         android:inputType="textPersonName"
-        android:textSize="25sp"
-        android:textColor="#1A1919"/>
+        android:textColor="#DAC8F8"
+        android:textColorHint="#80F8DE7E"
+        android:textSize="25sp" />
 
     <EditText
         android:background="@drawable/rounded_edittext"
-        android:id="@+id/ln"
+        android:id="@+id/sln"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:ems="15"
+        android:ems="12"
+        android:textColor="#DAC8F8"
+        android:textColorHint="#80F8DE7E"
         android:gravity="center"
         android:hint="Last Name"
         android:inputType="textPersonName"
@@ -61,44 +62,45 @@
 
     <EditText
         android:background="@drawable/rounded_edittext"
-        android:id="@+id/email"
+        android:id="@+id/semail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:ems="15"
+        android:ems="12"
         android:gravity="center"
+        android:textColor="#DAC8F8"
+        android:textColorHint="#80F8DE7E"
         android:hint="Email Id"
         android:inputType="textEmailAddress"
         android:textSize="25sp" />
 
     <EditText
         android:background="@drawable/rounded_edittext"
-        android:id="@+id/aid"
+        android:id="@+id/sid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:ems="15"
+        android:ems="12"
         android:gravity="center"
+        android:textColor="#DAC8F8"
+        android:textColorHint="#80F8DE7E"
         android:hint="Student ID"
         android:inputType="number"
         android:textSize="25sp" />
 
 
     <Button
-        android:id="@+id/btn_create"
+        android:id="@+id/btn_s_req"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="30dp"
-        android:background="#CF4B4B"
-        android:ems="15"
+        android:background="#CECF4B4B"
+        android:ems="8"
         android:text="request access"
-        android:textColor="#ffffff"
+        android:textColor="#f8de7e"
+        android:textColorHint="#80F8DE7E"
         android:textSize="30sp" />
 
 </LinearLayout>

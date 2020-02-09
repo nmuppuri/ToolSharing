@@ -1,43 +1,49 @@
 package com.example.toolsharing;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
+import androidx.navigation.Navigation;
 
-    TextView admin_regis, student_regis;
+import com.google.android.material.navigation.NavigationView;
+
+import static android.view.View.GONE;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    public NavController navController;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        admin_regis = findViewById(R.id.btn_admin_regis);
-        student_regis = findViewById(R.id.btn_student_regis);
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setVisibility(GONE);
 
-        admin_regis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        setUpNavigation();
+    }
 
-                Intent intent = new Intent(MainActivity.this, NewRegis.class);
-                startActivity(intent);
-            }
-        });
+    private void setUpNavigation() {
+        navController = Navigation.findNavController(this, R.id.host_frag);
+    }
 
-        student_regis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        return false;
+    }
 
-                Intent intent = new Intent(MainActivity.this, NewRegis.class);
-                startActivity(intent);
-            }
-        });
-
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

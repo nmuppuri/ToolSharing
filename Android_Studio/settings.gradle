@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':gmailbackgroundlibrary'
 rootProject.name='ToolSharing'

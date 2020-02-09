@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_design"
+    app:startDestination="@id/loginScreen">
+
+    <fragment
+        android:id="@+id/loginScreen"
+        android:name="com.example.toolsharing.LoginScreen"
+        android:label="fragment_login_screen"
+        tools:layout="@layout/fragment_login_screen" >
+        <action
+            android:id="@+id/action_loginScreen_to_studentRegister"
+            app:destination="@id/studentRegister" />
+        <action
+            android:id="@+id/action_loginScreen_to_adminRegister"
+            app:destination="@id/adminRegister" />
+        <action
+            android:id="@+id/action_loginScreen_to_studentDashboard"
+            app:destination="@id/studentDashboard" />
+        <action
+            android:id="@+id/action_loginScreen_to_adminDashboard"
+            app:destination="@id/adminDashboard" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminRegister"
+        android:name="com.example.toolsharing.AdminRegister"
+        android:label="fragment_admin_register"
+        tools:layout="@layout/fragment_admin_register" >
+        <action
+            android:id="@+id/action_adminRegister_to_loginScreen"
+            app:destination="@id/loginScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentRegister"
+        android:name="com.example.toolsharing.StudentRegister"
+        android:label="fragment_student_register"
+        tools:layout="@layout/fragment_student_register" >
+        <action
+            android:id="@+id/action_studentRegister_to_loginScreen"
+            app:destination="@id/loginScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminDashboard"
+        android:name="com.example.toolsharing.AdminDashboard"
+        android:label="fragment_admin_dashboard"
+        tools:layout="@layout/fragment_admin_dashboard" />
+    <fragment
+        android:id="@+id/studentDashboard"
+        android:name="com.example.toolsharing.StudentDashboard"
+        android:label="fragment_student_dashboard"
+        tools:layout="@layout/fragment_student_dashboard" />
+</navigation>

@@ -7,26 +7,28 @@
     android:layout_weight="5"
     android:backgroundTint="#838A72B4"
     android:backgroundTintMode="screen"
+    android:gravity="center|top"
     android:orientation="vertical"
     android:background="@drawable/ts"
-    tools:context=".NewRegis">
+    tools:context=".AdminRegister">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/sign_up_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#10316B"
-        app:popupTheme="@style/CustomPopupStyle">
+        android:background="#CE10316B"
+        android:id="@+id/regis_tool"
+        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:fontFamily="sans-serif-light"
-            android:gravity="center"
+            android:gravity="start|center"
             android:text="REGISTER"
             android:textColor="#f8de7e"
-            android:textSize="35sp"
+            android:textSize="30sp"
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
@@ -35,27 +37,26 @@
         android:background="@drawable/rounded_edittext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="100dp"
-        android:layout_marginEnd="30dp"
-        android:ems="15"
+        android:ems="12"
         android:gravity="center"
         android:hint="First Name"
         android:inputType="textPersonName"
         android:textSize="25sp"
-        android:textColor="#1A1919"/>
+        android:textColor="#DAC8F8"
+        android:textColorHint="#80F8DE7E"/>
 
     <EditText
         android:background="@drawable/rounded_edittext"
         android:id="@+id/ln"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:ems="15"
+        android:ems="12"
         android:gravity="center"
         android:hint="Last Name"
+        android:textColor="#DAC8F8"
+        android:textColorHint="#80F8DE7E"
         android:inputType="textPersonName"
         android:textSize="25sp" />
 
@@ -64,11 +65,11 @@
         android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:ems="15"
+        android:ems="12"
         android:gravity="center"
+        android:textColor="#DAC8F8"
+        android:textColorHint="#80F8DE7E"
         android:hint="Email Id"
         android:inputType="textEmailAddress"
         android:textSize="25sp" />
@@ -78,11 +79,11 @@
         android:id="@+id/aid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:ems="15"
+        android:ems="12"
         android:gravity="center"
+        android:textColor="#DAC8F8"
+        android:textColorHint="#80F8DE7E"
         android:hint="School ID"
         android:inputType="number"
         android:textSize="25sp" />
@@ -92,10 +93,10 @@
         android:id="@+id/pwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:ems="15"
+        android:textColor="#DAC8F8"
+        android:textColorHint="#80F8DE7E"
+        android:ems="12"
         android:gravity="center"
         android:hint="Create Password"
         android:inputType="textPassword"
@@ -106,10 +107,10 @@
         android:id="@+id/rpwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:ems="15"
+        android:textColor="#DAC8F8"
+        android:textColorHint="#80F8DE7E"
+        android:ems="12"
         android:gravity="center"
         android:hint="Re-enter Password"
         android:inputType="textPassword"
@@ -145,13 +146,12 @@
         android:id="@+id/btn_create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="70dp"
-        android:layout_marginEnd="30dp"
-        android:background="#CF4B4B"
-        android:ems="15"
+        android:ems="5"
+        android:background="#CECF4B4B"
         android:text="sign up"
-        android:textColor="#ffffff"
+        android:textColor="#f8de7e"
+        android:textColorHint="#80F8DE7E"
         android:textSize="30sp" />
 
 </LinearLayout>
