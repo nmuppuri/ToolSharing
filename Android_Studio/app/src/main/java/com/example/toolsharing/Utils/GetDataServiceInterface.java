@@ -1,4 +1,6 @@
-package com.example.toolsharing;
+package com.example.toolsharing.Utils;
+
+import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

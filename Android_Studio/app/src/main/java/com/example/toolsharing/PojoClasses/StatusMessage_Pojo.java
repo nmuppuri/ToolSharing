@@ -1,4 +1,4 @@
-package com.example.toolsharing;
+package com.example.toolsharing.PojoClasses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

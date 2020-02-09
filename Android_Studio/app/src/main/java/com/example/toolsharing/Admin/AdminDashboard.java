@@ -1,4 +1,4 @@
-package com.example.toolsharing;
+package com.example.toolsharing.Admin;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,6 +18,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.toolsharing.Utils.EmailUtil;
+import com.example.toolsharing.Utils.GetDataServiceInterface;
+import com.example.toolsharing.R;
+import com.example.toolsharing.Utils.RetrofitClientInstance;
+import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
+import com.example.toolsharing.PojoClasses.StudentRegisList_Pojo;
+
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -25,7 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AdminDashboard extends Fragment {
-    RecyclerAdapter recyclerAdapter;
+    AdminRecyclerAdapter adminRecyclerAdapter;
     ArrayList<StudentRegisList_Pojo> studentRegisList_pojoArrayList;
     RecyclerView recyclerView;
     TextView empty_view;
@@ -99,15 +106,15 @@ public class AdminDashboard extends Fragment {
 
                 if(!status.equalsIgnoreCase("error")) {
                     studentRegisList_pojoArrayList = new ArrayList<StudentRegisList_Pojo>(statusMessage_pojo.getStudentRegis());
-                    recyclerAdapter = new RecyclerAdapter(studentRegisList_pojoArrayList, getActivity().getApplicationContext());
+                    adminRecyclerAdapter = new AdminRecyclerAdapter(studentRegisList_pojoArrayList, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
                     recyclerView = getView().findViewById(R.id.recycler_admin);
                     recyclerView.setVisibility(View.VISIBLE);
                     empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
-                    recyclerView.setAdapter(recyclerAdapter);
+                    recyclerView.setAdapter(adminRecyclerAdapter);
 
-                    recyclerAdapter.setOnItemClickListener(new View.OnClickListener() {
+                    adminRecyclerAdapter.setOnItemClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             view.startAnimation(buttonClick);

@@ -1,4 +1,4 @@
-package com.example.toolsharing;
+package com.example.toolsharing.Admin;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,16 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.toolsharing.R;
+import com.example.toolsharing.PojoClasses.StudentRegisList_Pojo;
+
 import java.util.ArrayList;
 
 //import com.bumptech.glide.Glide;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Viewholder> {
+public class AdminRecyclerAdapter extends RecyclerView.Adapter<AdminRecyclerAdapter.Viewholder> {
     private ArrayList<StudentRegisList_Pojo> studentRegisList_pojos;
     private Context c;
     private View.OnClickListener onClickListener;
 
-    public RecyclerAdapter(ArrayList<StudentRegisList_Pojo> pokemonArrayList, Context c) {
+    public AdminRecyclerAdapter(ArrayList<StudentRegisList_Pojo> pokemonArrayList, Context c) {
         this.studentRegisList_pojos = pokemonArrayList;
         this.c = c;
     }

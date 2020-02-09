@@ -10,7 +10,7 @@
     android:backgroundTintMode="screen"
     android:orientation="vertical"
     android:gravity="top|center"
-    tools:context=".StudentRegister">
+    tools:context=".Student.StudentRegister">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
