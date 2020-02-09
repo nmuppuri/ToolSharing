@@ -32,15 +32,6 @@
         android:layout_height="0dp"
         android:orientation="vertical">
 
-        <!-- <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="#10316B"
-            android:text="Welcome" /> -->
-
         <EditText
             android:id="@+id/lid"
             android:layout_width="wrap_content"
@@ -75,17 +66,6 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:layout_weight="1">
-
-            <!-- <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="6"
-                android:layout_marginStart="80dp"
-                android:gravity="center|start"
-                android:text="Login"
-                android:textStyle="bold"
-                android:textColor="#10316B"
-                android:textSize="40sp" /> -->
 
             <Button
                 android:id="@+id/btn_login"
