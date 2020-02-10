@@ -28,4 +28,8 @@ public interface GetDataServiceInterface {
     @GET("StudentRegisAccept&{student_id}&{status}")
     Call<StatusMessage_Pojo> getStudentRegisAccept(@Path("student_id") int sid, /*@Path("admin_id") int aid,*/ @Path("status") String decision);
 
+
+    @GET("ForgotPassword&{email}")
+    Call<StatusMessage_Pojo> getforgotPassword(@Path("email") String email);
+
 }

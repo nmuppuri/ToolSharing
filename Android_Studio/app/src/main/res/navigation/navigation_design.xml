@@ -23,7 +23,7 @@
             android:id="@+id/action_loginScreen_to_adminDashboard"
             app:destination="@id/adminDashboard" />
         <action
-            android:id="@+id/action_loginScreen_to_forgotPassword2"
+            android:id="@+id/action_loginScreen_to_forgotPassword"
             app:destination="@id/forgotPassword" />
     </fragment>
     <fragment
