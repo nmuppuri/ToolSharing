@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,12 +17,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.toolsharing.Utils.EmailUtil;
-import com.example.toolsharing.Utils.GetDataServiceInterface;
-import com.example.toolsharing.R;
-import com.example.toolsharing.Utils.RetrofitClientInstance;
 import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
 import com.example.toolsharing.PojoClasses.StudentRegisList_Pojo;
+import com.example.toolsharing.R;
+import com.example.toolsharing.Utils.GetDataServiceInterface;
+import com.example.toolsharing.Utils.RetrofitClientInstance;
 
 import java.util.ArrayList;
 
@@ -109,7 +107,6 @@ public class AdminDashboard extends Fragment {
                     adminRecyclerAdapter = new AdminRecyclerAdapter(studentRegisList_pojoArrayList, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
                     recyclerView = getView().findViewById(R.id.recycler_admin);
-                    recyclerView.setVisibility(View.VISIBLE);
                     empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(adminRecyclerAdapter);
@@ -138,7 +135,7 @@ public class AdminDashboard extends Fragment {
 
                 }
                 else {
-                    recyclerView.setVisibility(View.GONE);
+                    //recyclerView.setVisibility(View.INVISIBLE);
                     empty_view.setVisibility(View.VISIBLE);
                 }
             }
@@ -155,25 +152,12 @@ public class AdminDashboard extends Fragment {
     public void studentRegisAccept(int sid, String dec, final String email, final String body)
     {
         Call<StatusMessage_Pojo> call = service.getStudentRegisAccept(sid, dec);
-
-        System.out.println("URL: " + call);
-
+        //
+        //EmailUtil.sendEmail(getActivity(),email,"Welcome to CEGEP ToolSharing Application!", body);
         call.enqueue(new Callback<StatusMessage_Pojo>() {
             @Override
             public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
-
-
-                StatusMessage_Pojo statusMessage_pojo = response.body();
-                String status = statusMessage_pojo.getStatus();
-                System.out.println("URL Status Called!: " + status);
-                System.out.println("URL Status Called!: " + statusMessage_pojo.getMessage());
-
-                if(status.equalsIgnoreCase("error")){
-                    Toast.makeText(getActivity().getApplicationContext(),"Registration Failed!!", Toast.LENGTH_LONG).show();
-                }else{
-                    EmailUtil.sendEmail(getActivity(),email,"Welcome to CEGEP ToolSharing Application!", body);
-                }
-
+                studentRegisDetails();
             }
 
             @Override
