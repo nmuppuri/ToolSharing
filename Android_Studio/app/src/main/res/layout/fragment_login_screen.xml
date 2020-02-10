@@ -40,7 +40,7 @@
             android:background="@drawable/rounded_edittext"
             android:ems="10"
             android:gravity="center"
-            android:hint="Enter Id"
+            android:hint="School Id"
             android:textColor="#DAC8F8"
             android:textColorHint="#80F8DE7E"
             android:inputType="number"
@@ -97,7 +97,7 @@
                 android:textSize="25sp"
                 android:textColor="#E94848"
                 android:textStyle="italic"
-                android:text="Forgot Password?"/>
+                android:text="@string/forgot"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_weight="1"

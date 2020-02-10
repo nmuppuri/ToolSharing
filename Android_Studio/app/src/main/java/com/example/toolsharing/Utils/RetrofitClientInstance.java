@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClientInstance {
 
     private static Retrofit retrofit;
-    private static final String BASE_URL = "http://192.168.43.84:8080/ToolSharing/mad310/final/";
+    private static final String BASE_URL = "http://192.168.2.13:8080/ToolSharing/mad310/final/";
 
     public static Retrofit getRetrofitInstance() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
