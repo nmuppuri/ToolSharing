@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_loginScreen_to_adminDashboard"
             app:destination="@id/adminDashboard" />
+        <action
+            android:id="@+id/action_loginScreen_to_forgotPassword2"
+            app:destination="@id/forgotPassword" />
     </fragment>
     <fragment
         android:id="@+id/adminRegister"
@@ -51,4 +54,13 @@
         android:name="com.example.toolsharing.Student.StudentDashboard"
         android:label="fragment_student_dashboard"
         tools:layout="@layout/fragment_student_dashboard" />
+    <fragment
+        android:id="@+id/forgotPassword"
+        android:name="com.example.toolsharing.ForgotPassword"
+        android:label="fragment_forgot_password"
+        tools:layout="@layout/fragment_forgot_password" >
+        <action
+            android:id="@+id/action_forgotPassword_to_loginScreen"
+            app:destination="@id/loginScreen" />
+    </fragment>
 </navigation>
