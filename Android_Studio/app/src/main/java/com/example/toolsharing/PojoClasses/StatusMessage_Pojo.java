@@ -19,6 +19,9 @@ public class StatusMessage_Pojo {
     @SerializedName("Message")
     @Expose
     private String message;
+    @SerializedName("Password")
+    @Expose
+    private String password;
     @SerializedName("StudentRegis")
     @Expose
     private List<StudentRegisList_Pojo> studentRegis = null;
@@ -53,6 +56,14 @@ public class StatusMessage_Pojo {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public List<StudentRegisList_Pojo> getStudentRegis() {
