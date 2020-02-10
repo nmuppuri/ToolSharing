@@ -28,7 +28,7 @@ public class LoginScreen extends Fragment {
 
     View view;
 
-    TextView admin_regis, student_regis;
+    TextView admin_regis, student_regis, forgot;
     EditText lid, lpwd;
     Button btn_login;
 
@@ -53,6 +53,14 @@ public class LoginScreen extends Fragment {
 
         admin_regis = view.findViewById(R.id.btn_admin_regis);
         student_regis = view.findViewById(R.id.btn_student_regis);
+        forgot = view.findViewById(R.id.btn_forgot);
+
+        forgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.action_loginScreen_to_forgotPassword);
+            }
+        });
 
         admin_regis.setOnClickListener(new View.OnClickListener() {
             @Override
