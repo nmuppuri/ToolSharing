@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
 import com.example.toolsharing.PojoClasses.ToolsList_Pojo;
 import com.example.toolsharing.R;
-import com.example.toolsharing.ToolsListRecylerAdapter;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
 import com.example.toolsharing.Utils.RetrofitClientInstance;
 
@@ -72,7 +71,7 @@ public class StudentToolSearch extends Fragment {
                     toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());
                     toolsListRecylerAdapter = new ToolsListRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-                    recyclerView = getView().findViewById(R.id.recycler_student);
+                    recyclerView = getView().findViewById(R.id.recycler_student_search);
                     //empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(toolsListRecylerAdapter);

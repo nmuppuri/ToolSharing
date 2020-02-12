@@ -14,9 +14,6 @@
             android:id="@+id/action_loginScreen_to_studentRegister"
             app:destination="@id/studentRegister" />
         <action
-            android:id="@+id/action_loginScreen_to_adminRegister"
-            app:destination="@id/adminRegister" />
-        <action
             android:id="@+id/action_loginScreen_to_studentDashboard"
             app:destination="@id/studentDashboard" />
         <action
@@ -25,15 +22,6 @@
         <action
             android:id="@+id/action_loginScreen_to_forgotPassword"
             app:destination="@id/forgotPassword" />
-    </fragment>
-    <fragment
-        android:id="@+id/adminRegister"
-        android:name="com.example.toolsharing.Admin.AdminRegister"
-        android:label="fragment_admin_register"
-        tools:layout="@layout/fragment_admin_register" >
-        <action
-            android:id="@+id/action_adminRegister_to_loginScreen"
-            app:destination="@id/loginScreen" />
     </fragment>
     <fragment
         android:id="@+id/studentRegister"
@@ -69,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/studentMyTools"
-        android:name="com.example.toolsharing.StudentMyTools"
+        android:name="com.example.toolsharing.Student.StudentMyTools"
         android:label="fragment_student_my_tools"
         tools:layout="@layout/fragment_student_my_tools" >
         <action
@@ -81,13 +69,10 @@
         <action
             android:id="@+id/action_studentMyTools_to_studentBorrowed"
             app:destination="@id/studentBorrowed" />
-        <action
-            android:id="@+id/action_studentMyTools_to_addMyTools"
-            app:destination="@id/addMyTools" />
     </fragment>
     <fragment
         android:id="@+id/studentOwned"
-        android:name="com.example.toolsharing.StudentOwned"
+        android:name="com.example.toolsharing.Student.StudentOwned"
         android:label="fragment_student_owned"
         tools:layout="@layout/fragment_student_owned" >
         <action
@@ -96,20 +81,11 @@
     </fragment>
     <fragment
         android:id="@+id/studentBorrowed"
-        android:name="com.example.toolsharing.StudentBorrowed"
+        android:name="com.example.toolsharing.Student.StudentBorrowed"
         android:label="fragment_student_borrowed"
         tools:layout="@layout/fragment_student_borrowed" >
         <action
             android:id="@+id/action_studentBorrowed_to_studentMyTools"
-            app:destination="@id/studentMyTools" />
-    </fragment>
-    <fragment
-        android:id="@+id/addMyTools"
-        android:name="com.example.toolsharing.AddMyTools"
-        android:label="fragment_add_my_tools"
-        tools:layout="@layout/fragment_add_my_tools" >
-        <action
-            android:id="@+id/action_addMyTools_to_studentMyTools"
             app:destination="@id/studentMyTools" />
     </fragment>
 </navigation>

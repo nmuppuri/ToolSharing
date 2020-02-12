@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
 import com.example.toolsharing.PojoClasses.StudentRegisList_Pojo;
 import com.example.toolsharing.R;
+import com.example.toolsharing.Utils.EmailUtil;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
 import com.example.toolsharing.Utils.RetrofitClientInstance;
 
@@ -163,7 +164,7 @@ public class AdminDashboard extends Fragment {
     {
         Call<StatusMessage_Pojo> call = service.getStudentRegisAccept(sid, dec);
         //
-        //EmailUtil.sendEmail(getActivity(),email,"Welcome to CEGEP ToolSharing Application!", body);
+        EmailUtil.sendEmail(getActivity(),email,"Welcome to CEGEP ToolSharing Application!", body);
         call.enqueue(new Callback<StatusMessage_Pojo>() {
             @Override
             public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {

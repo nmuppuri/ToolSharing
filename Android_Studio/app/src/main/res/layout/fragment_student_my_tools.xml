@@ -7,7 +7,7 @@
     android:background="@drawable/ts"
     android:backgroundTint="#838A72B4"
     android:backgroundTintMode="screen"
-    tools:context=".StudentMyTools">
+    tools:context=".Student.StudentMyTools">
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.appcompat.widget.Toolbar

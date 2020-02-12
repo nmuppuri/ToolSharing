@@ -1,4 +1,4 @@
-package com.example.toolsharing;
+package com.example.toolsharing.Student;
 
 
 import android.content.Intent;
@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.example.toolsharing.R;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
 import com.google.android.material.tabs.TabLayout;
 

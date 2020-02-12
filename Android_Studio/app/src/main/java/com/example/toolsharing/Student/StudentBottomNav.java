@@ -1,4 +1,4 @@
-package com.example.toolsharing;
+package com.example.toolsharing.Student;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.toolsharing.Student.StudentToolSearch;
+import com.example.toolsharing.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class StudentBottomNav extends AppCompatActivity {

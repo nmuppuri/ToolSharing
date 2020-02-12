@@ -1,4 +1,4 @@
-package com.example.toolsharing;
+package com.example.toolsharing.Student;
 
 
 import android.os.Bundle;
@@ -8,18 +8,15 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-public class StudentOwned extends Fragment {
+import com.example.toolsharing.R;
 
-
-    public StudentOwned() {
-        // Required empty public constructor
-    }
+public class StudentBorrowed extends Fragment {
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_student_owned, container, false);
+        View view = inflater.inflate(R.layout.fragment_student_borrowed, container, false);
 
         return view;
     }
