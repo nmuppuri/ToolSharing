@@ -5,6 +5,8 @@
  */
 package toolsharing;
 
+
+
 import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,11 +31,7 @@ import javax.ws.rs.PUT;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-/**
- * REST Web Service
- *
- * @author naren
- */
+
 @Path("final")
 public class ToolSharing {
 
@@ -338,10 +336,17 @@ public class ToolSharing {
                             "set decision = ?,\n" +
                             "decision_date = current_date\n" +
                             "where student_id = ?";
+            
+            String sql1 = "Insert into student(student_id) values (?)";
 
             stm = con.prepareStatement(sql);
             stm.setInt(2, student_id);
             stm.setString(1, decision);
+            stm.executeUpdate();
+            stm.close();
+            
+            stm = con.prepareStatement(sql1);
+            stm.setInt(1, student_id);
             stm.executeUpdate();
             stm.close();
 
@@ -356,6 +361,98 @@ public class ToolSharing {
         } catch (SQLException ex) {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
                     null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** TOOLS LIST *************/
+    @GET
+    @Path("ToolsList")
+    @Produces("application/json")
+    public String getToolsList() {
+        //TODO return proper representation object
+           
+        System.out.println("/********** TOOLS LIST *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "SELECT * from tools order by 2";
+            
+            stm = con.prepareStatement(sql);            
+            ResultSet rs = stm.executeQuery();
+            
+            int id;
+            String name, desc, img;
+            if(rs.next() == true){
+                do{
+                    id = rs.getInt(1);
+                    name = rs.getString(2);
+                    desc = rs.getString(3);
+                    img = rs.getString(4);
+                    
+                    childObj.accumulate("ToolId", id);
+                    childObj.accumulate("ToolName", name);                    
+                    childObj.accumulate("ToolDesc", desc);
+                    childObj.accumulate("ToolImg", img);
+                    jSONArray.add(childObj);  
+                    childObj.clear();
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("ToolsList", jSONArray);
+            } else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    /********** ADD MY TOOLS LIST *************/
+    @GET
+    @Path("AddTools&{psid}&{ptid}")
+    @Produces("application/json")
+    public String getaddToolsList(@PathParam("psid") int psid, @PathParam("ptid") int ptid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** ADD MY TOOLS LIST *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "INSERT INTO student_tools(posted_student_id, posted_tool_id) VALUES (?, ?)";
+
+            stm = con.prepareStatement(sql);
+            stm.setInt(1, psid);
+            stm.setInt(2, ptid);
+            stm.executeUpdate();
+                
+            mainObj.accumulate("Status", "Ok");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Tool Added!");                          
+            
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } finally {
             closeConnection();
