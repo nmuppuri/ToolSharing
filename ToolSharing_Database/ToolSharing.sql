@@ -62,25 +62,41 @@ DROP TABLE IF EXISTS tools;
 CREATE TABLE IF NOT EXISTS tools (
     tool_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     tool_name VARCHAR(50) NOT NULL,
-    tool_desc VARCHAR(255)
+    tool_desc VARCHAR(1000),
+    tool_img varchar(500)
 );
 
 ALTER TABLE tools AUTO_INCREMENT = 100;
 
 
+DROP TABLE IF EXISTS student_tools;
+CREATE TABLE IF NOT EXISTS student_tools (
+	posted_student_id INT NOT NULL,
+    posted_tool_id INT NOT NULL,
+    PRIMARY KEY (posted_student_id, posted_tool_id),
+    FOREIGN KEY (posted_student_id)
+        REFERENCES student (student_id),
+    FOREIGN KEY (posted_tool_id)
+        REFERENCES tools (tool_id)
+);
+
+
 DROP TABLE IF EXISTS order_details;
 CREATE TABLE IF NOT EXISTS order_details (
-    tool_id INT NOT NULL,
+    posted_tool_id INT NOT NULL,
+	posted_student_id INT NOT NULL,
     borrowed_student_id INT NOT NULL,
     from_date DATE NOT NULL,
     to_date DATE NOT NULL,
     return_date DATE,
     rating INT,
-    PRIMARY KEY (tool_id , borrowed_student_id),
-    FOREIGN KEY (tool_id)
-        REFERENCES tools (tool_id),
+    PRIMARY KEY (posted_tool_id , posted_student_id, borrowed_student_id),
+    FOREIGN KEY (posted_tool_id)
+        REFERENCES student_tools (posted_tool_id),
     FOREIGN KEY (borrowed_student_id)
-        REFERENCES student (student_id)
+        REFERENCES student (student_id),
+    FOREIGN KEY (posted_student_id)
+        REFERENCES student_tools (posted_student_id)
 );
 
 
@@ -107,5 +123,3 @@ CREATE TABLE IF NOT EXISTS message_recepient (
     FOREIGN KEY (message_id)
         REFERENCES message (message_id)
 );
-
-
