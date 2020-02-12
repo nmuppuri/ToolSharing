@@ -5,127 +5,150 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="5"
+    android:background="@drawable/ts"
     android:backgroundTint="#838A72B4"
     android:backgroundTintMode="screen"
     android:gravity="center|top"
     android:orientation="vertical"
-    android:background="@drawable/ts"
     tools:context=".Admin.AdminRegister">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/regis_tool"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#CE10316B"
-        android:id="@+id/regis_tool"
-        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:navigationIcon="@drawable/ic_arrow_back_black_24dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
             android:gravity="start|center"
             android:text="REGISTER"
             android:textColor="#f8de7e"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:textSize="25sp" />
     </androidx.appcompat.widget.Toolbar>
 
-    <EditText
-        android:id="@+id/fn"
-        android:background="@drawable/rounded_edittext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:ems="12"
-        android:gravity="center"
-        android:hint="First Name"
-        android:inputType="textPersonName"
-        android:textSize="25sp"
-        android:textColor="#DAC8F8"
-        android:textColorHint="#80F8DE7E"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#10316b"
+        android:gravity="center">
+        <!--android:background="#10316b" -->
+        <!--android:background="#910f3b" -->
 
-    <EditText
-        android:background="@drawable/rounded_edittext"
-        android:id="@+id/ln"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:ems="12"
-        android:gravity="center"
-        android:hint="Last Name"
-        android:textColor="#DAC8F8"
-        android:textColorHint="#80F8DE7E"
-        android:inputType="textPersonName"
-        android:textSize="25sp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/tsl" />
+    </LinearLayout>
 
-    <EditText
-        android:background="@drawable/rounded_edittext"
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:ems="12"
-        android:gravity="center"
-        android:textColor="#DAC8F8"
-        android:textColorHint="#80F8DE7E"
-        android:hint="Email Id"
-        android:inputType="textEmailAddress"
-        android:textSize="25sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:gravity="center|top"
+        android:orientation="vertical">
 
-    <EditText
-        android:background="@drawable/rounded_edittext"
-        android:id="@+id/aid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:ems="12"
-        android:gravity="center"
-        android:textColor="#DAC8F8"
-        android:textColorHint="#80F8DE7E"
-        android:hint="School ID"
-        android:inputType="number"
-        android:textSize="25sp" />
+        <EditText
+            android:id="@+id/fn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="12"
+            android:gravity="center"
+            android:hint="First Name"
+            android:inputType="textPersonName"
+            android:textColor="#DAC8F8"
+            android:textColorHint="#80F8DE7E"
+            android:textSize="25sp" />
 
-    <EditText
-        android:background="@drawable/rounded_edittext"
-        android:id="@+id/pwd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textColor="#DAC8F8"
-        android:textColorHint="#80F8DE7E"
-        android:ems="12"
-        android:gravity="center"
-        android:hint="Create Password"
-        android:inputType="textPassword"
-        android:textSize="25sp" />
+        <EditText
+            android:id="@+id/ln"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="12"
+            android:gravity="center"
+            android:hint="Last Name"
+            android:inputType="textPersonName"
+            android:textColor="#DAC8F8"
+            android:textColorHint="#80F8DE7E"
+            android:textSize="25sp" />
 
-    <EditText
-        android:background="@drawable/rounded_edittext"
-        android:id="@+id/rpwd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textColor="#DAC8F8"
-        android:textColorHint="#80F8DE7E"
-        android:ems="12"
-        android:gravity="center"
-        android:hint="Re-enter Password"
-        android:inputType="textPassword"
-        android:textSize="25sp" />
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="12"
+            android:gravity="center"
+            android:hint="Email Id"
+            android:inputType="textEmailAddress"
+            android:textColor="#DAC8F8"
+            android:textColorHint="#80F8DE7E"
+            android:textSize="25sp" />
 
-    <Button
-        android:id="@+id/btn_create"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:ems="5"
-        android:background="#CECF4B4B"
-        android:text="sign up"
-        android:textColor="#f8de7e"
-        android:textColorHint="#80F8DE7E"
-        android:textSize="30sp" />
+        <EditText
+            android:id="@+id/aid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="12"
+            android:gravity="center"
+            android:hint="School ID"
+            android:inputType="number"
+            android:textColor="#DAC8F8"
+            android:textColorHint="#80F8DE7E"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="12"
+            android:gravity="center"
+            android:hint="Create Password"
+            android:inputType="textPassword"
+            android:textColor="#DAC8F8"
+            android:textColorHint="#80F8DE7E"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/rpwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="12"
+            android:gravity="center"
+            android:hint="Re-enter Password"
+            android:inputType="textPassword"
+            android:textColor="#DAC8F8"
+            android:textColorHint="#80F8DE7E"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/btn_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/round_button"
+            android:ems="5"
+            android:text="sign up"
+            android:textStyle="bold"
+            android:textColor="#f8de7e"
+            android:textColorHint="#80F8DE7E"
+            android:textSize="25sp" />
+    </LinearLayout>
 
 </LinearLayout>

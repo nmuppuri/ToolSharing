@@ -1,6 +1,7 @@
 package com.example.toolsharing;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,12 +90,6 @@ public class LoginScreen extends Fragment {
 
                 lid1 = lid.getText().toString();
                 lpwd1 = lpwd.getText().toString();
-/*
-                AdminDashboard adminDashboard = new AdminDashboard();
-                Bundle bundle = new Bundle();
-                bundle.putString("lid", lid1);
-                adminDashboard.setArguments(bundle);
-                System.out.println("URL LID: " + lid1);*/
 
                 if(lpwd1.isEmpty() || lid1.isEmpty()){
                     Toast.makeText(getActivity().getApplicationContext(), "Please enter login details", Toast.LENGTH_LONG).show();
@@ -127,9 +122,14 @@ public class LoginScreen extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(),"Invalid Login!!", Toast.LENGTH_LONG).show();
                 }else{
                     if(statusMessage_pojo.getAdminaccess().equalsIgnoreCase("y")){
-                        Navigation.findNavController(view).navigate(R.id.action_loginScreen_to_adminDashboard);
+                        Intent intent = new Intent(getActivity(), AdminBottomNav.class);
+                        startActivity(intent);
+                        //Navigation.findNavController(view).navigate(R.id.action_loginScreen_to_adminDashboard);
                     } else{
-                        Navigation.findNavController(view).navigate(R.id.action_loginScreen_to_studentDashboard);
+                        Intent intent = new Intent(getActivity(), StudentBottomNav.class);
+                        intent.putExtra("stdId", lid1);
+                        startActivity(intent);
+                        //Navigation.findNavController(view).navigate(R.id.action_loginScreen_to_studentDashboard);
                     }
                     Toast.makeText(getActivity().getApplicationContext(), "Login Success", Toast.LENGTH_LONG).show();
                 }

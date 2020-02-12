@@ -7,7 +7,7 @@
     android:background="@drawable/ts"
     android:backgroundTint="#838A72B4"
     android:backgroundTintMode="screen"
-    tools:context=".Admin.AdminDashboard">
+    tools:context=".Student.StudentToolSearch">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">-->
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/dash_tool"
+        android:id="@+id/stu_dash_tool"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#CE10316B"
@@ -35,17 +35,7 @@
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
-
-    <!--<androidx.appcompat.widget.Toolbar
-        android:id="@+id/admin_menu_tool"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#10316B"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
-    </androidx.appcompat.widget.Toolbar>
-    </LinearLayout> -->
-
-     <FrameLayout
+    <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -53,24 +43,13 @@
         android:layout_marginBottom="56dp"
         android:text="@string/title_home"
         app:layout_constraintLeft_toLeftOf="parent"
-         app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent" >
 
-         <androidx.recyclerview.widget.RecyclerView
-             android:id="@+id/recycler_admin"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content" />
-
-
-         <TextView
-             android:id="@+id/empty_view"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:gravity="center"
-             android:textStyle="bold"
-             android:visibility="gone"
-             android:textSize="50sp"
-             android:text="No\nRequests" />
-     </FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_student"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
 
 

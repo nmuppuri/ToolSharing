@@ -32,4 +32,13 @@ public interface GetDataServiceInterface {
     @GET("ForgotPassword&{email}")
     Call<StatusMessage_Pojo> getforgotPassword(@Path("email") String email);
 
+    @GET("ToolsList")
+    Call<StatusMessage_Pojo> getAllTools();
+
+    @GET("AddTools&{psid}&{ptid}")
+    Call<StatusMessage_Pojo> getAddMyTool(@Path("psid") int psid, @Path("ptid") int ptid);
+
+    @GET("MyToolsList&{psid}")
+    Call<StatusMessage_Pojo> getMyTools(@Path("psid") int psid);
+
 }

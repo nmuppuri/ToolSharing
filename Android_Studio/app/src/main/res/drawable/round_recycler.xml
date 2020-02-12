@@ -4,13 +4,13 @@
         android:shape="rectangle" android:padding="20dp"
         >
         <corners
-            android:bottomRightRadius="15dp"
-            android:bottomLeftRadius="15dp"
-            android:topLeftRadius="15dp"
-            android:topRightRadius="15dp"/>
+            android:bottomRightRadius="100dp"
+            android:bottomLeftRadius="100dp"
+            android:topLeftRadius="100dp"
+            android:topRightRadius="100dp"/>
         <gradient
-            android:startColor="#CECF4B4B"
-            android:endColor="#CECF4B4B"
+            android:startColor="#500B2EF5"
+            android:endColor="#92ACF1"
             android:angle="270"
             />
 

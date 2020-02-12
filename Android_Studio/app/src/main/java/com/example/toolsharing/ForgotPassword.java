@@ -1,7 +1,10 @@
 package com.example.toolsharing;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -31,8 +34,9 @@ public class ForgotPassword extends Fragment {
     View view;
     EditText fpwd;
     Button btn_reset;
-    Toolbar ftoolbar;
+    Toolbar toolbar;
     String forgotEmail;
+    ProgressDialog progressDialog;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -57,15 +61,13 @@ public class ForgotPassword extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_forgot_password, container, false);
-
-        /*ftoolbar = view.findViewById(R.id.forgot_tool);
-        ftoolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        view = inflater.inflate(R.layout.fragment_forgot_password, container, false);toolbar = view.findViewById(R.id.regis_tool);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(view).navigate(R.id.action_forgotPassword_to_loginScreen);
             }
-        });*/
+        });
         return view;
     }
 
@@ -87,14 +89,28 @@ public class ForgotPassword extends Fragment {
                 if(forgotEmail.isEmpty()){
                     Toast.makeText(getActivity().getApplicationContext(), "Please enter valid Email", Toast.LENGTH_LONG).show();
                 } else{
-                    forgotPassword();
+
+
+                    progressDialog = ProgressDialog.show(getActivity(), "",
+                            "Sending Email.." , true);
+
+                    progressDialog.show();
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            progressDialog.dismiss();
+                        }
+                    }, 1000*3);
+                    forgotPassword(progressDialog);
                 }
             }
         });
 
     }
 
-    public void forgotPassword(){
+    public void forgotPassword(final ProgressDialog progressDialog){
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
 
         Call<StatusMessage_Pojo> call = service.getforgotPassword(forgotEmail);
@@ -113,8 +129,8 @@ public class ForgotPassword extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(),"Invalid Email!!", Toast.LENGTH_LONG).show();
                 }else{
                     EmailUtil.sendEmail(getActivity(), forgotEmail, "Password Request Mail", "Your Password is: " + statusMessage_pojo.getPassword());
+                    Navigation.findNavController(view).navigate(R.id.action_forgotPassword_to_loginScreen);
                 }
-                Navigation.findNavController(view).navigate(R.id.action_forgotPassword_to_loginScreen);
             }
 
             @Override
