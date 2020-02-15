@@ -56,7 +56,7 @@
             android:textColor="#DAC8F8"
             android:textColorHint="#80F8DE7E"
             android:gravity="center"
-            android:hint="Enter Password"
+            android:hint="Password"
             android:inputType="textPassword"
             android:textSize="25sp" />
 
@@ -103,8 +103,9 @@
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_marginTop="20dp"
+                android:gravity="center"
                 android:layout_height="0dp">
-                <TextView
+                <!--<TextView
                     android:id="@+id/btn_admin_regis"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -114,12 +115,12 @@
                     android:layout_height="match_parent"
                     android:textStyle="italic|bold"
                     android:textColor="#54665B"
-                    android:text="@string/admin"/>
+                    android:text="@string/admin"/> -->
                 <TextView
                     android:id="@+id/btn_student_regis"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="start"
+                    android:gravity="center|top"
                     android:textSize="20sp"
                     android:layout_marginStart="20dp"
                     android:textColor="#54665B"

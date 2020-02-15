@@ -17,7 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.toolsharing.Admin.AdminBottomNav;
 import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
+import com.example.toolsharing.Student.StudentBottomNav;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
 import com.example.toolsharing.Utils.RetrofitClientInstance;
 
@@ -29,7 +31,7 @@ public class LoginScreen extends Fragment {
 
     View view;
 
-    TextView admin_regis, student_regis, forgot;
+    TextView student_regis, forgot;
     EditText lid, lpwd;
     Button btn_login;
 
@@ -52,7 +54,6 @@ public class LoginScreen extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        admin_regis = view.findViewById(R.id.btn_admin_regis);
         student_regis = view.findViewById(R.id.btn_student_regis);
         forgot = view.findViewById(R.id.btn_forgot);
 
@@ -60,13 +61,6 @@ public class LoginScreen extends Fragment {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(view).navigate(R.id.action_loginScreen_to_forgotPassword);
-            }
-        });
-
-        admin_regis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    Navigation.findNavController(view).navigate(R.id.action_loginScreen_to_adminRegister);
             }
         });
 

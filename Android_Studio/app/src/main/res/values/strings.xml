@@ -49,7 +49,7 @@
     <string name="sign_up_request">Sign Up Request</string>
     <string name="sign_up">Sign Up </string>
     <string name="admin"><u>Admin Register</u></string>
-    <string name="student"><u>Student Register</u></string>
+    <string name="student"><u>Register</u></string>
     <string name="forgot"><u>Forgot Password?</u></string>
 
     <!-- String related to login -->
