@@ -1,7 +1,6 @@
 package com.example.toolsharing.Student;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.toolsharing.R;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
@@ -22,6 +23,7 @@ public class StudentMyTools extends Fragment {
     TabLayout tabLayout;
     GetDataServiceInterface service;
     Toolbar toolbar;
+    Bundle bundle = new Bundle();
 
     String sid;
 
@@ -36,6 +38,7 @@ public class StudentMyTools extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        bundle.putString("SID", getArguments().getString("sId"));
 
         tabLayout = view.findViewById(R.id.tab_mytools);
         tabLayout.addTab(tabLayout.newTab().setText("Owned"));
@@ -48,9 +51,14 @@ public class StudentMyTools extends Fragment {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.addtool:
-                        Intent intent = new Intent(getActivity(), AddOwnTools.class);
-                        intent.putExtra("SID", getArguments().getString("sId"));
-                        startActivity(intent);
+
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        final AddTools addTools = new AddTools();
+                        fragmentTransaction.replace(R.id.frag_stu, addTools, "addTools");
+                        fragmentTransaction.addToBackStack(null);
+                        addTools.setArguments(bundle);
+                        fragmentTransaction.commit();
                         return true;
                 }
                 return  false;
@@ -63,17 +71,44 @@ public class StudentMyTools extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 if(tabLayout.getSelectedTabPosition() == 0) {
 
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    final StudentOwned studentOwned = new StudentOwned();
+                    fragmentTransaction.replace(R.id.fragment_mytools_container, studentOwned, "OwnTools");
+                    fragmentTransaction.addToBackStack(null);
+                    studentOwned.setArguments(bundle);
+                    fragmentTransaction.commit();
                 }
 
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                if(tabLayout.getSelectedTabPosition() == 0) {
+
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    final StudentOwned studentOwned = new StudentOwned();
+                    fragmentTransaction.replace(R.id.fragment_mytools_container, studentOwned, "OwnTools");
+                    fragmentTransaction.addToBackStack(null);
+                    studentOwned.setArguments(bundle);
+                    fragmentTransaction.commit();
+                }
 
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                if(tabLayout.getSelectedTabPosition() == 0) {
+
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    final StudentOwned studentOwned = new StudentOwned();
+                    fragmentTransaction.replace(R.id.fragment_mytools_container, studentOwned, "OwnTools");
+                    fragmentTransaction.addToBackStack(null);
+                    studentOwned.setArguments(bundle);
+                    fragmentTransaction.commit();
+                }
 
             }
         });

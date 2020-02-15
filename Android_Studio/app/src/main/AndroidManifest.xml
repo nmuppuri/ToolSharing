@@ -12,7 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Student.AddOwnTools"></activity>
         <activity android:name=".Student.StudentBottomNav" />
         <activity android:name=".Admin.AdminBottomNav" />
         <activity android:name=".MainActivity">

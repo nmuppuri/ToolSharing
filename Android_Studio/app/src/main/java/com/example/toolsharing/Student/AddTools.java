@@ -1,15 +1,19 @@
 package com.example.toolsharing.Student;
 
+
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddOwnTools extends AppCompatActivity {
+public class AddTools extends Fragment {
     View view;
     AddToolsListRecylerAdapter addToolsListRecylerAdapter;
     ToolsListRecylerAdapter toolsListRecylerAdapter;
@@ -37,26 +41,34 @@ public class AddOwnTools extends AppCompatActivity {
     Toolbar toolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_own_tools);
-        String sid = getIntent().getStringExtra("SID");
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_add_tools, container, false);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        String sid = getArguments().getString("SID");
         addMyToolsmethod(sid);
-        toolbar = findViewById(R.id.stu_add_own_toolbar);
+
+        toolbar = view.findViewById(R.id.stu_add_tool_bar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.close:
-                        Intent intent = new Intent(getApplicationContext(), StudentMyTools.class);
-                        startActivity(intent);
+                        //getActivity().getFragmentManager().popBackStack();
+                        getActivity().onBackPressed();
                         return true;
                 }
                 return  false;
             }
         });
     }
-
 
     public void addMyToolsmethod(final String sid)
     {
@@ -74,9 +86,9 @@ public class AddOwnTools extends AppCompatActivity {
 
                 if(!status.equalsIgnoreCase("error")) {
                     toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());
-                    addToolsListRecylerAdapter = new AddToolsListRecylerAdapter(toolsList_pojos, getApplicationContext());
-                    @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-                    RecyclerView recyclerView = findViewById(R.id.recycler_add_own_tools);
+                    addToolsListRecylerAdapter = new AddToolsListRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
+                    @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
+                    RecyclerView recyclerView = view.findViewById(R.id.recycler_add_tools);
                     //empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(addToolsListRecylerAdapter);
@@ -125,10 +137,10 @@ public class AddOwnTools extends AppCompatActivity {
                 System.out.println("URL Student recycler Called!: " + status);
 
                 if(!status.equalsIgnoreCase("error")) {
-                    Toast.makeText(getApplicationContext(),statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(),statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Oops!! You own this tool!!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Oops!! You own this tool!!",Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -157,9 +169,9 @@ public class AddOwnTools extends AppCompatActivity {
 
                 if(!status.equalsIgnoreCase("error")) {
                     toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());
-                    toolsListRecylerAdapter = new ToolsListRecylerAdapter(toolsList_pojos, getApplicationContext());
-                    @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-                    RecyclerView recyclerView = findViewById(R.id.studentOwned_recycler);
+                    toolsListRecylerAdapter = new ToolsListRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
+                    @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
+                    RecyclerView recyclerView = view.findViewById(R.id.fragment_mytools_container);
                     //empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(toolsListRecylerAdapter);

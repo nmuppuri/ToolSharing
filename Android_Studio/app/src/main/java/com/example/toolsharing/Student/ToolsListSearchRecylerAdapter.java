@@ -13,21 +13,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.toolsharing.PojoClasses.ToolsList_Pojo;
+import com.example.toolsharing.PojoClasses.SearchToolsList_Pojo;
 import com.example.toolsharing.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsListSearchRecylerAdapter.Viewholder> implements Filterable {
-    private List<ToolsList_Pojo> toolsPojoArrayList;
-    private List<ToolsList_Pojo> toolsPojoArrayListFull;
+    private List<SearchToolsList_Pojo> searchToolsList;
+    private List<SearchToolsList_Pojo> searchToolsListFull;
     private Context c;
     private View.OnClickListener onClickListener;
 
-    ToolsListSearchRecylerAdapter(List<ToolsList_Pojo> toolsPojoArrayList, Context c) {
-        this.toolsPojoArrayList = toolsPojoArrayList;
-        toolsPojoArrayListFull = new ArrayList<>(toolsPojoArrayList);
+    ToolsListSearchRecylerAdapter(List<SearchToolsList_Pojo> searchToolsList, Context c) {
+        this.searchToolsList = searchToolsList;
+        searchToolsListFull = new ArrayList<>(searchToolsList);
         this.c = c;
     }
 
@@ -41,8 +41,8 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
 
     @Override
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
-        Glide.with(c).asBitmap().load(toolsPojoArrayList.get(position).getToolImg()).into(holder.tool_img);
-        holder.tool_name.setText(toolsPojoArrayList.get(position).getToolName());
+        Glide.with(c).asBitmap().load(searchToolsList.get(position).getToolImg()).into(holder.tool_img);
+        holder.tool_name.setText(searchToolsList.get(position).getToolName());
     }
 
     public void setOnItemClickListener(View.OnClickListener itemClickListener){
@@ -51,7 +51,7 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
 
     @Override
     public int getItemCount() {
-        return toolsPojoArrayList.size();
+        return searchToolsList.size();
     }
 
     public class Viewholder extends RecyclerView.ViewHolder{
@@ -81,14 +81,14 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
     private Filter searchFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            List<ToolsList_Pojo> filterList = new ArrayList<>();
+            List<SearchToolsList_Pojo> filterList = new ArrayList<>();
 
             if(charSequence == null || charSequence.length() == 0){
-                filterList.addAll(toolsPojoArrayListFull);
+                filterList.addAll(searchToolsListFull);
             } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
 
-                for(ToolsList_Pojo list_pojo : toolsPojoArrayListFull){
+                for(SearchToolsList_Pojo list_pojo : searchToolsListFull){
                     if(list_pojo.getToolName().toLowerCase().contains(filterPattern)){
                         filterList.add(list_pojo);
                     }
@@ -102,8 +102,8 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            toolsPojoArrayList.clear();
-            toolsPojoArrayList.addAll((List) filterResults.values);
+            searchToolsList.clear();
+            searchToolsList.addAll((List) filterResults.values);
             notifyDataSetChanged();
         }
     };

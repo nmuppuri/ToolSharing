@@ -15,11 +15,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.toolsharing.PojoClasses.SearchToolsList_Pojo;
 import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
-import com.example.toolsharing.PojoClasses.ToolsList_Pojo;
 import com.example.toolsharing.R;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
 import com.example.toolsharing.Utils.RetrofitClientInstance;
@@ -35,7 +37,7 @@ public class StudentToolSearch extends Fragment {
     View view;
     GetDataServiceInterface service;
     ToolsListSearchRecylerAdapter toolsListSearchRecylerAdapter;
-    ArrayList<ToolsList_Pojo> toolsList_pojos;
+    ArrayList<SearchToolsList_Pojo> searchToolsList_pojos;
     RecyclerView recyclerView;
     Toolbar toolbar;
     String str;
@@ -51,19 +53,14 @@ public class StudentToolSearch extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_student_tool_search, container, false);
         setHasOptionsMenu(true);
-        toolList(str);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        //toolList(str);
+        searchToolList();
     }
-
-
-
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -92,10 +89,10 @@ public class StudentToolSearch extends Fragment {
 
 
 
-    public void toolList(final String s)
+    public void searchToolList()
     {
         service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
-        Call<StatusMessage_Pojo> call = service.getAllTools();
+        Call<StatusMessage_Pojo> call = service.getSearchTools();
 
         System.out.println("URL Tools: " + call);
 
@@ -107,8 +104,8 @@ public class StudentToolSearch extends Fragment {
                 System.out.println("URL Student recycler Called!: " + status);
 
                 if(!status.equalsIgnoreCase("error")) {
-                    toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());
-                    toolsListSearchRecylerAdapter = new ToolsListSearchRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
+                    searchToolsList_pojos = new ArrayList<>(statusMessage_pojo.getSearchToolsList());
+                    toolsListSearchRecylerAdapter = new ToolsListSearchRecylerAdapter(searchToolsList_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
                     recyclerView = getView().findViewById(R.id.recycler_student_search);
                     //empty_view.setVisibility(View.GONE);
@@ -123,8 +120,30 @@ public class StudentToolSearch extends Fragment {
                             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                             int position = viewHolder.getAdapterPosition();
 
-                            String toolName = statusMessage_pojo.getToolsList().get(position).getToolName();
-                            String toolImg = statusMessage_pojo.getToolsList().get(position).getToolImg();
+                            int psid = statusMessage_pojo.getSearchToolsList().get(position).getPostedStudentId();
+                            int toolId = statusMessage_pojo.getSearchToolsList().get(position).getPostedToolId();
+                            String toolName = statusMessage_pojo.getSearchToolsList().get(position).getToolName();
+                            String toolImg = statusMessage_pojo.getSearchToolsList().get(position).getToolImg();
+                            String toolDesc = statusMessage_pojo.getSearchToolsList().get(position).getToolDesc();
+                            int trating = statusMessage_pojo.getSearchToolsList().get(position).getToolRating();
+                            int availableInDays = statusMessage_pojo.getSearchToolsList().get(position).getToolAvailableInDays();
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("psId", String.valueOf(psid));
+                            bundle.putString("tId", String.valueOf(toolId));
+                            bundle.putString("tN", toolName);
+                            bundle.putString("tImg", toolImg);
+                            bundle.putString("tD", toolDesc);
+                            bundle.putString("tr", String.valueOf(trating));
+                            bundle.putString("avail", String.valueOf(availableInDays));
+
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            final ToolDetails toolDetails = new ToolDetails();
+                            fragmentTransaction.replace(R.id.frag_stu, toolDetails, "details");
+                            fragmentTransaction.addToBackStack(null);
+                            toolDetails.setArguments(bundle);
+                            fragmentTransaction.commit();
 
                             System.out.println("URL toolName: " + toolName);
                             System.out.println("URL toolImg: " + toolImg);

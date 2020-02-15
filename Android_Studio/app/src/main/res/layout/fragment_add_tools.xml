@@ -7,11 +7,11 @@
     android:background="@drawable/ts"
     android:backgroundTint="#838A72B4"
     android:backgroundTintMode="screen"
-    tools:context=".Student.AddOwnTools">
+    tools:context=".Student.AddTools">
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/stu_add_own_toolbar"
+        android:id="@+id/stu_add_tool_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#CE10316B"
@@ -32,7 +32,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_add_own_tools"
+        android:id="@+id/recycler_add_tools"
         android:layout_marginTop="56dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

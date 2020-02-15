@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.toolsharing.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -14,11 +15,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class StudentBottomNav extends AppCompatActivity {
 
 
-    final Fragment studentDashboard = new StudentToolSearch();
+    /*final Fragment studentToolSearch = new StudentToolSearch();
+    final Fragment toolDetails = new ToolDetails();
     final Fragment studentMyTools = new StudentMyTools();
     final FragmentManager fm = getSupportFragmentManager();
-    Fragment active = studentDashboard;
+    Fragment active = studentToolSearch;*/
     String stdid;
+    Fragment fragment = null;
+    Bundle b = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +35,17 @@ public class StudentBottomNav extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.s_bottom_nav);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        fm.beginTransaction().add(R.id.frag_stu, studentMyTools, "2").hide(studentMyTools).commit();
-        fm.beginTransaction().add(R.id.frag_stu, studentDashboard, "1").commit();
+        b.putString("sId", stdid);
+        fragment = new StudentToolSearch();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.frag_stu, fragment);
+        fragment.setArguments(b);
+        ft.commit();
+
+        //fm.beginTransaction().add(R.id.frag_stu, studentMyTools, "3").hide(studentMyTools).commit();
+        //fm.beginTransaction().add(R.id.frag_stu, toolDetails, "2").hide(toolDetails).commit();
+        //fm.beginTransaction().add(R.id.frag_stu, studentToolSearch, "1").commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -40,21 +53,27 @@ public class StudentBottomNav extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.sbottom_search:
-                    fm.beginTransaction().hide(active).show(studentDashboard).commit();
-                    active = studentDashboard;
-                    return true;
-
-                case R.id.sbottom_tools:
-                    Bundle b = new Bundle();
-                    b.putString("sId", stdid);
-                    fm.beginTransaction().hide(active).show(studentMyTools).commit();
+            if(item.getItemId() == R.id.sbottom_search) {
+                //fm.beginTransaction().hide(active).show(studentToolSearch).commit();
+                //active = studentToolSearch;
+                fragment = new StudentToolSearch();
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.frag_stu, fragment);
+                fragment.setArguments(b);
+                ft.commit();
+            } else if(item.getItemId() == R.id.sbottom_tools) {
+                    /*fm.beginTransaction().hide(active).show(studentMyTools).commit();
                     active = studentMyTools;
-                    studentMyTools.setArguments(b);
-                    return true;
+                    studentMyTools.setArguments(b);*/
+                fragment = new StudentMyTools();
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.frag_stu, fragment);
+                fragment.setArguments(b);
+                ft.commit();
             }
-            return false;
+            return true;
         }
     };
 }

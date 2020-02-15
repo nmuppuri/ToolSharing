@@ -15,7 +15,7 @@
             app:destination="@id/studentRegister" />
         <action
             android:id="@+id/action_loginScreen_to_studentDashboard"
-            app:destination="@id/studentDashboard" />
+            app:destination="@id/studentToolSearch" />
         <action
             android:id="@+id/action_loginScreen_to_adminDashboard"
             app:destination="@id/adminDashboard" />
@@ -47,13 +47,16 @@
         android:label="fragment_admin_dashboard"
         tools:layout="@layout/fragment_admin_dashboard" />
     <fragment
-        android:id="@+id/studentDashboard"
+        android:id="@+id/studentToolSearch"
         android:name="com.example.toolsharing.Student.StudentToolSearch"
-        android:label="fragment_student_dashboard"
+        android:label="fragment_student_tool_search"
         tools:layout="@layout/fragment_student_tool_search" >
         <action
-            android:id="@+id/action_studentDashboard_to_studentMyTools"
+            android:id="@+id/action_studentToolSearch_to_studentMyTools"
             app:destination="@id/studentMyTools" />
+        <action
+            android:id="@+id/action_studentToolSearch_to_toolDetails"
+            app:destination="@id/toolDetails" />
     </fragment>
     <fragment
         android:id="@+id/studentMyTools"
@@ -62,7 +65,7 @@
         tools:layout="@layout/fragment_student_my_tools" >
         <action
             android:id="@+id/action_studentMyTools_to_studentDashboard"
-            app:destination="@id/studentDashboard" />
+            app:destination="@id/studentToolSearch" />
         <action
             android:id="@+id/action_studentMyTools_to_studentOwned"
             app:destination="@id/studentOwned" />
@@ -87,5 +90,14 @@
         <action
             android:id="@+id/action_studentBorrowed_to_studentMyTools"
             app:destination="@id/studentMyTools" />
+    </fragment>
+    <fragment
+        android:id="@+id/toolDetails"
+        android:name="com.example.toolsharing.Student.ToolDetails"
+        android:label="fragment_tool_details"
+        tools:layout="@layout/fragment_tool_details" >
+        <action
+            android:id="@+id/action_toolDetails_to_studentToolSearch"
+            app:destination="@id/studentToolSearch" />
     </fragment>
 </navigation>

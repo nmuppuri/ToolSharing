@@ -28,6 +28,9 @@ public class StatusMessage_Pojo {
     @SerializedName("ToolsList")
     @Expose
     private List<ToolsList_Pojo> toolsList = null;
+    @SerializedName("SearchToolsList")
+    @Expose
+    private List<SearchToolsList_Pojo> searchToolsList = null;
 
     public String getStatus() {
         return status;
@@ -83,6 +86,14 @@ public class StatusMessage_Pojo {
 
     public void setToolsList(List<ToolsList_Pojo> toolsList) {
         this.toolsList = toolsList;
+    }
+
+    public List<SearchToolsList_Pojo> getSearchToolsList() {
+        return searchToolsList;
+    }
+
+    public void setSearchToolsList(List<SearchToolsList_Pojo> searchToolsList) {
+        this.searchToolsList = searchToolsList;
     }
 
 }
