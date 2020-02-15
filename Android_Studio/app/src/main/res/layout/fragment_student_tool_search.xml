@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/ts"
     android:backgroundTint="#838A72B4"
     android:backgroundTintMode="screen"
@@ -15,42 +15,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">-->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/stu_dash_tool"
+    <!--<SearchView
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#CE10316B"
-        app:menu="@menu/refresh"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center"
-            android:text="Home"
-            android:textColor="#f8de7e"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-    </androidx.appcompat.widget.Toolbar>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:searchIcon="@drawable/ic_search_black_24dp"
+        android:background="#DAC8F8"
+        android:backgroundTint="#998A72B4"
+        android:backgroundTintMode="screen"/> -->
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="56dp"
         android:layout_marginBottom="56dp"
         android:text="@string/title_home"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/stu_dash_tool"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#CE10316B"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:menu="@menu/sort">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="Search"
+                android:textColor="#f8de7e"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_student_search"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp" />
     </FrameLayout>
-
 
 
 </RelativeLayout>

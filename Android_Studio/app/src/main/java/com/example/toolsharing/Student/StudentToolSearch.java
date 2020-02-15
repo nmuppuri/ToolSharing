@@ -4,11 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,9 +34,11 @@ public class StudentToolSearch extends Fragment {
 
     View view;
     GetDataServiceInterface service;
-    ToolsListRecylerAdapter toolsListRecylerAdapter;
+    ToolsListSearchRecylerAdapter toolsListSearchRecylerAdapter;
     ArrayList<ToolsList_Pojo> toolsList_pojos;
     RecyclerView recyclerView;
+    Toolbar toolbar;
+    String str;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -43,6 +50,8 @@ public class StudentToolSearch extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_student_tool_search, container, false);
+        setHasOptionsMenu(true);
+        toolList(str);
         return view;
     }
 
@@ -50,10 +59,40 @@ public class StudentToolSearch extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //toolList();
+        //toolList(str);
     }
 
-    public void toolList()
+
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        MenuInflater menuInflater = new MenuInflater(view.getContext());
+        menuInflater.inflate(R.menu.sort, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.toolsearch);
+
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                toolsListSearchRecylerAdapter.getFilter().filter(s);
+                //recyclerView.setAdapter(toolsListSearchRecylerAdapter);
+                return true;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+
+    public void toolList(final String s)
     {
         service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
         Call<StatusMessage_Pojo> call = service.getAllTools();
@@ -69,14 +108,15 @@ public class StudentToolSearch extends Fragment {
 
                 if(!status.equalsIgnoreCase("error")) {
                     toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());
-                    toolsListRecylerAdapter = new ToolsListRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
+                    toolsListSearchRecylerAdapter = new ToolsListSearchRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
                     recyclerView = getView().findViewById(R.id.recycler_student_search);
                     //empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
-                    recyclerView.setAdapter(toolsListRecylerAdapter);
+                    //toolsListSearchRecylerAdapter.getFilter().filter(s);
+                    recyclerView.setAdapter(toolsListSearchRecylerAdapter);
 
-                    toolsListRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
+                    toolsListSearchRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             //view.startAnimation(buttonClick);
