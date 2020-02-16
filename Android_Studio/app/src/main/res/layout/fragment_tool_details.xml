@@ -175,7 +175,7 @@
                 android:ems="6"
                 android:background="@drawable/rounded_names"
                 android:gravity="center"
-                android:text="Start Date"
+                android:text="From Date"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -183,10 +183,10 @@
                 android:id="@+id/td_sd"
                 android:layout_marginStart="20dp"
                 android:textSize="20sp"
-                android:ems="5"
+                android:ems="6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Start Date"
+                android:hint="YYYY-MM-DD"
                 android:layout_gravity="center"/>
 
             <ImageButton
@@ -213,7 +213,7 @@
                 android:ems="6"
                 android:background="@drawable/rounded_names"
                 android:gravity="center"
-                android:text="End Date"
+                android:text="To Date"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -223,8 +223,8 @@
                 android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="End Date"
-                android:ems="5"
+                android:hint="YYYY-MM-DD"
+                android:ems="6"
                 android:layout_gravity="center"/>
 
             <ImageButton
