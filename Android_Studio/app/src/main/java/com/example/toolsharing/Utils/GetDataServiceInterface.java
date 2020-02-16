@@ -37,6 +37,11 @@ public interface GetDataServiceInterface {
     Call<StatusMessage_Pojo> getSearchTools();
 
 
+    @GET("ToolOrder&{ptid}&{psid}&{bsid}&{fd}&{td}")
+    Call<StatusMessage_Pojo> getToolOrder(@Path("ptid") int ptid, @Path("psid") int psid, @Path("bsid") int bsid, @Path("fd") String fd,
+                                          @Path("td") String td);
+
+
     @GET("ToolsList")
     Call<StatusMessage_Pojo> getAllTools();
 
