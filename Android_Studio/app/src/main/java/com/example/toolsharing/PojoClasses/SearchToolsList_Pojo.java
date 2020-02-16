@@ -20,15 +20,21 @@ public class SearchToolsList_Pojo {
     @SerializedName("ToolImg")
     @Expose
     private String toolImg;
+    @SerializedName("FromDate")
+    @Expose
+    private Object fromDate;
     @SerializedName("ReturnDate")
     @Expose
     private Object returnDate;
     @SerializedName("ToolRating")
     @Expose
     private Integer toolRating;
-    @SerializedName("ToolAvailableInDays")
+    @SerializedName("ToolAvailableTillInDays")
     @Expose
-    private Integer toolAvailableInDays;
+    private Integer toolAvailableTillInDays;
+    @SerializedName("ToolAvailableFromInDays")
+    @Expose
+    private Integer toolAvailableFromInDays;
 
     public Integer getPostedStudentId() {
         return postedStudentId;
@@ -70,6 +76,14 @@ public class SearchToolsList_Pojo {
         this.toolImg = toolImg;
     }
 
+    public Object getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(Object fromDate) {
+        this.fromDate = fromDate;
+    }
+
     public Object getReturnDate() {
         return returnDate;
     }
@@ -86,12 +100,20 @@ public class SearchToolsList_Pojo {
         this.toolRating = toolRating;
     }
 
-    public Integer getToolAvailableInDays() {
-        return toolAvailableInDays;
+    public Integer getToolAvailableTillInDays() {
+        return toolAvailableTillInDays;
     }
 
-    public void setToolAvailableInDays(Integer toolAvailableInDays) {
-        this.toolAvailableInDays = toolAvailableInDays;
+    public void setToolAvailableTillInDays(Integer toolAvailableTillInDays) {
+        this.toolAvailableTillInDays = toolAvailableTillInDays;
+    }
+
+    public Integer getToolAvailableFromInDays() {
+        return toolAvailableFromInDays;
+    }
+
+    public void setToolAvailableFromInDays(Integer toolAvailableFromInDays) {
+        this.toolAvailableFromInDays = toolAvailableFromInDays;
     }
 
 }

@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:text="Student id"
-                    android:textSize="18sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -117,7 +117,7 @@
                     android:layout_marginStart="20dp"
                     android:background="@drawable/rounded_names"
                     android:gravity="center"
-                    android:text="Tool Availability In"
+                    android:text="Tool Availabile In"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -128,7 +128,7 @@
                     android:layout_marginStart="40dp"
                     android:gravity="center|top"
                     android:text="availability"
-                    android:textSize="18sp" />
+                    android:textSize="20sp" />
 
             </LinearLayout>
         </LinearLayout>
@@ -246,12 +246,12 @@
 
             <Button
                 android:id="@+id/btn_td_borrow"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|top"
                 android:background="@drawable/round_button"
-                android:ems="7"
+                android:ems="8"
                 android:text="Borrow"
                 android:textColor="#DAC8F8"
                 android:textSize="20sp"

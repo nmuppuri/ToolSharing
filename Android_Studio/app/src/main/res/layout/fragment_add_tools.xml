@@ -32,6 +32,8 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:scrollbars="vertical"
+        android:scrollbarSize="10dp"
         android:id="@+id/recycler_add_tools"
         android:layout_marginTop="56dp"
         android:layout_width="match_parent"

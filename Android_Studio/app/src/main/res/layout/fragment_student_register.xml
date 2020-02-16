@@ -121,7 +121,7 @@
         android:ems="8"
         android:textStyle="bold"
         android:text="request access"
-        android:textColor="#f8de7e"
+        android:textColor="#DAC8F8"
         android:textColorHint="#80F8DE7E"
         android:textSize="25sp" />
     </LinearLayout>
