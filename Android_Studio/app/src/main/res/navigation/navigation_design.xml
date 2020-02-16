@@ -56,7 +56,7 @@
             app:destination="@id/studentMyTools" />
         <action
             android:id="@+id/action_studentToolSearch_to_toolDetails"
-            app:destination="@id/toolDetails" />
+            app:destination="@id/toolDetailsNOrder" />
     </fragment>
     <fragment
         android:id="@+id/studentMyTools"
@@ -92,8 +92,8 @@
             app:destination="@id/studentMyTools" />
     </fragment>
     <fragment
-        android:id="@+id/toolDetails"
-        android:name="com.example.toolsharing.Student.ToolDetails"
+        android:id="@+id/toolDetailsNOrder"
+        android:name="com.example.toolsharing.Student.ToolDetailsNOrder"
         android:label="fragment_tool_details"
         tools:layout="@layout/fragment_tool_details" >
         <action

@@ -139,10 +139,10 @@ public class StudentToolSearch extends Fragment {
 
                             FragmentManager fragmentManager = getFragmentManager();
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            final ToolDetails toolDetails = new ToolDetails();
-                            fragmentTransaction.replace(R.id.frag_stu, toolDetails, "details");
+                            final ToolDetailsNOrder toolDetailsNOrder = new ToolDetailsNOrder();
+                            fragmentTransaction.replace(R.id.frag_stu, toolDetailsNOrder, "details");
                             fragmentTransaction.addToBackStack(null);
-                            toolDetails.setArguments(bundle);
+                            toolDetailsNOrder.setArguments(bundle);
                             fragmentTransaction.commit();
 
                             System.out.println("URL toolName: " + toolName);

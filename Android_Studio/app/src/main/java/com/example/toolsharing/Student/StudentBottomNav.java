@@ -16,7 +16,7 @@ public class StudentBottomNav extends AppCompatActivity {
 
 
     /*final Fragment studentToolSearch = new StudentToolSearch();
-    final Fragment toolDetails = new ToolDetails();
+    final Fragment toolDetails = new ToolDetailsNOrder();
     final Fragment studentMyTools = new StudentMyTools();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active = studentToolSearch;*/
