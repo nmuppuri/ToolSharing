@@ -370,6 +370,123 @@ public class ToolSharing {
     }
     
     
+    /********** SEARCH TOOLS LIST *************/
+    @GET
+    @Path("SearchToolsList")
+    @Produces("application/json")
+    public String getSearchToolsList() {
+        //TODO return proper representation object
+           
+        System.out.println("/********** SEARCH TOOLS LIST *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "select st.posted_student_id, t.*, od.return_date, od.rating,\n" +
+                         "DATEDIFF(coalesce(od.return_date, current_date), current_date) available\n" +
+                        "from tools t left outer join student_tools st \n" +
+                        "on t.tool_id = st.posted_tool_id "
+                    + "left outer join order_details od\n" +
+                        "on st.posted_tool_id = od.posted_tool_id order by 1 desc,3";
+            
+            stm = con.prepareStatement(sql);            
+            ResultSet rs = stm.executeQuery();
+            
+            int psid, ptid, trating, available;
+            String rd, name, desc, img;
+            if(rs.next() == true){
+                do{
+                    psid = rs.getInt(1);
+                    ptid = rs.getInt(2);
+                    name = rs.getString(3);
+                    desc = rs.getString(4);
+                    img = rs.getString(5);
+                    rd = rs.getString(6);
+                    trating = rs.getInt(7);
+                    available = rs.getInt(8);
+                    
+                    childObj.accumulate("PostedStudentId", psid);
+                    childObj.accumulate("PostedToolId", ptid);
+                    childObj.accumulate("ToolName", name);                    
+                    childObj.accumulate("ToolDesc", desc);
+                    childObj.accumulate("ToolImg", img);
+                    childObj.accumulate("ReturnDate", rd);
+                    childObj.accumulate("ToolRating", trating);
+                    childObj.accumulate("ToolAvailableInDays", available);
+                    jSONArray.add(childObj);  
+                    childObj.clear();
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("SearchToolsList", jSONArray);
+            } else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** TOOL ORDER DETAILS *************/
+    @GET
+    @Path("ToolOrder&{ptid}&{psid}&{bsid}&{fd}&{td}")
+    @Produces("application/json")
+    public String getToolOrder(@PathParam("ptid") int ptid, @PathParam("psid") int psid,
+            @PathParam("bsid") int bsid, @PathParam("fd") String fd,
+            @PathParam("td") String td) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** TOOL ORDER DETAILS *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "INSERT INTO order_details(posted_tool_id, posted_student_id,"
+                    + " borrowed_student_id, from_date, to_date, return_date) "
+                    + "VALUES (?, ?, ?, ?, ?, ?)";
+            
+            stm = con.prepareStatement(sql);
+            stm.setInt(1, ptid);
+            stm.setInt(2, psid);
+            stm.setInt(3, bsid);
+            stm.setString(4, fd);
+            stm.setString(5, td);
+            stm.setString(6, td);
+            
+            stm.executeUpdate();
+            stm.close();
+
+            mainObj.accumulate("Status", "OK");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Borrowed Successfully!");
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
     /********** TOOLS LIST *************/
     @GET
     @Path("ToolsList")
