@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.toolsharing.R;
 
-public class StudentBorrowed extends Fragment {
+public class StudentProfile extends Fragment {
 
     View view;
 
@@ -18,7 +18,7 @@ public class StudentBorrowed extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_student_borrowed, container, false);
+        view = inflater.inflate(R.layout.fragment_student_profile, container, false);
 
         return view;
     }
