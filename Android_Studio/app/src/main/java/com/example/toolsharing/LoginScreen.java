@@ -29,13 +29,16 @@ import retrofit2.Response;
 
 public class LoginScreen extends Fragment {
 
-    View view;
+    private View view;
 
-    TextView student_regis, forgot;
-    EditText lid, lpwd;
-    Button btn_login;
+    private TextView student_regis;
+    private TextView forgot;
+    private EditText lid;
+    private EditText lpwd;
+    private Button btn_login;
 
-    String lid1, lpwd1;
+    private String lid1;
+    private String lpwd1;
 
     @Override
     public void onAttach(Context context) {
@@ -94,7 +97,7 @@ public class LoginScreen extends Fragment {
         });
     }
 
-    public void login()
+    private void login()
     {
 
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);

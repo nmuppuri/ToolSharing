@@ -33,19 +33,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AdminDashboard extends Fragment {
-    AdminRecyclerAdapter adminRecyclerAdapter;
-    ArrayList<StudentRegisList_Pojo> studentRegisList_pojoArrayList;
-    RecyclerView recyclerView;
-    TextView empty_view;
-    View view;
-    Toolbar toolbar;
-    AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
-    GetDataServiceInterface service;
+    private AdminRecyclerAdapter adminRecyclerAdapter;
+    private ArrayList<StudentRegisList_Pojo> studentRegisList_pojoArrayList;
+    private RecyclerView recyclerView;
+    private TextView empty_view;
+    private View view;
+    private Toolbar toolbar;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
+    private GetDataServiceInterface service;
 
     Bundle bundle;
 
-    int position;
-    String aid;
+    private int position;
+    private String aid;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -80,10 +80,9 @@ public class AdminDashboard extends Fragment {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.refresh:
-                        studentRegisDetails();
-                        return true;
+                if (menuItem.getItemId() == R.id.refresh) {
+                    studentRegisDetails();
+                    return true;
                 }
                 return  false;
             }
@@ -96,7 +95,7 @@ public class AdminDashboard extends Fragment {
 
 
 
-    public void studentRegisDetails()
+    private void studentRegisDetails()
     {
 
         Call<StatusMessage_Pojo> call = service.getstudentRegisDetails();
@@ -114,7 +113,7 @@ public class AdminDashboard extends Fragment {
                 System.out.println("URL Status Called!: " + status);
 
                 if(!status.equalsIgnoreCase("error")) {
-                    studentRegisList_pojoArrayList = new ArrayList<StudentRegisList_Pojo>(statusMessage_pojo.getStudentRegis());
+                    studentRegisList_pojoArrayList = new ArrayList<>(statusMessage_pojo.getStudentRegis());
                     adminRecyclerAdapter = new AdminRecyclerAdapter(studentRegisList_pojoArrayList, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
                     recyclerView = getView().findViewById(R.id.recycler_admin);
@@ -160,7 +159,7 @@ public class AdminDashboard extends Fragment {
         });
     }
 
-    public void studentRegisAccept(int sid, String dec, final String email, final String body)
+    private void studentRegisAccept(int sid, String dec, final String email, final String body)
     {
         Call<StatusMessage_Pojo> call = service.getStudentRegisAccept(sid, dec);
         //

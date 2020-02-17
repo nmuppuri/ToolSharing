@@ -27,10 +27,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StudentOwned extends Fragment {
-    View view;
+    private View view;
     AddToolsListRecylerAdapter addToolsListRecylerAdapter;
-    ToolsListRecylerAdapter toolsListRecylerAdapter;
-    ArrayList<ToolsList_Pojo> toolsList_pojos;
+    private ToolsListRecylerAdapter toolsListRecylerAdapter;
+    private ArrayList<ToolsList_Pojo> toolsList_pojos;
     int position;
     Toolbar toolbar;
 

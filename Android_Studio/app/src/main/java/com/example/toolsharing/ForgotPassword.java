@@ -31,12 +31,12 @@ import retrofit2.Response;
 
 public class ForgotPassword extends Fragment {
 
-    View view;
-    EditText fpwd;
-    Button btn_reset;
-    Toolbar toolbar;
-    String forgotEmail;
-    ProgressDialog progressDialog;
+    private View view;
+    private EditText fpwd;
+    private Button btn_reset;
+    private Toolbar toolbar;
+    private String forgotEmail;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -110,7 +110,7 @@ public class ForgotPassword extends Fragment {
 
     }
 
-    public void forgotPassword(final ProgressDialog progressDialog){
+    private void forgotPassword(final ProgressDialog progressDialog){
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
 
         Call<StatusMessage_Pojo> call = service.getforgotPassword(forgotEmail);

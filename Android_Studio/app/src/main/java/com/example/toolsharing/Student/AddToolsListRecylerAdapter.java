@@ -57,7 +57,7 @@ public class AddToolsListRecylerAdapter extends RecyclerView.Adapter<AddToolsLis
         TextView tool_name;
         Button btn_add_tools;
 
-        public Viewholder(@NonNull View itemView) {
+        Viewholder(@NonNull View itemView) {
             super(itemView);
 
             tool_img = itemView.findViewById(R.id.add_tool_image);

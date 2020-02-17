@@ -39,7 +39,7 @@ public class AdminRecyclerAdapter extends RecyclerView.Adapter<AdminRecyclerAdap
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
         //Glide.with(c).asBitmap().load(pokemonArrayList.get(position).getImage()).into(holder.pokemonImage);
         holder.rsname.setText(studentRegisList_pojos.get(position).getStudentName());
-        holder.rsid.setText(studentRegisList_pojos.get(position).getStudentId().toString());
+        holder.rsid.setText(String.valueOf(studentRegisList_pojos.get(position).getStudentId()));
     }
 
     public void setOnItemClickListener(View.OnClickListener itemClickListener){
@@ -56,7 +56,7 @@ public class AdminRecyclerAdapter extends RecyclerView.Adapter<AdminRecyclerAdap
         TextView rsname, rsid;
         Button btn_approve;
 
-        public Viewholder(@NonNull View itemView) {
+        Viewholder(@NonNull View itemView) {
             super(itemView);
 
             rsid = itemView.findViewById(R.id.rsid);

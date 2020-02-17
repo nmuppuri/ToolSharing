@@ -30,15 +30,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddTools extends Fragment {
-    View view;
-    AddToolsListRecylerAdapter addToolsListRecylerAdapter;
-    ToolsListRecylerAdapter toolsListRecylerAdapter;
-    ArrayList<ToolsList_Pojo> toolsList_pojos;
+    private View view;
+    private AddToolsListRecylerAdapter addToolsListRecylerAdapter;
+    private ToolsListRecylerAdapter toolsListRecylerAdapter;
+    private ArrayList<ToolsList_Pojo> toolsList_pojos;
     //RecyclerView recyclerView;
-    AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
 
-    int position;
-    Toolbar toolbar;
+    private int position;
+    private Toolbar toolbar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,18 +59,16 @@ public class AddTools extends Fragment {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.close:
-                        //getActivity().getFragmentManager().popBackStack();
-                        getActivity().onBackPressed();
-                        return true;
+                if (item.getItemId() == R.id.close) {//getActivity().getFragmentManager().popBackStack();
+                    getActivity().onBackPressed();
+                    return true;
                 }
                 return  false;
             }
         });
     }
 
-    public void addMyToolsmethod(final String sid)
+    private void addMyToolsmethod(final String sid)
     {
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
         Call<StatusMessage_Pojo> call = service.getAllTools();
@@ -124,7 +122,7 @@ public class AddTools extends Fragment {
         });
     }
 
-    public void addMyToolsDB(int psid, int ptid)
+    private void addMyToolsDB(int psid, int ptid)
     {
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
         Call<StatusMessage_Pojo> call = service.getAddMyTool(psid, ptid);

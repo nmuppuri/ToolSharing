@@ -20,9 +20,9 @@ public class StudentBottomNav extends AppCompatActivity {
     final Fragment studentMyTools = new StudentMyTools();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active = studentToolSearch;*/
-    String stdid;
-    Fragment fragment = null;
-    Bundle b = new Bundle();
+    private String stdid;
+    private Fragment fragment = null;
+    private Bundle b = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

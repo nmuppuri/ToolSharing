@@ -20,19 +20,18 @@ import com.google.android.material.tabs.TabLayout;
 
 public class StudentMyTools extends Fragment {
 
-    TabLayout tabLayout;
+    private TabLayout tabLayout;
     GetDataServiceInterface service;
-    Toolbar toolbar;
-    Bundle bundle = new Bundle();
+    private Toolbar toolbar;
+    private Bundle bundle = new Bundle();
 
     String sid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_student_my_tools, container, false);
 
-        return view;
+        return inflater.inflate(R.layout.fragment_student_my_tools, container, false);
     }
 
     @Override
@@ -49,17 +48,15 @@ public class StudentMyTools extends Fragment {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.addtool:
-
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        final AddTools addTools = new AddTools();
-                        fragmentTransaction.replace(R.id.frag_stu, addTools, "addTools");
-                        fragmentTransaction.addToBackStack(null);
-                        addTools.setArguments(bundle);
-                        fragmentTransaction.commit();
-                        return true;
+                if (menuItem.getItemId() == R.id.addtool) {
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    final AddTools addTools = new AddTools();
+                    fragmentTransaction.replace(R.id.frag_stu, addTools, "addTools");
+                    fragmentTransaction.addToBackStack(null);
+                    addTools.setArguments(bundle);
+                    fragmentTransaction.commit();
+                    return true;
                 }
                 return  false;
             }

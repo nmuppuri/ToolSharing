@@ -34,11 +34,11 @@ import retrofit2.Response;
 
 public class StudentToolSearch extends Fragment {
 
-    View view;
-    GetDataServiceInterface service;
-    ToolsListSearchRecylerAdapter toolsListSearchRecylerAdapter;
-    ArrayList<SearchToolsList_Pojo> searchToolsList_pojos;
-    RecyclerView recyclerView;
+    private View view;
+    private GetDataServiceInterface service;
+    private ToolsListSearchRecylerAdapter toolsListSearchRecylerAdapter;
+    private ArrayList<SearchToolsList_Pojo> searchToolsList_pojos;
+    private RecyclerView recyclerView;
     Toolbar toolbar;
     String str;
 
@@ -89,7 +89,7 @@ public class StudentToolSearch extends Fragment {
 
 
 
-    public void searchToolList()
+    private void searchToolList()
     {
         service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
         Call<StatusMessage_Pojo> call = service.getSearchTools();
@@ -125,8 +125,12 @@ public class StudentToolSearch extends Fragment {
                             String toolName = statusMessage_pojo.getSearchToolsList().get(position).getToolName();
                             String toolImg = statusMessage_pojo.getSearchToolsList().get(position).getToolImg();
                             String toolDesc = statusMessage_pojo.getSearchToolsList().get(position).getToolDesc();
+                            String fromdate = statusMessage_pojo.getSearchToolsList().get(position).getFromDate().toString();
                             int trating = statusMessage_pojo.getSearchToolsList().get(position).getToolRating();
-                            int availableInDays = statusMessage_pojo.getSearchToolsList().get(position).getToolAvailableInDays();
+                            int availableFromInDays = statusMessage_pojo.getSearchToolsList().get(position).getToolAvailableFromInDays();
+                            int availableTillInDays = statusMessage_pojo.getSearchToolsList().get(position).getToolAvailableTillInDays();
+
+
 
                             Bundle bundle = new Bundle();
                             bundle.putString("psId", String.valueOf(psid));
@@ -136,7 +140,9 @@ public class StudentToolSearch extends Fragment {
                             bundle.putString("tImg", toolImg);
                             bundle.putString("tD", toolDesc);
                             bundle.putString("tr", String.valueOf(trating));
-                            bundle.putString("avail", String.valueOf(availableInDays));
+                            bundle.putString("availF", String.valueOf(availableFromInDays));
+                            bundle.putString("availT", String.valueOf(availableTillInDays));
+                            bundle.putString("fromDate", fromdate);
 
                             FragmentManager fragmentManager = getFragmentManager();
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -146,7 +152,7 @@ public class StudentToolSearch extends Fragment {
                             toolDetailsNOrder.setArguments(bundle);
                             fragmentTransaction.commit();
 
-                            System.out.println("URL toolName: " + toolName);
+                            System.out.println("URL psid: " + psid);
                             System.out.println("URL toolImg: " + toolImg);
                         }
                     });

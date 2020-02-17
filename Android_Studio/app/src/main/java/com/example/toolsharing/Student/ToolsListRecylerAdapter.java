@@ -55,7 +55,7 @@ public class ToolsListRecylerAdapter extends RecyclerView.Adapter<ToolsListRecyl
         ImageView tool_img;
         TextView tool_name;
 
-        public Viewholder(@NonNull View itemView) {
+        Viewholder(@NonNull View itemView) {
             super(itemView);
 
             tool_img = itemView.findViewById(R.id.tool_image);

@@ -36,17 +36,29 @@ import retrofit2.Response;
 
 public class ToolDetailsNOrder extends Fragment {
 
-    TextView td_sid, td_tid, td_name, td_desc, td_avail, td_sd, td_ed;
-    CircleImageView td_img;
-    RatingBar td_rat;
-    ImageButton btn_td_sd, btn_td_ed;
-    View view;
-    String psid, bsid, tid, fromDate, toDate;
-    Toolbar toolbar;
-    Button btn_td_borrow;
+    private TextView td_sid;
+    TextView td_tid;
+    private TextView td_name;
+    private TextView td_desc;
+    private TextView td_avail;
+    private TextView td_sd;
+    private TextView td_ed;
+    private CircleImageView td_img;
+    private RatingBar td_rat;
+    private ImageButton btn_td_sd;
+    private ImageButton btn_td_ed;
+    private View view;
+    private String psid;
+    private String bsid;
+    private String tid;
+    private String fromDate;
+    private String toDate;
+    private Toolbar toolbar;
+    private Button btn_td_borrow;
 
-    DatePickerDialog.OnDateSetListener onDateSetListener;
-    DatePickerDialog.OnDateSetListener onDateSetListener1;
+    private DatePickerDialog.OnDateSetListener onDateSetListener;
+    private DatePickerDialog.OnDateSetListener onDateSetListener1;
+    private Date fDate = null;
 
     public ToolDetailsNOrder() {
         // Required empty public constructor
@@ -95,7 +107,7 @@ public class ToolDetailsNOrder extends Fragment {
             //td_img.setText(getArguments().getString("tImg", "NULL"));
             td_desc.setText(getArguments().getString("tD", "NULL"));
             //td_rat.setText(getArguments().getString("tr", "NULL"));
-            td_avail.setText(getArguments().getString("avail", "NULL"));
+            td_avail.setText(getArguments().getString("availT", "NULL") + " days");
             Glide.with(getContext()).asBitmap().load(getArguments().getString("tImg", "NULL")).into(td_img);
         }
         td_rat.setMax(5);
@@ -104,6 +116,7 @@ public class ToolDetailsNOrder extends Fragment {
         btn_td_sd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fDate = null;
                 selectDate(onDateSetListener);
             }
         });
@@ -120,15 +133,14 @@ public class ToolDetailsNOrder extends Fragment {
             public void onDateSet(DatePicker datePicker, int y, int m, int d) {
                 m = m + 1;
                 String date = y + "-" + m + "-" + d;
-                Date date1 = null;
                 try {
-                    date1 = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+                    fDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                fromDate = simpleDateFormat.format(date1);
+                fromDate = simpleDateFormat.format(fDate);
                 System.out.println("URL Date: " + fromDate);
                 td_sd.setText(fromDate);
             }
@@ -155,6 +167,11 @@ public class ToolDetailsNOrder extends Fragment {
         };
 
         btn_td_borrow = view.findViewById(R.id.btn_td_borrow);
+        if(psid.trim().equalsIgnoreCase("0")) {
+            btn_td_borrow.setEnabled(false);
+            btn_td_borrow.setText("Not Available");
+            btn_td_borrow.setBackgroundResource(R.drawable.round_button_disable);
+        }
         btn_td_borrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -175,12 +192,16 @@ public class ToolDetailsNOrder extends Fragment {
         int d = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), onDateSetListener, y, m ,d);
-
+        if(fDate == null) {
+            datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+        } else{
+            datePickerDialog.getDatePicker().setMinDate(fDate.getTime());
+        }
         datePickerDialog.getWindow();
         datePickerDialog.show();
     }
 
-    public void toolOrder()
+    private void toolOrder()
     {
 
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);

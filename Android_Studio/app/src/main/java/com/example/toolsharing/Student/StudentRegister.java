@@ -29,12 +29,18 @@ import retrofit2.Response;
 
 public class StudentRegister extends Fragment {
 
-    EditText sfn, sln, sid, semail;
-    Button btn_s_req;
+    private EditText sfn;
+    private EditText sln;
+    private EditText sid;
+    private EditText semail;
+    private Button btn_s_req;
 
-    String sfn1, sln1, sid1, semail1;
-    Toolbar toolbar;
-    View view;
+    private String sfn1;
+    private String sln1;
+    private String sid1;
+    private String semail1;
+    private Toolbar toolbar;
+    private View view;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -106,7 +112,7 @@ public class StudentRegister extends Fragment {
 
     }
 
-    public void studentRegister()
+    private void studentRegister()
     {
 
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
