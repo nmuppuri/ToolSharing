@@ -7,29 +7,36 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.toolsharing.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class AdminBottomNav extends AppCompatActivity {
 
-
-    private final Fragment adminDashboard = new AdminDashboard();
-    //final Fragment fragmentProfile = new Profile();
-    private final FragmentManager fm = getSupportFragmentManager();
-    private Fragment active = adminDashboard;
+    private String alid;
+    private Fragment fragment = null;
+    private Bundle b = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_bottom_nav);
 
+        Bundle bundle = getIntent().getExtras();
+        alid = bundle.getString("alid");
+
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_nav);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        //fm.beginTransaction().add(R.id.main_container, fragmentProfile, "3").hide(fragmentProfile).commit();
-        fm.beginTransaction().add(R.id.frag_admin, adminDashboard, "1").commit();
+        b.putString("alid", alid);
+        fragment = new AdminDashboard();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.frag_admin, fragment);
+        fragment.setArguments(b);
+        ft.commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -38,16 +45,21 @@ public class AdminBottomNav extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             if (item.getItemId() == R.id.abottom_home) {
-                fm.beginTransaction().hide(active).show(adminDashboard).commit();
-                active = adminDashboard;
-                return true;
-
-                /*case R.id.navigation_profile:
-                    fm.beginTransaction().hide(active).show(fragmentProfile).commit();
-                    active = fragmentProfile;
-                    return true;*/
+                fragment = new AdminDashboard();
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.frag_admin, fragment);
+                fragment.setArguments(b);
+                ft.commit();
+            }else if(item.getItemId() ==  R.id.abottom_profile) {
+                fragment = new AdminProfile();
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.frag_admin, fragment);
+                fragment.setArguments(b);
+                ft.commit();
             }
-            return false;
+            return true;
         }
     };
 }
