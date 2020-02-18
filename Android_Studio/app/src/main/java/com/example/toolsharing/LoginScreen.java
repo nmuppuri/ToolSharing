@@ -120,6 +120,7 @@ public class LoginScreen extends Fragment {
                 }else{
                     if(statusMessage_pojo.getAdminaccess().equalsIgnoreCase("y")){
                         Intent intent = new Intent(getActivity(), AdminBottomNav.class);
+                        intent.putExtra("alid", lid1);
                         startActivity(intent);
                         //Navigation.findNavController(view).navigate(R.id.action_loginScreen_to_adminDashboard);
                     } else{
