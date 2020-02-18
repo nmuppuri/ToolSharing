@@ -382,18 +382,19 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "select st.posted_student_id, t.*, od.return_date, od.rating,\n" +
-                         "DATEDIFF(coalesce(od.return_date, current_date), current_date) available\n" +
-                        "from tools t left outer join student_tools st \n" +
-                        "on t.tool_id = st.posted_tool_id "
-                    + "left outer join order_details od\n" +
-                        "on st.posted_tool_id = od.posted_tool_id order by 1 desc,3";
+            String sql = "select st.posted_student_id, t.*, coalesce(od.return_date, ''), "
+                    + "coalesce(od.from_date, ''), od.rating, "
+                    + "DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill, "
+                    + "DATEDIFF(coalesce(od.return_date, current_date), current_date) availableIn "
+                    + "from tools t left outer join student_tools st on t.tool_id = st.posted_tool_id  "
+                    + "left outer join order_details od on st.posted_tool_id = od.posted_tool_id "
+                    + "order by 1 desc, 3";
             
             stm = con.prepareStatement(sql);            
             ResultSet rs = stm.executeQuery();
             
-            int psid, ptid, trating, available;
-            String rd, name, desc, img;
+            int psid, ptid, trating, availabletill, availablefrom;
+            String fd, rd, name, desc, img;
             if(rs.next() == true){
                 do{
                     psid = rs.getInt(1);
@@ -402,17 +403,21 @@ public class ToolSharing {
                     desc = rs.getString(4);
                     img = rs.getString(5);
                     rd = rs.getString(6);
-                    trating = rs.getInt(7);
-                    available = rs.getInt(8);
+                    fd = rs.getString(7);
+                    trating = rs.getInt(8);
+                    availabletill = rs.getInt(9);
+                    availablefrom = rs.getInt(10);
                     
                     childObj.accumulate("PostedStudentId", psid);
                     childObj.accumulate("PostedToolId", ptid);
                     childObj.accumulate("ToolName", name);                    
                     childObj.accumulate("ToolDesc", desc);
                     childObj.accumulate("ToolImg", img);
+                    childObj.accumulate("FromDate", fd);
                     childObj.accumulate("ReturnDate", rd);
                     childObj.accumulate("ToolRating", trating);
-                    childObj.accumulate("ToolAvailableInDays", available);
+                    childObj.accumulate("ToolAvailableTillInDays", availabletill);
+                    childObj.accumulate("ToolAvailableFromInDays", availablefrom);
                     jSONArray.add(childObj);  
                     childObj.clear();
                 }while(rs.next());
@@ -628,6 +633,115 @@ public class ToolSharing {
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** PROFILE INFO *************/
+    @GET
+    @Path("ProfileInfo&{id}")
+    @Produces("application/json")
+    public String getProfileInfo(@PathParam("id") int id) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** PROFILE INFO *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "select p.*, coalesce(p.address, '') addr from person p where id = ?";
+            
+            stm = con.prepareStatement(sql);  
+            stm.setInt(1,id);
+            ResultSet rs = stm.executeQuery();
+            
+            Long phone;
+            String pwd, fn, ln, addr;
+            if(rs.next() == true){
+                do{
+                    phone = rs.getLong(6);
+                    pwd = rs.getString(2);
+                    fn = rs.getString(3);
+                    ln = rs.getString(4);
+                    addr = rs.getString(9);
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("Message", "Success");
+                mainObj.accumulate("SchoolId", id);
+                mainObj.accumulate("Passwd", pwd);
+                mainObj.accumulate("FirstName", fn);
+                mainObj.accumulate("LastName", ln);
+                mainObj.accumulate("Address", addr);
+                mainObj.accumulate("Phone", phone);
+            } else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** UPDATE PROFILE *************/
+    @GET
+    @Path("UpdateProfile&{id}&{passwd}&{fname}&{lname}&{phone}&{addr}")
+    @Produces("application/json")
+    public String updateProfile(@PathParam("id") int id, @PathParam("passwd") String pwd, 
+            @PathParam("fname") String fname, @PathParam("lname") String lname,
+            @PathParam("phone") long phone,
+            @PathParam("addr") String addr) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** UPDATE PROFILE *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "update person\n" +
+                        "set passwd = ?,\n" +
+                        "first_name = ?,\n" +
+                        "last_name = ?,\n" +
+                        "phone = ?,\n" +
+                        "address = ?\n" +
+                        "where id = ?";
+            
+            stm = con.prepareStatement(sql);
+            stm.setInt(6, id);
+            stm.setString(1, pwd);
+            stm.setString(2, fname);
+            stm.setString(3, lname);
+            stm.setLong(4, phone);
+            stm.setString(5, addr);
+            stm.executeUpdate();
+            stm.close();
+
+            mainObj.accumulate("Status", "OK");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Changes Saved Successfully!");
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, ex);
             return getError(ex.toString(), 0, 0);
         } finally {
             closeConnection();
