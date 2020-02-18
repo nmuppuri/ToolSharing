@@ -31,6 +31,24 @@ public class StatusMessage_Pojo {
     @SerializedName("SearchToolsList")
     @Expose
     private List<SearchToolsList_Pojo> searchToolsList = null;
+    @SerializedName("SchoolId")
+    @Expose
+    private Integer schoolId;
+    @SerializedName("Passwd")
+    @Expose
+    private String passwd;
+    @SerializedName("FirstName")
+    @Expose
+    private String firstName;
+    @SerializedName("LastName")
+    @Expose
+    private String lastName;
+    @SerializedName("Address")
+    @Expose
+    private String address;
+    @SerializedName("Phone")
+    @Expose
+    private Long phone;
 
     public String getStatus() {
         return status;
@@ -94,6 +112,54 @@ public class StatusMessage_Pojo {
 
     public void setSearchToolsList(List<SearchToolsList_Pojo> searchToolsList) {
         this.searchToolsList = searchToolsList;
+    }
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getPasswd() {
+        return passwd;
+    }
+
+    public void setPasswd(String passwd) {
+        this.passwd = passwd;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Long phone) {
+        this.phone = phone;
     }
 
 }
