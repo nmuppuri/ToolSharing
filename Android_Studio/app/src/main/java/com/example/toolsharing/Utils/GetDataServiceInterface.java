@@ -53,4 +53,13 @@ public interface GetDataServiceInterface {
     @GET("MyToolsList&{psid}")
     Call<StatusMessage_Pojo> getMyTools(@Path("psid") int psid);
 
+
+    @GET("ProfileInfo&{id}")
+    Call<StatusMessage_Pojo> getProfileInfo(@Path("id") int id);
+
+
+    @GET("UpdateProfile&{id}&{passwd}&{fname}&{lname}&{phone}&{addr}")
+    Call<StatusMessage_Pojo> getUpdateProfile(@Path("id") int id, @Path("passwd") String pwd, @Path("fname") String fname,
+                                              @Path("lname") String lname, @Path("phone") long phone, @Path("addr") String addr);
+
 }
