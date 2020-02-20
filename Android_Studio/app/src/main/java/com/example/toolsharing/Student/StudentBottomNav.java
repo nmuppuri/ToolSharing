@@ -79,6 +79,13 @@ public class StudentBottomNav extends AppCompatActivity {
                 ft.replace(R.id.frag_stu, fragment);
                 fragment.setArguments(b);
                 ft.commit();
+            }else if(item.getItemId() == R.id.sbottom_message){
+                fragment = new Message();
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.frag_stu, fragment);
+                fragment.setArguments(b);
+                ft.commit();
             }
             return true;
         }

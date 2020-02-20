@@ -62,4 +62,12 @@ public interface GetDataServiceInterface {
     Call<StatusMessage_Pojo> getUpdateProfile(@Path("id") int id, @Path("passwd") String pwd, @Path("fname") String fname,
                                               @Path("lname") String lname, @Path("phone") long phone, @Path("addr") String addr);
 
+
+    @GET("MyMessages&{tsid}")
+    Call<StatusMessage_Pojo> getMyMessages(@Path("tsid") int tsid);
+
+
+    @GET("MessageDetails&{tsid}&{fsid}")
+    Call<StatusMessage_Pojo> getMyMessageDetails(@Path("tsid") int tsid, @Path("fsid") int fsid);
+
 }

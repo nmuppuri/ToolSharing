@@ -55,6 +55,7 @@ public class ToolDetailsNOrder extends Fragment {
     private String toDate;
     private Toolbar toolbar;
     private Button btn_td_borrow;
+    TextView tool_name_det;
 
     private DatePickerDialog.OnDateSetListener onDateSetListener;
     private DatePickerDialog.OnDateSetListener onDateSetListener1;
@@ -76,6 +77,9 @@ public class ToolDetailsNOrder extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        tool_name_det = view.findViewById(R.id.tool_name_det);
+        tool_name_det.setText(getArguments().getString("tN"));
 
         toolbar = view.findViewById(R.id.tool_det_toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

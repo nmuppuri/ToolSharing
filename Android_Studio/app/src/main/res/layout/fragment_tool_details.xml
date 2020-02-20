@@ -19,6 +19,7 @@
         app:navigationIcon="@drawable/ic_arrow_back_black_24dp">
 
         <TextView
+            android:id="@+id/tool_name_det"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"

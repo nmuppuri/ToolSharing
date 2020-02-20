@@ -49,6 +49,12 @@ public class StatusMessage_Pojo {
     @SerializedName("Phone")
     @Expose
     private Long phone;
+    @SerializedName("MyMessages")
+    @Expose
+    private List<MyMessages_Pojo> myMessages = null;
+    @SerializedName("MessageDetails")
+    @Expose
+    private List<MessageDetails_Pojo> messageDetails = null;
 
     public String getStatus() {
         return status;
@@ -161,5 +167,23 @@ public class StatusMessage_Pojo {
     public void setPhone(Long phone) {
         this.phone = phone;
     }
+
+    public List<MyMessages_Pojo> getMyMessages() {
+        return myMessages;
+    }
+
+    public void setMyMessages(List<MyMessages_Pojo> myMessages) {
+        this.myMessages = myMessages;
+    }
+
+    public List<MessageDetails_Pojo> getMessageDetails() {
+        return messageDetails;
+    }
+
+    public void setMessageDetails(List<MessageDetails_Pojo> messageDetails) {
+        this.messageDetails = messageDetails;
+    }
+
+
 
 }
