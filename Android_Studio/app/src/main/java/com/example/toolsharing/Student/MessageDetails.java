@@ -2,11 +2,16 @@ package com.example.toolsharing.Student;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +38,8 @@ public class MessageDetails extends Fragment {
     private ArrayList<MessageDetails_Pojo> messageDetails_pojos;
     Toolbar msg_det_toolbar;
     TextView fsid_msg_title;
+    EditText msg_det_text;
+    ImageButton btn_msg_det_text_send;
 
 
     @Override
@@ -59,6 +66,22 @@ public class MessageDetails extends Fragment {
 
 
         getMyMessageDetails(getArguments().getString("tsid"), getArguments().getString("fsid"));
+
+        msg_det_text = view.findViewById(R.id.msg_det_text);
+        btn_msg_det_text_send = view.findViewById(R.id.btn_msg_det_text_send);
+
+        btn_msg_det_text_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                if(!msg_det_text.getText().equals(null)){
+                    sendNewMessage(getArguments().getString("tsid"), getArguments().getString("fsid"), String.valueOf(msg_det_text.getText()));
+                    msg_det_text.getText().clear();
+                }
+            }
+        });
     }
 
     public void getMyMessageDetails(String tsid, String fsid)
@@ -80,40 +103,41 @@ public class MessageDetails extends Fragment {
                     messageDetailsRecylerAdapter = new MessageDetailsRecyclerAdapter(messageDetails_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
                     RecyclerView recyclerView = view.findViewById(R.id.recycler_message_details);
-                    //empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(messageDetailsRecylerAdapter);
 
-                    /*messageListRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //view.startAnimation(buttonClick);
-                            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                            int position = viewHolder.getAdapterPosition();
-
-                            int fsid = statusMessage_pojo.getMyMessages().get(position).getFromStudentId();
-                            String msg = statusMessage_pojo.getMyMessages().get(position).getMessage();
-
-                            System.out.println("URL FromStudent: " + fsid);
-                            System.out.println("URL Message: " + msg);
-
-
-
-                            FragmentManager fragmentManager = getFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            final MessageDetails messageDetails = new MessageDetails();
-                            fragmentTransaction.replace(R.id.frag_stu, messageDetails);
-                            fragmentTransaction.addToBackStack(null);
-                            //toolDetailsNOrder.setArguments(bundle);
-                            fragmentTransaction.commit();
-                        }
-                    });*/
-
                 }
-                else {
-                    //recyclerView.setVisibility(View.INVISIBLE);
-                    //empty_view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<StatusMessage_Pojo> call, Throwable t) {
+
+                System.out.println("URL Failure Called! :" + t.getMessage());
+
+            }
+        });
+    }
+
+    public void sendNewMessage(String tsid, String fsid, String message_text)
+    {
+        GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
+        Call<StatusMessage_Pojo> call = service.getNewMessage(Integer.parseInt(tsid), Integer.parseInt(fsid), message_text);
+
+        System.out.println("URL Tools: " + call);
+
+        call.enqueue(new Callback<StatusMessage_Pojo>() {
+            @Override
+            public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
+                final StatusMessage_Pojo statusMessage_pojo = response.body();
+                String status = statusMessage_pojo.getStatus();
+                System.out.println("URL Student recycler Called!: " + status);
+
+                if(!status.equalsIgnoreCase("error")) {
+                    Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
+                } else{
+                    Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
                 }
+                getMyMessageDetails(getArguments().getString("tsid"), getArguments().getString("fsid"));
             }
 
             @Override

@@ -6,10 +6,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,20 +29,18 @@ import retrofit2.Response;
 
 public class StudentOwned extends Fragment {
     private View view;
-    AddToolsListRecylerAdapter addToolsListRecylerAdapter;
-    private ToolsListRecylerAdapter toolsListRecylerAdapter;
+    ToolsListOwnedRecylerAdapter toolsListOwnedRecylerAdapter;
     private ArrayList<ToolsList_Pojo> toolsList_pojos;
     int position;
-    Toolbar toolbar;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_student_owned, container, false);
+        view = inflater.inflate(R.layout.fragment_student_owned, container, false);
 
-        String sid = getArguments().getString("SID");
-        //myToolList(Integer.parseInt(sid));
+        //String sid = getArguments().getString("SID");
         return view;
     }
 
@@ -49,9 +48,12 @@ public class StudentOwned extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        System.out.println("URL STUDENT OWNED: " + getArguments().getString("SID"));
+        myToolList(Integer.parseInt(getArguments().getString("SID")));
+
     }
 
-    public void myToolList(int psid)
+    public void myToolList(final int psid)
     {
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
         Call<StatusMessage_Pojo> call = service.getMyTools(psid);
@@ -67,33 +69,68 @@ public class StudentOwned extends Fragment {
 
                 if(!status.equalsIgnoreCase("error")) {
                     toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());
-                    toolsListRecylerAdapter = new ToolsListRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
+                    toolsListOwnedRecylerAdapter = new ToolsListOwnedRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-                    RecyclerView recyclerView = view.findViewById(R.id.recycler_student_owned);
+                    RecyclerView recyclerView = view.findViewById(R.id.recycler_student_owned_mytools);
                     //empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
-                    recyclerView.setAdapter(toolsListRecylerAdapter);
+                    recyclerView.setAdapter(toolsListOwnedRecylerAdapter);
 
-                    toolsListRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
+                    toolsListOwnedRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //view.startAnimation(buttonClick);
+                            view.startAnimation(buttonClick);
                             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                             int position = viewHolder.getAdapterPosition();
 
-                            String toolName = statusMessage_pojo.getToolsList().get(position).getToolName();
-                            String toolImg = statusMessage_pojo.getToolsList().get(position).getToolImg();
+                            int toolId = statusMessage_pojo.getToolsList().get(position).getToolId();
+                            int avail = statusMessage_pojo.getToolsList().get(position).getToolAvailability();
 
-                            System.out.println("URL toolName: " + toolName);
-                            System.out.println("URL toolImg: " + toolImg);
+                            System.out.println("URL toolName: " + toolId);
+                            System.out.println("URL toolImg: " + avail);
+                            System.out.println("URL toolImg: " + psid);
+                            if(avail == 0) {
+                                updateToolAvail(psid, toolId, 1);
+                            } else{
+                                updateToolAvail(psid, toolId, 0);
+                            }
                         }
                     });
 
                 }
-                else {
-                    //recyclerView.setVisibility(View.INVISIBLE);
-                    //empty_view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<StatusMessage_Pojo> call, Throwable t) {
+
+                System.out.println("URL Failure Called! :" + t.getMessage());
+
+            }
+        });
+    }
+
+    private void updateToolAvail(final int psid, int ptid, int avail) {
+
+        GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
+
+        Call<StatusMessage_Pojo> call = service.updateAvailMyTool(psid, ptid, avail);
+
+
+        call.enqueue(new Callback<StatusMessage_Pojo>() {
+            @Override
+            public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
+
+                StatusMessage_Pojo statusMessage_pojo = response.body();
+                String status = statusMessage_pojo.getStatus();
+                System.out.println("URL Status Called!: " + status);
+
+                if(status.equalsIgnoreCase("error")){
+                    Toast.makeText(getActivity().getApplicationContext(),"Error!!", Toast.LENGTH_LONG).show();
+                }else{
+                    myToolList(psid);
+                    Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
                 }
+
             }
 
             @Override

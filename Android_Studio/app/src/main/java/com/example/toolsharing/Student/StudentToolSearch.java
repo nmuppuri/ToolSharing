@@ -125,8 +125,96 @@ public class StudentToolSearch extends Fragment {
                             String toolName = statusMessage_pojo.getSearchToolsList().get(position).getToolName();
                             String toolImg = statusMessage_pojo.getSearchToolsList().get(position).getToolImg();
                             String toolDesc = statusMessage_pojo.getSearchToolsList().get(position).getToolDesc();
+                            //String fromdate = statusMessage_pojo.getSearchToolsList().get(position).getFromDate().toString();
+                            float trating = statusMessage_pojo.getSearchToolsList().get(position).getToolRating();
+                            int availableFromInDays = statusMessage_pojo.getSearchToolsList().get(position).getToolAvailableFromInDays();
+                            int availableTillInDays = statusMessage_pojo.getSearchToolsList().get(position).getToolAvailableTillInDays();
+                            int availability = statusMessage_pojo.getSearchToolsList().get(position).getToolAvailability();
+                            int fav = statusMessage_pojo.getSearchToolsList().get(position).getToolFavorite();
+
+
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("psId", String.valueOf(psid));
+                            bundle.putString("lsid", getArguments().getString("sId"));
+                            bundle.putString("tId", String.valueOf(toolId));
+                            bundle.putString("tN", toolName);
+                            bundle.putString("tImg", toolImg);
+                            bundle.putString("tD", toolDesc);
+                            bundle.putString("tr", String.valueOf(trating));
+                            bundle.putString("availF", String.valueOf(availableFromInDays));
+                            bundle.putString("availT", String.valueOf(availableTillInDays));
+                            bundle.putString("availability", String.valueOf(availability));
+                            bundle.putString("fav", String.valueOf(fav));
+                            //bundle.putString("fromDate", fromdate);
+
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            final ToolDetailsNOrder toolDetailsNOrder = new ToolDetailsNOrder();
+                            fragmentTransaction.replace(R.id.frag_stu, toolDetailsNOrder);
+                            fragmentTransaction.addToBackStack(null);
+                            toolDetailsNOrder.setArguments(bundle);
+                            fragmentTransaction.commit();
+
+                            System.out.println("URL psid: " + psid);
+                            System.out.println("URL toolImg: " + toolImg);
+                        }
+                    });
+
+                }
+                else {
+                    //recyclerView.setVisibility(View.INVISIBLE);
+                    //empty_view.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StatusMessage_Pojo> call, Throwable t) {
+
+                System.out.println("URL Failure Called! :" + t.getMessage());
+
+            }
+        });
+    }
+
+    private void resetReturnFromDates()
+    {
+        service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
+        Call<StatusMessage_Pojo> call = service.getSearchTools();
+
+        System.out.println("URL Tools: " + call);
+
+        call.enqueue(new Callback<StatusMessage_Pojo>() {
+            @Override
+            public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
+                final StatusMessage_Pojo statusMessage_pojo = response.body();
+                String status = statusMessage_pojo.getStatus();
+                System.out.println("URL Student recycler Called!: " + status);
+
+                if(!status.equalsIgnoreCase("error")) {
+                    searchToolsList_pojos = new ArrayList<>(statusMessage_pojo.getSearchToolsList());
+                    toolsListSearchRecylerAdapter = new ToolsListSearchRecylerAdapter(searchToolsList_pojos, getActivity().getApplicationContext());
+                    @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
+                    recyclerView = getView().findViewById(R.id.recycler_student_search);
+                    //empty_view.setVisibility(View.GONE);
+                    recyclerView.setLayoutManager(linearLayout);
+                    //toolsListSearchRecylerAdapter.getFilter().filter(s);
+                    recyclerView.setAdapter(toolsListSearchRecylerAdapter);
+
+                    toolsListSearchRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //view.startAnimation(buttonClick);
+                            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                            int position = viewHolder.getAdapterPosition();
+
+                            int psid = statusMessage_pojo.getSearchToolsList().get(position).getPostedStudentId();
+                            int toolId = statusMessage_pojo.getSearchToolsList().get(position).getPostedToolId();
+                            String toolName = statusMessage_pojo.getSearchToolsList().get(position).getToolName();
+                            String toolImg = statusMessage_pojo.getSearchToolsList().get(position).getToolImg();
+                            String toolDesc = statusMessage_pojo.getSearchToolsList().get(position).getToolDesc();
                             String fromdate = statusMessage_pojo.getSearchToolsList().get(position).getFromDate().toString();
-                            int trating = statusMessage_pojo.getSearchToolsList().get(position).getToolRating();
+                            float trating = statusMessage_pojo.getSearchToolsList().get(position).getToolRating();
                             int availableFromInDays = statusMessage_pojo.getSearchToolsList().get(position).getToolAvailableFromInDays();
                             int availableTillInDays = statusMessage_pojo.getSearchToolsList().get(position).getToolAvailableTillInDays();
 

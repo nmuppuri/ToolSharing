@@ -2,13 +2,16 @@ package com.example.toolsharing.Student;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,7 +41,7 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
     @Override
     public Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_student_tool_search,parent,false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_student_tool_search,parent,false);
         return new Viewholder(view);
     }
 
@@ -48,13 +51,22 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
         Glide.with(c).asBitmap().load(searchToolsList.get(position).getToolImg()).into(holder.tool_img);
         holder.tool_name.setText(searchToolsList.get(position).getToolName());
 
-        if(String.valueOf(searchToolsList.get(position).getPostedStudentId()).trim().equals("0")){
+        holder.ts_rat.getProgressDrawable().setColorFilter(Color.parseColor("#FCB637"), PorterDuff.Mode.SRC_ATOP);
+        holder.ts_rat.setRating(searchToolsList.get(position).getToolRating());
+        if(String.valueOf(searchToolsList.get(position).getToolFavorite()).trim().equals("1")){
+            holder.btn_add_fav.setBackgroundResource(R.drawable.ic_turned_in_black_24dp);
+        }
+
+        if(String.valueOf(searchToolsList.get(position).getPostedStudentId()).trim().equals("0") || String.valueOf(searchToolsList.get(position).getToolAvailability()).trim().equals("0")){
             holder.ts_sid.setText("_ _");
             holder.ts_avail.setBackgroundResource(R.drawable.ic_highlight_off_black_24dp);
             System.out.println("URL name sid: " + searchToolsList.get(position).getToolName() + " : " + searchToolsList.get(position).getPostedStudentId());
 
             view.setFocusable(false);
-        } else {
+        } else if(searchToolsList.get(position).getToolAvailableFromInDays() > 0){
+            holder.ts_avail.setBackgroundResource(R.drawable.ic_remove_circle_black_24dp);
+            holder.ts_sid.setText(String.valueOf(searchToolsList.get(position).getPostedStudentId()));
+        } else{
             holder.ts_avail.setBackgroundResource(R.drawable.ic_check_circle_black_24dp);
             holder.ts_sid.setText(String.valueOf(searchToolsList.get(position).getPostedStudentId()));
         }
@@ -75,6 +87,8 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
         ImageView tool_img;
         TextView tool_name, ts_sid;
         Button ts_avail;
+        ImageButton btn_add_fav;
+        RatingBar ts_rat;
 
         Viewholder(@NonNull View itemView) {
             super(itemView);
@@ -83,6 +97,8 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
             tool_name = itemView.findViewById(R.id.tool_name);
             ts_sid = itemView.findViewById(R.id.ts_sid);
             ts_avail = itemView.findViewById(R.id.ts_avail);
+            btn_add_fav = itemView.findViewById(R.id.btn_add_favorite);
+            ts_rat = itemView.findViewById(R.id.ts_rat);
 
             itemView.setTag(this);
             itemView.setOnClickListener(onClickListener);

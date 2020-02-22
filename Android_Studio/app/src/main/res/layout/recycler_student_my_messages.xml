@@ -82,7 +82,7 @@
                             android:layout_marginEnd="10dp"
                             android:text="Time"
                             android:textColor="#DA2B2B2B"
-                            android:textSize="20sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>

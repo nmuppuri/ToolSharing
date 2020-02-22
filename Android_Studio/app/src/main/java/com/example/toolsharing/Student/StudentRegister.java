@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +42,7 @@ public class StudentRegister extends Fragment {
     private String semail1;
     private Toolbar toolbar;
     private View view;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -93,6 +95,7 @@ public class StudentRegister extends Fragment {
         btn_s_req.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(buttonClick);
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 

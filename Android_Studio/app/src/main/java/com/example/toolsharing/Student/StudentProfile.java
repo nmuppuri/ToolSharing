@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class StudentProfile extends Fragment {
     private Button btn_stu_pro_update, btn_stu_pro_delete;
 
     private String pwd1, fn, ln, addr, phn, pwd;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -171,6 +173,7 @@ public class StudentProfile extends Fragment {
         btn_stu_pro_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(buttonClick);
                 System.out.println("URL fn: " + fn);
                 System.out.println("URL ln: " + ln);
                 System.out.println("URL addr: " + addr);

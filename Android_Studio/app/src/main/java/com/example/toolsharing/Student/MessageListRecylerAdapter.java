@@ -35,7 +35,7 @@ public class MessageListRecylerAdapter extends RecyclerView.Adapter<MessageListR
     @Override
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
         holder.sent_sid.setText(String.valueOf(myMessagesPojo.get(position).getFromStudentId()));
-        holder.sent_time.setText(myMessagesPojo.get(position).getSentDate());
+        holder.sent_time.setText(String.valueOf(myMessagesPojo.get(position).getSentDate()));
         if(myMessagesPojo.get(position).getMessage().length() > 20) {
             holder.msg_text.setText(myMessagesPojo.get(position).getMessage().substring(0, 19) + " ....");
         } else {

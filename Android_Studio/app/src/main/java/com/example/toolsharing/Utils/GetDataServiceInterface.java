@@ -54,6 +54,34 @@ public interface GetDataServiceInterface {
     Call<StatusMessage_Pojo> getMyTools(@Path("psid") int psid);
 
 
+    @GET("UpdateMyToolAvail&{psid}&{ptid}&{avail}")
+    Call<StatusMessage_Pojo> updateAvailMyTool(@Path("psid") int psid, @Path("ptid") int ptid, @Path("avail") int avail);
+
+
+    @GET("BorrowedToolsList&{bsid}")
+    Call<StatusMessage_Pojo> getborrowedToolList(@Path("bsid") int bsid);
+
+
+    @GET("BorrowToolReturn&{bsid}&{ptid}")
+    Call<StatusMessage_Pojo> returnBorrowTool(@Path("bsid") int bsid, @Path("ptid") int ptid);
+
+
+    @GET("UpdateRating&{psid}&{ptid}&{rating}")
+    Call<StatusMessage_Pojo> updateToolRat(@Path("psid") int psid, @Path("ptid") int ptid, @Path("rating") String tool_rating);
+
+
+    @GET("AddFavoriteTools&{psid}&{ptid}&{lsid}")
+    Call<StatusMessage_Pojo> addFavoriteTools(@Path("psid") int psid, @Path("ptid") int ptid, @Path("lsid") int lsid);
+
+
+    @GET("FavoriteList&{lsid}")
+    Call<StatusMessage_Pojo> favoriteTools(@Path("lsid") int lsid);
+
+
+    @GET("RemoveFavorite&{psid}&{ptid}&{lsid}")
+    Call<StatusMessage_Pojo> removeFavoriteTools(@Path("psid") int psid, @Path("ptid") int ptid, @Path("lsid") int lsid);
+
+
     @GET("ProfileInfo&{id}")
     Call<StatusMessage_Pojo> getProfileInfo(@Path("id") int id);
 
@@ -69,5 +97,9 @@ public interface GetDataServiceInterface {
 
     @GET("MessageDetails&{tsid}&{fsid}")
     Call<StatusMessage_Pojo> getMyMessageDetails(@Path("tsid") int tsid, @Path("fsid") int fsid);
+
+
+    @GET("NewMessage&{fsid}&{tsid}&{message}")
+    Call<StatusMessage_Pojo> getNewMessage(@Path("fsid") int fsid, @Path("tsid") int tsid, @Path("message") String message_text);
 
 }

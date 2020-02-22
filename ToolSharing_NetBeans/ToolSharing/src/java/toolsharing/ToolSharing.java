@@ -30,6 +30,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import static org.apache.commons.lang.StringUtils.trim;
 
 
 @Path("final")
@@ -382,18 +383,24 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "select st.posted_student_id, t.*, coalesce(od.return_date, ''), "
-                    + "coalesce(od.from_date, ''), od.rating, "
-                    + "DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill, "
-                    + "DATEDIFF(coalesce(od.return_date, current_date), current_date) availableIn "
-                    + "from tools t left outer join student_tools st on t.tool_id = st.posted_tool_id  "
-                    + "left outer join order_details od on st.posted_tool_id = od.posted_tool_id "
-                    + "order by 1 desc, 3";
+            String sql = "select st.posted_student_id, t.*, od.return_date, od.from_date, st.rating,\n" +
+                "DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,\n" +
+                "DATEDIFF(coalesce(od.return_date, current_date), current_date) availableIn,\n" +
+                "st.availability, f.favorite\n" +
+                "from student_tools st left outer join order_details od on od.posted_student_id = st.posted_student_id\n" +
+                "and st.posted_tool_id = od.posted_tool_id\n" +
+                "right outer join tools t\n" +
+                "on st.posted_tool_id = t.tool_id\n" +
+                "left outer join favorites f\n" +
+                "on f.posted_tool_id = t.tool_id\n" +
+                "and f.posted_student_id = st.posted_student_id\n" +
+                "order by tool_name";
             
-            stm = con.prepareStatement(sql);            
+            stm = con.prepareStatement(sql);           
             ResultSet rs = stm.executeQuery();
             
-            int psid, ptid, trating, availabletill, availablefrom;
+            int psid, ptid, availabletill, availablefrom, availability, fav;
+            float trating;
             String fd, rd, name, desc, img;
             if(rs.next() == true){
                 do{
@@ -402,11 +409,20 @@ public class ToolSharing {
                     name = rs.getString(3);
                     desc = rs.getString(4);
                     img = rs.getString(5);
-                    rd = rs.getString(6);
+                    rd = rs.getString(6);                        
+                    System.out.println("return date: " + rd);
                     fd = rs.getString(7);
-                    trating = rs.getInt(8);
+                    trating = rs.getFloat(8);
                     availabletill = rs.getInt(9);
                     availablefrom = rs.getInt(10);
+                    if(availablefrom < 0){
+                        String sql1 = "delete from order_details where return_date < current_date";
+                        PreparedStatement stm1 = con.prepareStatement(sql1);
+                        stm1.executeUpdate();
+                        stm1.close();
+                    }
+                    availability = rs.getInt(11);
+                    fav = rs.getInt(12);
                     
                     childObj.accumulate("PostedStudentId", psid);
                     childObj.accumulate("PostedToolId", ptid);
@@ -418,6 +434,8 @@ public class ToolSharing {
                     childObj.accumulate("ToolRating", trating);
                     childObj.accumulate("ToolAvailableTillInDays", availabletill);
                     childObj.accumulate("ToolAvailableFromInDays", availablefrom);
+                    childObj.accumulate("ToolAvailability", availability);
+                    childObj.accumulate("ToolFavorite", fav);
                     jSONArray.add(childObj);  
                     childObj.clear();
                 }while(rs.next());
@@ -558,7 +576,7 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "INSERT INTO student_tools(posted_student_id, posted_tool_id) VALUES (?, ?)";
+            String sql = "INSERT INTO student_tools(posted_student_id, posted_tool_id, availability) VALUES (?, ?, 1)";
 
             stm = con.prepareStatement(sql);
             stm.setInt(1, psid);
@@ -591,20 +609,20 @@ public class ToolSharing {
     public String getMyToolsList(@PathParam("psid") int psid) {
         //TODO return proper representation object
            
-        System.out.println("/********** TOOLS LIST *************/");
+        System.out.println("/********** MY TOOLS LIST *************/");
         
         try {
             createConnection();
 
-            String sql = "select * from tools "
-                    + "where tool_id in (select posted_tool_id from student_tools "
-                    + "where posted_student_id = ?) order by 2";
+            String sql = "select * from tools t inner join student_tools st"
+                    + " on t.tool_id = st.posted_tool_id\n" +
+                        "where st.posted_student_id = ? order by 2";
             
             stm = con.prepareStatement(sql);  
             stm.setInt(1,psid);
             ResultSet rs = stm.executeQuery();
             
-            int id;
+            int id, avail;
             String name, desc, img;
             if(rs.next() == true){
                 do{
@@ -612,11 +630,13 @@ public class ToolSharing {
                     name = rs.getString(2);
                     desc = rs.getString(3);
                     img = rs.getString(4);
+                    avail = rs.getInt(7);
                     
                     childObj.accumulate("ToolId", id);
                     childObj.accumulate("ToolName", name);                    
                     childObj.accumulate("ToolDesc", desc);
                     childObj.accumulate("ToolImg", img);
+                    childObj.accumulate("ToolAvailability", avail);
                     jSONArray.add(childObj);  
                     childObj.clear();
                 }while(rs.next());
@@ -627,6 +647,369 @@ public class ToolSharing {
             } else{
                 getError("None", 0, 0);                
             }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** UPDATE MY TOOLS AVAILABILITY *************/
+    @GET
+    @Path("UpdateMyToolAvail&{psid}&{ptid}&{avail}")
+    @Produces("application/json")
+    public String getUpdateMyToolAvail(@PathParam("psid") int psid,
+            @PathParam("ptid") int ptid, @PathParam("avail") int avail) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** UPDATE MY TOOLS AVAILABILITY *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "update student_tools\n" +
+                        "set availability = ?\n" +
+                        "where posted_student_id = ?\n" +
+                        "and posted_tool_id = ?";
+            
+            stm = con.prepareStatement(sql);  
+            stm.setInt(3,ptid);
+            stm.setInt(2,psid);
+            stm.setInt(1,avail);
+            stm.executeUpdate();
+                
+            mainObj.accumulate("Status", "Ok");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Updated Successfully!");
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** BORROWED TOOLS LIST *************/
+    @GET
+    @Path("BorrowedToolsList&{bsid}")
+    @Produces("application/json")
+    public String getBorrowedToolsList(@PathParam("bsid") int bsid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** BORROWED TOOLS LIST *************/");
+        
+        try {
+            createConnection();
+
+            /*String sql = "select * from tools t inner join order_details od\n" +
+                        "on od.posted_tool_id = t.tool_id\n" +
+                        "where borrowed_student_id = ?";*/
+            String sql = "select t.*, od.*, st.rating from tools t inner join order_details od\n" +
+                "on od.posted_tool_id = t.tool_id\n" +
+                "left outer join student_tools st\n" +
+                "on st.posted_tool_id = t.tool_id\n" +
+                "and od.posted_student_id = st.posted_student_id\n" +
+                "where borrowed_student_id = ?";
+            
+            stm = con.prepareStatement(sql);  
+            stm.setInt(1,bsid);
+            ResultSet rs = stm.executeQuery();
+            
+            int id, psid;
+            float rating;
+            String name, desc, img, return_date;
+            if(rs.next() == true){
+                do{
+                    id = rs.getInt(1);
+                    psid = rs.getInt(6);
+                    name = rs.getString(2);
+                    desc = rs.getString(3);
+                    img = rs.getString(4);
+                    return_date = rs.getString(10);
+                    rating = rs.getFloat(11);
+                    
+                    childObj.accumulate("ToolId", id);
+                    childObj.accumulate("ToolName", name);                    
+                    childObj.accumulate("ToolDesc", desc);
+                    childObj.accumulate("ToolImg", img);
+                    childObj.accumulate("ReturnDate", return_date);
+                    childObj.accumulate("ToolRating", rating);
+                    childObj.accumulate("PostedStudentId", psid);
+                    jSONArray.add(childObj);  
+                    childObj.clear();
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("ToolsList", jSONArray);
+            } else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** BORROW TOOL RETURN *************/
+    @GET
+    @Path("BorrowToolReturn&{bsid}&{ptid}")
+    @Produces("application/json")
+    public String getBorrowToolReturn(@PathParam("bsid") int bsid,
+            @PathParam("ptid") int ptid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** BORROW TOOL RETURN *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "delete from order_details "
+                    + "where posted_tool_id = ? and borrowed_student_id = ?";
+            
+            stm = con.prepareStatement(sql);  
+            stm.setInt(2,bsid);
+            stm.setInt(1,ptid);
+            stm.executeUpdate();
+                
+            mainObj.accumulate("Status", "Ok");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Returned Successfully!");
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** UPDATE RATING *************/
+    @GET
+    @Path("UpdateRating&{psid}&{ptid}&{rating}")
+    @Produces("application/json")
+    public String getUpdateRating(@PathParam("psid") int psid
+            , @PathParam("ptid") int ptid, @PathParam("rating") String rating) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** UPDATE RATING *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "update student_tools\n" +
+                "set rating = ?\n" +
+                "where posted_student_id = ?\n" +
+                "and posted_tool_id = ?";
+
+            stm = con.prepareStatement(sql);
+            stm.setInt(2, psid);
+            stm.setInt(3, ptid);
+            stm.setFloat(1, Float.parseFloat(rating));
+            stm.executeUpdate();
+                
+            mainObj.accumulate("Status", "Ok");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Thanks for rating!");                          
+            
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** ADD FAVORITE TOOLS *************/
+    @GET
+    @Path("AddFavoriteTools&{psid}&{ptid}&{lsid}")
+    @Produces("application/json")
+    public String getAddFavoritesToolsList(@PathParam("psid") int psid
+            , @PathParam("ptid") int ptid, @PathParam("lsid") int lsid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** ADD FAVORITE TOOLS *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "INSERT INTO favorites(posted_student_id, posted_tool_id, logged_student_id, favorite) VALUES (?, ?, ?, 1)";
+
+            stm = con.prepareStatement(sql);
+            stm.setInt(1, psid);
+            stm.setInt(2, ptid);
+            stm.setInt(3, lsid);
+            stm.executeUpdate();
+                
+            mainObj.accumulate("Status", "Ok");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Tool Added to Favorites!");                          
+            
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    /********** FAVORITE LIST *************/
+    @GET
+    @Path("FavoriteList&{lsid}")
+    @Produces("application/json")
+    public String getFavoriteList(@PathParam("lsid") int lsid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** FAVORITE LIST *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "select st.posted_student_id, t.*, od.return_date, od.from_date, st.rating,\n" +
+                "DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,\n" +
+                "DATEDIFF(coalesce(od.return_date, current_date), current_date) availableIn,\n" +
+                "st.availability, f.favorite\n" +
+                "from student_tools st left outer join order_details od on od.posted_student_id = st.posted_student_id\n" +
+                "and st.posted_tool_id = od.posted_tool_id\n" +
+                "right outer join tools t\n" +
+                "on st.posted_tool_id = t.tool_id\n" +
+                "left outer join favorites f\n" +
+                "on f.posted_tool_id = t.tool_id\n" +
+                "and f.posted_student_id = st.posted_student_id\n" +
+                "where f.favorite = 1 and f.logged_student_id = ? "
+                    + "order by tool_name ";
+            
+            stm = con.prepareStatement(sql); 
+            stm.setInt(1, lsid);
+            ResultSet rs = stm.executeQuery();
+            
+            int psid, ptid, availabletill, availablefrom, availability, fav;
+            float trating;
+            String fd, rd, name, desc, img;
+            if(rs.next() == true){
+                do{
+                    psid = rs.getInt(1);
+                    ptid = rs.getInt(2);
+                    name = rs.getString(3);
+                    desc = rs.getString(4);
+                    img = rs.getString(5);
+                    rd = rs.getString(6);                        
+                    System.out.println("return date: " + rd);
+                    fd = rs.getString(7);
+                    trating = rs.getFloat(8);
+                    availabletill = rs.getInt(9);
+                    availablefrom = rs.getInt(10);
+                    availability = rs.getInt(11);
+                    fav = rs.getInt(12);
+                    
+                    childObj.accumulate("PostedStudentId", psid);
+                    childObj.accumulate("PostedToolId", ptid);
+                    childObj.accumulate("ToolName", name);                    
+                    childObj.accumulate("ToolDesc", desc);
+                    childObj.accumulate("ToolImg", img);
+                    childObj.accumulate("FromDate", fd);
+                    childObj.accumulate("ReturnDate", rd);
+                    childObj.accumulate("ToolRating", trating);
+                    childObj.accumulate("ToolAvailableTillInDays", availabletill);
+                    childObj.accumulate("ToolAvailableFromInDays", availablefrom);
+                    childObj.accumulate("ToolAvailability", availability);
+                    childObj.accumulate("ToolFavorite", fav);
+                    jSONArray.add(childObj);  
+                    childObj.clear();
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("SearchToolsList", jSONArray);
+            } else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    /********** REMOVE FAVORITE *************/
+    @GET
+    @Path("RemoveFavorite&{psid}&{ptid}&{lsid}")
+    @Produces("application/json")
+    public String getRemoveFavorite(@PathParam("psid") int psid,
+            @PathParam("ptid") int ptid, @PathParam("lsid") int lsid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** REMOVE FAVORITE *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "delete from favorites where "
+                    + "posted_student_id = ? and "
+                    + "posted_tool_id = ? and "
+                    + "logged_student_id = ?";
+
+            stm = con.prepareStatement(sql);
+            
+            stm.setInt(1, psid);
+            stm.setInt(2, ptid);
+            stm.setInt(3, lsid);
+            stm.executeUpdate();
+                
+            mainObj.accumulate("Status", "Ok");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Tool Removed from Favorites!"); 
+            
 
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
@@ -751,9 +1134,200 @@ public class ToolSharing {
     }
     
     
+    /********** NEW MESSAGE *************/
+    @GET
+    @Path("NewMessage&{fsid}&{tsid}&{message}")
+    @Produces("application/json")
+    public String getNewMessage(@PathParam("fsid") int fsid, @PathParam("tsid") int tsid, 
+            @PathParam("message") String message) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** NEW MESSAGE *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "INSERT INTO message(message, sent_date, from_student_id) "
+                    + "VALUES (?, CURRENT_TIMESTAMP, ?)";
+            String sql1 = "INSERT INTO message_recepient (message_id, to_student_id)"
+                    + " VALUES ((select message_id from message "
+                    + "where sent_date in (select max(sent_date) from message "
+                    + "where from_student_id = ?)), ?)";
+
+            stm = con.prepareStatement(sql);
+            stm.setString(1, message);
+            stm.setInt(2, fsid);
+            stm.executeUpdate();
+            stm.close();
+
+            stm = con.prepareStatement(sql1);
+            stm.setInt(1, fsid);
+            stm.setInt(2, tsid);
+            stm.executeUpdate();
+            stm.close();
+
+            mainObj.accumulate("Status", "OK");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Message sent!");
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** MY Messages *************/
+    @GET
+    @Path("MyMessages&{sid}")
+    @Produces("application/json")
+    public String getMyMessages(@PathParam("sid") int sid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** MY Messages *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "select m.message_id, m.message, "
+                    + "m.from_student_id, mr.to_student_id, m.sent_date "
+                    + "from message m inner join message_recepient mr "
+                    + "on m.message_id = mr.message_id "
+                    + "where sent_date in (select max(sent_date) "
+                    + "from message m inner join message_recepient mr "
+                    + "on m.message_id = mr.message_id "
+                    + "group by m.from_student_id, mr.to_student_id "
+                    + "having to_student_id = ? "
+                    + ") order by sent_date desc";
+            
+            stm = con.prepareStatement(sql);  
+            stm.setInt(1,sid);
+            //stm.setInt(2,sid);
+            ResultSet rs = stm.executeQuery();
+            
+            int message_id, from_student_id, to_student_id;
+            String message, sent_date;
+            if(rs.next() == true){
+                do{
+                    message_id = rs.getInt("message_id");
+                    from_student_id = rs.getInt("from_student_id");
+                    to_student_id = rs.getInt("to_student_id");
+                    message = rs.getString("message");
+                    sent_date = rs.getString("sent_date");
+                    
+                    childObj.accumulate("MessageId", message_id);
+                    childObj.accumulate("FromStudentId", from_student_id);                    
+                    childObj.accumulate("Message", message);
+                    childObj.accumulate("SentDate", sent_date);
+                    childObj.accumulate("ToStudentId", to_student_id);
+                    jSONArray.add(childObj);  
+                    childObj.clear();
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("MyMessages", jSONArray);
+            } else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** MessageDetails *************/
+    @GET
+    @Path("MessageDetails&{tsid}&{fsid}")
+    @Produces("application/json")
+    public String getMessageDetails(@PathParam("tsid") int tsid, @PathParam("fsid") int fsid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** MessageDetails *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "select m.message_id, m.message, "
+                    + "m.from_student_id, mr.to_student_id "
+                    + "from message m inner join message_recepient mr "
+                    + "on m.message_id = mr.message_id "
+                    + "where mr.to_student_id = ? "
+                    + "and m.from_student_id = ? "
+                    + "or mr.to_student_id = ? "
+                    + "and m.from_student_id = ? "
+                    + "order by sent_date";
+            
+            stm = con.prepareStatement(sql);  
+            stm.setInt(1,tsid);
+            stm.setInt(2,fsid);
+            stm.setInt(3,fsid);
+            stm.setInt(4,tsid);
+            ResultSet rs = stm.executeQuery();
+            
+            int message_id, from_student_id, to_student_id;
+            String message, id;
+            if(rs.next() == true){
+                do{
+                    message_id = rs.getInt("message_id");
+                    from_student_id = rs.getInt("from_student_id");
+                    to_student_id = rs.getInt("to_student_id");
+                    message = rs.getString("message");
+                    //id = rs.getString("id");
+                    
+                    childObj.accumulate("MDMessageId", message_id);
+                    childObj.accumulate("MDFromStudentId", from_student_id);                    
+                    childObj.accumulate("MDMessage", message);
+                    //childObj.accumulate("MDId", id);
+                    childObj.accumulate("MDToStudentId", to_student_id);
+                    jSONArray.add(childObj);  
+                    childObj.clear();
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("MessageDetails", jSONArray);
+            } else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /****************** CREATE CONNECTION ************************/
     
     private static void createConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
+        //Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         con = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/toolsharing?autoReconnect=true&useSSL=false",
                 "root", "naren");

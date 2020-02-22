@@ -2,11 +2,16 @@ package com.example.toolsharing.Student;
 
 
 import android.app.DatePickerDialog;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
@@ -47,6 +52,7 @@ public class ToolDetailsNOrder extends Fragment {
     private RatingBar td_rat;
     private ImageButton btn_td_sd;
     private ImageButton btn_td_ed;
+    CheckBox btn_favorite;
     private View view;
     private String psid;
     private String bsid;
@@ -56,6 +62,7 @@ public class ToolDetailsNOrder extends Fragment {
     private Toolbar toolbar;
     private Button btn_td_borrow;
     TextView tool_name_det;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
 
     private DatePickerDialog.OnDateSetListener onDateSetListener;
     private DatePickerDialog.OnDateSetListener onDateSetListener1;
@@ -100,6 +107,28 @@ public class ToolDetailsNOrder extends Fragment {
         td_ed = view.findViewById(R.id.td_ed);
         btn_td_sd = view.findViewById(R.id.btn_td_sd);
         btn_td_ed = view.findViewById(R.id.btn_td_ed);
+        btn_favorite = view.findViewById(R.id.btn_favorite);
+
+        if(getArguments().getString("fav").trim().equals("1")){
+            btn_favorite.setChecked(true);
+            btn_favorite.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#D88F04")));
+        }
+        btn_favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(btn_favorite.isChecked()){
+                    btn_favorite.setChecked(true);
+                    btn_favorite.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#D88F04")));
+                    addFavorites(Integer.parseInt(getArguments().getString("psId")), Integer.parseInt(getArguments().getString("tId")), Integer.parseInt(getArguments().getString("lsid")));
+                } else{
+                    btn_favorite.setChecked(false);
+                    btn_favorite.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#6F6F6F")));
+                    removeFavorites(Integer.parseInt(getArguments().getString("psId")), Integer.parseInt(getArguments().getString("tId")), Integer.parseInt(getArguments().getString("lsid")));
+                }
+            }
+        });
+
+
 
         if (getArguments() != null) {
             tid = getArguments().getString("tId", "NULL");
@@ -111,15 +140,16 @@ public class ToolDetailsNOrder extends Fragment {
             //td_img.setText(getArguments().getString("tImg", "NULL"));
             td_desc.setText(getArguments().getString("tD", "NULL"));
             //td_rat.setText(getArguments().getString("tr", "NULL"));
-            td_avail.setText(getArguments().getString("availT", "NULL") + " days");
+            td_avail.setText(getArguments().getString("availF", "NULL") + " days");
             Glide.with(getContext()).asBitmap().load(getArguments().getString("tImg", "NULL")).into(td_img);
         }
-        td_rat.setMax(5);
-        td_rat.setRating(Integer.parseInt(getArguments().getString("tr")));
+        td_rat.getProgressDrawable().setColorFilter(Color.parseColor("#B97D05"), PorterDuff.Mode.SRC_ATOP);
+        td_rat.setRating(Float.parseFloat(getArguments().getString("tr")));
 
         btn_td_sd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(buttonClick);
                 fDate = null;
                 selectDate(onDateSetListener);
             }
@@ -128,6 +158,7 @@ public class ToolDetailsNOrder extends Fragment {
         btn_td_ed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(buttonClick);
                 selectDate(onDateSetListener1);
             }
         });
@@ -171,14 +202,31 @@ public class ToolDetailsNOrder extends Fragment {
         };
 
         btn_td_borrow = view.findViewById(R.id.btn_td_borrow);
-        if(psid.trim().equalsIgnoreCase("0")) {
+        if(psid.trim().equalsIgnoreCase("0") || getArguments().getString("availability").equals("0")) {
             btn_td_borrow.setEnabled(false);
             btn_td_borrow.setText("Not Available");
+            btn_td_ed.setEnabled(false);
+            btn_td_sd.setEnabled(false);
             btn_td_borrow.setBackgroundResource(R.drawable.round_button_disable);
+        } else if(psid.trim().equals(getArguments().getString("lsid"))){
+            btn_favorite.setEnabled(false);
+            btn_td_borrow.setEnabled(false);
+            btn_td_ed.setEnabled(false);
+            btn_td_sd.setEnabled(false);
+            btn_td_borrow.setBackgroundResource(R.drawable.round_button_disable);
+
+        }
+
+        if(Integer.parseInt(getArguments().getString("availF")) > 0 /*&& Integer.parseInt(getArguments().getString("availT")) <= 0*/) {
+            btn_td_borrow.setEnabled(false);
+            btn_td_borrow.setBackgroundResource(R.drawable.round_button_disable);
+            btn_td_ed.setEnabled(false);
+            btn_td_sd.setEnabled(false);
         }
         btn_td_borrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.startAnimation(buttonClick);
                 if(td_sd.getText().toString().isEmpty() || td_ed.getText().toString().isEmpty()){
                     Toast.makeText(getActivity().getApplicationContext(), "Please Enter All Details!", Toast.LENGTH_LONG).show();
                 } else{
@@ -226,6 +274,74 @@ public class ToolDetailsNOrder extends Fragment {
 
                 if(status.equalsIgnoreCase("error")){
                     Toast.makeText(getActivity().getApplicationContext(),"Borrow Request Failed!!", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StatusMessage_Pojo> call, Throwable t) {
+
+                System.out.println("URL Failure Called! :" + t.getMessage());
+
+            }
+        });
+    }
+
+    private void addFavorites(int psid, int ptid, int lsid)
+    {
+
+        GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
+
+        Call<StatusMessage_Pojo> call = service.addFavoriteTools(psid, ptid, lsid);
+
+        System.out.println("URL: " + call);
+
+        call.enqueue(new Callback<StatusMessage_Pojo>() {
+            @Override
+            public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
+
+
+                StatusMessage_Pojo statusMessage_pojo = response.body();
+                String status = statusMessage_pojo.getStatus();
+                System.out.println("URL Status Called!: " + status);
+
+                if(status.equalsIgnoreCase("error")){
+                    Toast.makeText(getActivity().getApplicationContext(),"Error", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StatusMessage_Pojo> call, Throwable t) {
+
+                System.out.println("URL Failure Called! :" + t.getMessage());
+
+            }
+        });
+    }
+
+    private void removeFavorites(int psid, int ptid, int lsid)
+    {
+
+        GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
+
+        Call<StatusMessage_Pojo> call = service.removeFavoriteTools(psid, ptid, lsid);
+
+        System.out.println("URL: " + call);
+
+        call.enqueue(new Callback<StatusMessage_Pojo>() {
+            @Override
+            public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
+
+
+                StatusMessage_Pojo statusMessage_pojo = response.body();
+                String status = statusMessage_pojo.getStatus();
+                System.out.println("URL Status Called!: " + status);
+
+                if(status.equalsIgnoreCase("error")){
+                    Toast.makeText(getActivity().getApplicationContext(),"Error", Toast.LENGTH_LONG).show();
                 }else{
                     Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
                 }

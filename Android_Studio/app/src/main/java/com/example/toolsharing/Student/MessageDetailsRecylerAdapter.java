@@ -33,10 +33,11 @@ class MessageDetailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemViewType(int position) {
         MessageDetails_Pojo item = itemList.get(position);
-        if(position%2==0)       // Even position
+        if(position%2==0) {     // Even position
             return TYPE_ONE;
-        else                   // Odd position
+        } else {                   // Odd position
             return TYPE_TWO;
+        }
     }
 
 
@@ -59,9 +60,11 @@ class MessageDetailsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int listPosition) {
         switch (holder.getItemViewType()) {
             case TYPE_ONE:
+                holder.setIsRecyclable(false);
                 initLayoutOne((ViewHolderOne)holder, listPosition);
                 break;
             case TYPE_TWO:
+                holder.setIsRecyclable(false);
                 initLayoutTwo((ViewHolderTwo) holder, listPosition);
                 break;
             default:

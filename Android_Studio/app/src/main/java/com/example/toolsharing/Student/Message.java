@@ -83,6 +83,7 @@ public class Message extends Fragment {
 
                             System.out.println("URL FromStudent: " + fsid);
                             System.out.println("URL Message: " + msg);
+                            System.out.println("URL Sent Time: " + statusMessage_pojo.getMyMessages().get(position).getSentDate());
 
                             Bundle bundle = new Bundle();
                             bundle.putString("tsid", String.valueOf(tsid));
