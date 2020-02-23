@@ -121,6 +121,7 @@ public class StudentToolSearch extends Fragment {
                             int position = viewHolder.getAdapterPosition();
 
                             int psid = statusMessage_pojo.getSearchToolsList().get(position).getPostedStudentId();
+                            int lsid = statusMessage_pojo.getSearchToolsList().get(position).getLoggedStudentId();
                             int toolId = statusMessage_pojo.getSearchToolsList().get(position).getPostedToolId();
                             String toolName = statusMessage_pojo.getSearchToolsList().get(position).getToolName();
                             String toolImg = statusMessage_pojo.getSearchToolsList().get(position).getToolImg();
@@ -132,10 +133,18 @@ public class StudentToolSearch extends Fragment {
                             int availability = statusMessage_pojo.getSearchToolsList().get(position).getToolAvailability();
                             int fav = statusMessage_pojo.getSearchToolsList().get(position).getToolFavorite();
 
+                            int favor;
+                            if(lsid == Integer.parseInt(getArguments().getString("sId"))){
+                                favor = 1;
+                            } else{
+                                favor = 0;
+                            }
 
 
                             Bundle bundle = new Bundle();
                             bundle.putString("psId", String.valueOf(psid));
+                            bundle.putString("flsid", String.valueOf(lsid));
+                            bundle.putString("favor", String.valueOf(favor));
                             bundle.putString("lsid", getArguments().getString("sId"));
                             bundle.putString("tId", String.valueOf(toolId));
                             bundle.putString("tN", toolName);

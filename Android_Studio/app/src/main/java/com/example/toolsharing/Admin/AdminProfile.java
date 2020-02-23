@@ -1,6 +1,7 @@
 package com.example.toolsharing.Admin;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.toolsharing.MainActivity;
 import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
 import com.example.toolsharing.R;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
@@ -31,7 +33,7 @@ public class AdminProfile extends Fragment {
 
     private TextView a_pro_name;
     private EditText a_pro_fn, a_pro_ln, a_pro_addr, a_pro_phone, a_pro_pwd;
-    private Button btn_a_pro_update, btn_a_pro_delete;
+    private Button btn_a_pro_update, btn_a_pro_logout;
 
     private String pwd1, fn, ln, addr, phn, pwd;
 
@@ -185,6 +187,16 @@ public class AdminProfile extends Fragment {
                 }
             }
         });
+
+        btn_a_pro_logout = view.findViewById(R.id.btn_a_pro_logout);
+        btn_a_pro_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity().getApplicationContext(), "Logged Out", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void profileInfo() {
@@ -218,7 +230,7 @@ public class AdminProfile extends Fragment {
                     pwd1 = statusMessage_pojo.getPasswd();
                     //System.out.println("URL pwd1: " + pwd1);
                     //stu_pro_pwd.setText(statusMessage_pojo.getPasswd());
-                    profileInfo();
+
                 }
 
             }
@@ -258,7 +270,9 @@ public class AdminProfile extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(), "Error!!", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
+                    profileInfo();
                 }
+
 
             }
 
@@ -270,4 +284,5 @@ public class AdminProfile extends Fragment {
             }
         });
     }
+
 }

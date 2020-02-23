@@ -107,6 +107,7 @@ public class StudentToolFavorite extends Fragment {
                             Bundle bundle = new Bundle();
                             bundle.putString("psId", String.valueOf(psid));
                             bundle.putString("lsid", getArguments().getString("sId"));
+                            bundle.putString("favor", "1");
                             bundle.putString("tId", String.valueOf(toolId));
                             bundle.putString("tN", toolName);
                             bundle.putString("tImg", toolImg);
@@ -120,7 +121,7 @@ public class StudentToolFavorite extends Fragment {
 
                             FragmentManager fragmentManager = getFragmentManager();
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            final ToolDetailsNOrder toolDetailsNOrder = new ToolDetailsNOrder();
+                            ToolDetailsNOrder toolDetailsNOrder = new ToolDetailsNOrder();
                             fragmentTransaction.replace(R.id.frag_stu, toolDetailsNOrder);
                             fragmentTransaction.addToBackStack(null);
                             toolDetailsNOrder.setArguments(bundle);

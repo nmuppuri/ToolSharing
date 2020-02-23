@@ -19,6 +19,14 @@ public interface GetDataServiceInterface {
                                               @Path("lname") String ln, @Path("email") String email);
 
 
+    @GET("DeleteStudent&{id}")
+    Call<StatusMessage_Pojo> studentDeleteReq(@Path("id") int id);
+
+
+    @GET("StudentDeleteAccept&{student_id}")
+    Call<StatusMessage_Pojo> studentDelAccept(@Path("student_id") int student_id);
+
+
     @GET("Login&{id}&{pwd}")
     Call<StatusMessage_Pojo> getlogin(@Path("id") int id, @Path("pwd") String pwd);
 

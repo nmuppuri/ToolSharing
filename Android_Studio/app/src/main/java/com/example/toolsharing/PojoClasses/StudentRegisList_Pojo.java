@@ -8,6 +8,9 @@ public class StudentRegisList_Pojo {
     @SerializedName("StudentId")
     @Expose
     private Integer studentId;
+    @SerializedName("StudentDelete")
+    @Expose
+    private Integer studentDelete;
     @SerializedName("StudentName")
     @Expose
     private String studentName;
@@ -24,6 +27,14 @@ public class StudentRegisList_Pojo {
 
     public void setStudentId(Integer studentId) {
         this.studentId = studentId;
+    }
+
+    public Integer getStudentDelete() {
+        return studentDelete;
+    }
+
+    public void setStudentDelete(Integer studentDelete) {
+        this.studentDelete = studentDelete;
     }
 
     public String getStudentName() {

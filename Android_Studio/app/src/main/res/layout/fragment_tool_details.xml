@@ -40,17 +40,25 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_names1"
             android:layout_weight="4">
 
             <TextView
                 android:id="@+id/td_name"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/rounded_names1"
                 android:gravity="center"
                 android:text="tool name"
+                android:layout_weight="4.5"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+
+            <CheckBox
+                style="?android:attr/starStyle"
+                android:id="@+id/btn_favorite"
+                android:layout_weight="0.5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
 
@@ -106,11 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
-                    android:outlineAmbientShadowColor="#f8de7e"
-                    android:outlineSpotShadowColor="#f8de7e"
-                    android:rating="5"
-                    android:stepSize="1"
-                    android:textSize="10sp" />
+                    android:stepSize="0.25" />
 
                 <TextView
                     android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 package com.example.toolsharing.Admin;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,12 @@ public class AdminRecyclerAdapter extends RecyclerView.Adapter<AdminRecyclerAdap
         //Glide.with(c).asBitmap().load(pokemonArrayList.get(position).getImage()).into(holder.pokemonImage);
         holder.rsname.setText(studentRegisList_pojos.get(position).getStudentName());
         holder.rsid.setText(String.valueOf(studentRegisList_pojos.get(position).getStudentId()));
+
+        if(studentRegisList_pojos.get(position).getStudentDelete() == 1){
+            holder.btn_approve.setText("Delete");
+            holder.btn_approve.setBackgroundResource(R.drawable.round_button);
+            holder.btn_approve.setTextColor(Color.parseColor("#DAC8F8"));
+        }
     }
 
     public void setOnItemClickListener(View.OnClickListener itemClickListener){

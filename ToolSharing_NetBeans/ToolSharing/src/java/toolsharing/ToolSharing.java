@@ -136,7 +136,7 @@ public class ToolSharing {
             String sql = "INSERT INTO person(id, first_name, last_name, email,"
                     + "passwd, admin_access)"
                     + "VALUES (?, ?, ?, ?, ?, 'N')";
-            String sql1 = "INSERT INTO student_registration(student_id, decision) VALUES (?, 'Pending')";
+            String sql1 = "INSERT INTO student_registration(student_id, decision, delete_request) VALUES (?, 'Pending', 0)";
 
             stm = con.prepareStatement(sql);
             stm.setInt(1, id);
@@ -157,6 +157,44 @@ public class ToolSharing {
             mainObj.accumulate("Status", "OK");
             mainObj.accumulate("Timestamp", epoc);
             mainObj.accumulate("Message", "Account Created Successfully!");
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** STUDENT DELETE REQUEST *************/
+    @GET
+    @Path("DeleteStudent&{id}")
+    @Produces("application/json")
+    public String studentDelete(@PathParam("id") int id) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** STUDENT DELETE REQUEST *************/");
+        
+        try {
+            createConnection();
+            String sql = "INSERT INTO student_registration(student_id, decision, delete_request) VALUES (?, 'Pending', 1)";
+
+            stm = con.prepareStatement(sql);
+            stm.setInt(1, id);
+            stm.executeUpdate();
+            stm.close();
+
+            mainObj.accumulate("Status", "OK");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Delete request sent");
 
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
@@ -277,22 +315,24 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "SELECT student_id, concat(first_name, ' ', last_name) as name, email, passwd FROM student_registration inner join person where student_id = id"
+            String sql = "SELECT student_id, concat(first_name, ' ', last_name) as name, email, passwd, delete_request FROM student_registration inner join person where student_id = id"
                     + " and decision = 'Pending'";
             
             stm = con.prepareStatement(sql);            
             ResultSet rs = stm.executeQuery();
             
-            int id;
+            int id, del_req;
             String name, email, passwd;
             if(rs.next() == true){
                 do{
                     id = rs.getInt(1);
+                    del_req = rs.getInt(5);
                     name = rs.getString(2);
                     email = rs.getString(3);
                     passwd = rs.getString(4);
                     
                     childObj.accumulate("StudentId", id);
+                    childObj.accumulate("StudentDelete", del_req);
                     childObj.accumulate("StudentName", name);                    
                     childObj.accumulate("StudentEmail", email);                    
                     childObj.accumulate("StudentPwd", passwd);                    
@@ -324,7 +364,6 @@ public class ToolSharing {
     @Path("StudentRegisAccept&{student_id}&{status}")
     @Produces("application/json")
     public String studentRegisAccept(@PathParam("student_id") int student_id,
-            @PathParam("admin_id") int admin_id,
             @PathParam("status") String decision) {
         //TODO return proper representation object
            
@@ -371,6 +410,98 @@ public class ToolSharing {
     }
     
     
+    /**************** STUDENT DELETE ACCEPT ****************/
+    @GET
+    @Path("StudentDeleteAccept&{student_id}")
+    @Produces("application/json")
+    public String studentDelAccept(@PathParam("student_id") int student_id) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** STUDENT DELETE ACCEPT*************/");
+        
+        try {
+            createConnection();
+
+            String sql = "delete from message_recepient where to_student_id = ?";
+            String sql1 = "delete from message where from_student_id = ?";
+            String sql2 = "delete from order_details "
+                    + "where posted_student_id = ? or borrowed_student_id = ?";
+            String sql3 = "delete from favorites "
+                    + "where posted_student_id = ? or logged_student_id = ?";
+            String sql4 = "delete from student_tools where posted_student_id = ?";
+            String sql5 = "delete from student_registration "
+                    + "where student_id = ?";
+            String sql6 = "delete from student where student_id = ?";
+            String sql7 = "delete from person where id = ?";
+
+            stm = con.prepareStatement(sql);
+            stm.setInt(1, student_id);
+            stm.executeUpdate();
+            stm.close();
+            
+            stm = con.prepareStatement(sql1);
+            stm.setInt(1, student_id);
+            stm.executeUpdate();
+            stm.close();
+            stm.close();
+            
+            stm = con.prepareStatement(sql2);
+            stm.setInt(1, student_id);
+            stm.setInt(2, student_id);
+            stm.executeUpdate();
+            stm.close();
+            stm.close();
+            
+            stm = con.prepareStatement(sql3);
+            stm.setInt(1, student_id);
+            stm.setInt(2, student_id);
+            stm.executeUpdate();
+            stm.close();
+            stm.close();
+            
+            stm = con.prepareStatement(sql4);
+            stm.setInt(1, student_id);
+            stm.executeUpdate();
+            stm.close();
+            stm.close();
+            
+            stm = con.prepareStatement(sql5);
+            stm.setInt(1, student_id);
+            stm.executeUpdate();
+            stm.close();
+            stm.close();
+            
+            stm = con.prepareStatement(sql6);
+            stm.setInt(1, student_id);
+            stm.executeUpdate();
+            stm.close();
+            stm.close();
+            
+            stm = con.prepareStatement(sql7);
+            stm.setInt(1, student_id);
+            stm.executeUpdate();
+            stm.close();
+
+            mainObj.accumulate("Status", "OK");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Account Deleted");
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
     /********** SEARCH TOOLS LIST *************/
     @GET
     @Path("SearchToolsList")
@@ -386,7 +517,7 @@ public class ToolSharing {
             String sql = "select st.posted_student_id, t.*, od.return_date, od.from_date, st.rating,\n" +
                 "DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,\n" +
                 "DATEDIFF(coalesce(od.return_date, current_date), current_date) availableIn,\n" +
-                "st.availability, f.favorite\n" +
+                "st.availability, f.favorite, f.logged_student_id\n" +
                 "from student_tools st left outer join order_details od on od.posted_student_id = st.posted_student_id\n" +
                 "and st.posted_tool_id = od.posted_tool_id\n" +
                 "right outer join tools t\n" +
@@ -399,13 +530,14 @@ public class ToolSharing {
             stm = con.prepareStatement(sql);           
             ResultSet rs = stm.executeQuery();
             
-            int psid, ptid, availabletill, availablefrom, availability, fav;
+            int psid, ptid, lsid, availabletill, availablefrom, availability, fav;
             float trating;
             String fd, rd, name, desc, img;
             if(rs.next() == true){
                 do{
                     psid = rs.getInt(1);
                     ptid = rs.getInt(2);
+                    lsid = rs.getInt(13);
                     name = rs.getString(3);
                     desc = rs.getString(4);
                     img = rs.getString(5);
@@ -425,6 +557,7 @@ public class ToolSharing {
                     fav = rs.getInt(12);
                     
                     childObj.accumulate("PostedStudentId", psid);
+                    childObj.accumulate("LoggedStudentId", lsid);
                     childObj.accumulate("PostedToolId", ptid);
                     childObj.accumulate("ToolName", name);                    
                     childObj.accumulate("ToolDesc", desc);

@@ -15,7 +15,8 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".Student.StudentBottomNav" />
         <activity android:name=".Admin.AdminBottomNav" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

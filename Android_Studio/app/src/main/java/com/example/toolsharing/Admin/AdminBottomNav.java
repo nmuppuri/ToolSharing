@@ -44,22 +44,27 @@ public class AdminBottomNav extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            if (item.getItemId() == R.id.abottom_home) {
-                fragment = new AdminDashboard();
-                FragmentManager fm = getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.frag_admin, fragment);
-                fragment.setArguments(b);
-                ft.commit();
-            }else if(item.getItemId() ==  R.id.abottom_profile) {
-                fragment = new AdminProfile();
-                FragmentManager fm = getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.frag_admin, fragment);
-                fragment.setArguments(b);
-                ft.commit();
+            switch(item.getItemId()){
+
+                default:
+                    fragment = new AdminDashboard();
+                    break;
+
+                case R.id.abottom_profile:
+                    fragment = new AdminProfile();
+
             }
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.frag_admin, fragment);
+            fragment.setArguments(b);
+            ft.commit();
             return true;
         }
     };
+
+    /*@Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }*/
 }

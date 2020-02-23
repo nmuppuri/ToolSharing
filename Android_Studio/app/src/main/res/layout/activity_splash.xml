@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="#838A72B4"
+    android:backgroundTintMode="screen"
+    android:background="@drawable/ts"
+    tools:context=".SplashScreen">
+
+
+    <TextView
+        android:id="@+id/txt"
+        android:text="Tool Sharing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|bottom"
+        android:layout_marginBottom="100dp"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        android:textColor="#9210316B"
+        android:layout_centerInParent="true"/>
+
+</LinearLayout>

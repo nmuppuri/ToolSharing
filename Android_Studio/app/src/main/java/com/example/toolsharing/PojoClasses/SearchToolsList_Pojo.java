@@ -8,6 +8,9 @@ public class SearchToolsList_Pojo {
     @SerializedName("PostedStudentId")
     @Expose
     private Integer postedStudentId;
+    @SerializedName("LoggedStudentId")
+    @Expose
+    private Integer loggedStudentId;
     @SerializedName("PostedToolId")
     @Expose
     private Integer postedToolId;
@@ -48,6 +51,14 @@ public class SearchToolsList_Pojo {
 
     public void setPostedStudentId(Integer postedStudentId) {
         this.postedStudentId = postedStudentId;
+    }
+
+    public Integer getLoggedStudentId() {
+        return loggedStudentId;
+    }
+
+    public void setLoggedStudentId(Integer loggedStudentId) {
+        this.loggedStudentId = loggedStudentId;
     }
 
     public Integer getPostedToolId() {

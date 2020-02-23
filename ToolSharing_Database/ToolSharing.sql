@@ -47,15 +47,14 @@ CREATE TABLE IF NOT EXISTS admins (
 DROP TABLE IF EXISTS student_registration;
 CREATE TABLE IF NOT EXISTS student_registration (
     student_id INT NOT NULL,
-    admin_id INT NULL,
+    delete_request INT NULL,
     decision VARCHAR(50) NOT NULL,
     decision_date DATE,
-    PRIMARY KEY (student_id),
-    FOREIGN KEY (admin_id)
-        REFERENCES admins (admin_id),
+    PRIMARY KEY (student_id, delete_request),
     FOREIGN KEY (student_id)
         REFERENCES person (id)
 );
+
 
 
 DROP TABLE IF EXISTS tools;
@@ -73,12 +72,32 @@ DROP TABLE IF EXISTS student_tools;
 CREATE TABLE IF NOT EXISTS student_tools (
 	posted_student_id INT NOT NULL,
     posted_tool_id INT NOT NULL,
+    availability INT,
+    rating float,
     PRIMARY KEY (posted_student_id, posted_tool_id),
     FOREIGN KEY (posted_student_id)
         REFERENCES student (student_id),
     FOREIGN KEY (posted_tool_id)
         REFERENCES tools (tool_id)
 );
+
+
+DROP TABLE IF EXISTS favorites;
+CREATE TABLE IF NOT EXISTS favorites (	
+	posted_student_id INT NOT NULL,
+    posted_tool_id INT NOT NULL,
+    logged_student_id INT NOT NULL,
+    favorite int,
+    PRIMARY KEY (posted_student_id, posted_tool_id, logged_student_id),
+    FOREIGN KEY (posted_student_id)
+        REFERENCES student_tools (posted_student_id),
+    FOREIGN KEY (posted_tool_id)
+        REFERENCES student_tools (posted_tool_id),
+    FOREIGN KEY (logged_student_id)
+        REFERENCES student (student_id)
+);
+    
+
 
 
 DROP TABLE IF EXISTS order_details;
@@ -89,7 +108,6 @@ CREATE TABLE IF NOT EXISTS order_details (
     from_date DATE NOT NULL,
     to_date DATE NOT NULL,
     return_date DATE,
-    rating INT,
     PRIMARY KEY (posted_tool_id , posted_student_id, borrowed_student_id),
     FOREIGN KEY (posted_tool_id)
         REFERENCES student_tools (posted_tool_id),

@@ -131,14 +131,22 @@ public class AdminDashboard extends Fragment {
                             int sid = statusMessage_pojo.getStudentRegis().get(position).getStudentId();
 
                             String email = statusMessage_pojo.getStudentRegis().get(position).getStudentEmail();
-                            String body = "Your request is approved. Use following password to login: " + statusMessage_pojo.getStudentRegis().get(position).getStudentPwd();
 
-                            System.out.println("URL SID: " + sid);
-                            System.out.println("URL AID: " + aid);
-                            System.out.println("URL EMAIL: " + email);
-                            System.out.println("URL PWD: " + statusMessage_pojo.getStudentRegis().get(position).getStudentPwd());
+                            if(statusMessage_pojo.getStudentRegis().get(position).getStudentDelete() == 1){
+                                String body = "Your request for Account deletion is approved. To avail our services, please register again. Thank you!!";
 
-                            studentRegisAccept(sid,"Accepted", email, body);
+                                studentDel(sid, email, body);
+
+                            } else {
+                                String body = "Your request is approved. Use following password to login: " + statusMessage_pojo.getStudentRegis().get(position).getStudentPwd();
+
+                                System.out.println("URL SID: " + sid);
+                                System.out.println("URL AID: " + aid);
+                                System.out.println("URL EMAIL: " + email);
+                                System.out.println("URL PWD: " + statusMessage_pojo.getStudentRegis().get(position).getStudentPwd());
+
+                                studentRegisAccept(sid, "Accepted", email, body);
+                            }
 
                         }
                     });
@@ -163,11 +171,31 @@ public class AdminDashboard extends Fragment {
     {
         Call<StatusMessage_Pojo> call = service.getStudentRegisAccept(sid, dec);
         //
-        EmailUtil.sendEmail(getActivity(),email,"Welcome to CEGEP ToolSharing Application!", body);
         call.enqueue(new Callback<StatusMessage_Pojo>() {
             @Override
             public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
                 studentRegisDetails();
+                EmailUtil.sendEmail(getActivity(),email,"Welcome to CEGEP ToolSharing Application!", body);
+            }
+
+            @Override
+            public void onFailure(Call<StatusMessage_Pojo> call, Throwable t) {
+
+                System.out.println("URL Failure Called! :" + t.getMessage());
+
+            }
+        });
+    }
+
+    private void studentDel(int sid, final String email, final String body)
+    {
+        Call<StatusMessage_Pojo> call = service.studentDelAccept(sid);
+        //
+        call.enqueue(new Callback<StatusMessage_Pojo>() {
+            @Override
+            public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
+                studentRegisDetails();
+                EmailUtil.sendEmail(getActivity(),email,"Hope you enjoyed our services - CEGEP ToolSharing Application", body);
             }
 
             @Override

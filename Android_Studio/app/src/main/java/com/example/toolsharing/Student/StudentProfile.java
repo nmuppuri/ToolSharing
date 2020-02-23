@@ -1,10 +1,12 @@
 package com.example.toolsharing.Student;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -15,8 +17,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.example.toolsharing.MainActivity;
 import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
 import com.example.toolsharing.R;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
@@ -33,6 +37,7 @@ public class StudentProfile extends Fragment {
     private TextView stu_pro_name;
     private EditText stu_pro_fn, stu_pro_ln, stu_pro_addr, stu_pro_phone, stu_pro_pwd;
     private Button btn_stu_pro_update, btn_stu_pro_delete;
+    Toolbar toolbar;
 
     private String pwd1, fn, ln, addr, phn, pwd;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
@@ -187,6 +192,28 @@ public class StudentProfile extends Fragment {
                 }
             }
         });
+
+        toolbar = view.findViewById(R.id.stu_prof_tool);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.logout) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Logged Out", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                return  false;
+            }
+        });
+
+        btn_stu_pro_delete = view.findViewById(R.id.btn_stu_pro_delete);
+        btn_stu_pro_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                studentDeleteRequest(Integer.parseInt(getArguments().getString("sId")));
+            }
+        });
     }
 
     private void profileInfo()
@@ -221,7 +248,6 @@ public class StudentProfile extends Fragment {
                     pwd1 = statusMessage_pojo.getPasswd();
                     //System.out.println("URL pwd1: " + pwd1);
                     //stu_pro_pwd.setText(statusMessage_pojo.getPasswd());
-                    profileInfo();
                 }
 
             }
@@ -261,7 +287,46 @@ public class StudentProfile extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(),"Error!!", Toast.LENGTH_LONG).show();
                 }else{
                     Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
+                    profileInfo();
                 }
+
+            }
+
+            @Override
+            public void onFailure(Call<StatusMessage_Pojo> call, Throwable t) {
+
+                System.out.println("URL Failure Called! :" + t.getMessage());
+
+            }
+        });
+    }
+
+    private void studentDeleteRequest(int id)
+    {
+
+        GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
+
+        Call<StatusMessage_Pojo> call = service.studentDeleteReq(id);
+
+        System.out.println("URL: " + call);
+
+        call.enqueue(new Callback<StatusMessage_Pojo>() {
+            @Override
+            public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
+
+
+                StatusMessage_Pojo statusMessage_pojo = response.body();
+                String status = statusMessage_pojo.getStatus();
+                System.out.println("URL Status Called!: " + status);
+
+                if(status.equalsIgnoreCase("error")){
+                    Toast.makeText(getActivity().getApplicationContext(),"Error", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+
 
             }
 

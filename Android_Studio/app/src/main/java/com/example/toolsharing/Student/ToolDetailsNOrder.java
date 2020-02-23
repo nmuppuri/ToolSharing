@@ -109,7 +109,7 @@ public class ToolDetailsNOrder extends Fragment {
         btn_td_ed = view.findViewById(R.id.btn_td_ed);
         btn_favorite = view.findViewById(R.id.btn_favorite);
 
-        if(getArguments().getString("fav").trim().equals("1")){
+        if(getArguments().getString("fav").trim().equals("1") && getArguments().getString("favor").trim().equals("1")){
             btn_favorite.setChecked(true);
             btn_favorite.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#D88F04")));
         }
