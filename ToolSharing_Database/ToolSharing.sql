@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS admins (
 DROP TABLE IF EXISTS student_registration;
 CREATE TABLE IF NOT EXISTS student_registration (
     student_id INT NOT NULL,
-    delete_request INT NULL,
+    delete_request INT NOT NULL,
     decision VARCHAR(50) NOT NULL,
     decision_date DATE,
     PRIMARY KEY (student_id, delete_request),
@@ -82,8 +82,8 @@ CREATE TABLE IF NOT EXISTS student_tools (
 );
 
 
-DROP TABLE IF EXISTS favorites;
-CREATE TABLE IF NOT EXISTS favorites (	
+DROP TABLE IF EXISTS favorite_tools;
+CREATE TABLE IF NOT EXISTS favorite_tools (	
 	posted_student_id INT NOT NULL,
     posted_tool_id INT NOT NULL,
     logged_student_id INT NOT NULL,
@@ -102,13 +102,15 @@ CREATE TABLE IF NOT EXISTS favorites (
 
 DROP TABLE IF EXISTS order_details;
 CREATE TABLE IF NOT EXISTS order_details (
+	order_id int not null auto_increment,
     posted_tool_id INT NOT NULL,
 	posted_student_id INT NOT NULL,
     borrowed_student_id INT NOT NULL,
     from_date DATE NOT NULL,
     to_date DATE NOT NULL,
-    return_date DATE,
-    PRIMARY KEY (posted_tool_id , posted_student_id, borrowed_student_id),
+    returned INT,
+    penalty float,
+    PRIMARY KEY (order_id, returned),
     FOREIGN KEY (posted_tool_id)
         REFERENCES student_tools (posted_tool_id),
     FOREIGN KEY (borrowed_student_id)
@@ -116,6 +118,22 @@ CREATE TABLE IF NOT EXISTS order_details (
     FOREIGN KEY (posted_student_id)
         REFERENCES student_tools (posted_student_id)
 );
+
+ALTER TABLE order_details AUTO_INCREMENT = 1000;
+
+
+
+
+DROP TABLE IF EXISTS tools_comment;
+CREATE TABLE IF NOT EXISTS tools_comment (
+	order_id INT NOT NULL,
+    rating float,
+    comments VARCHAR(500),
+    PRIMARY KEY (order_id),
+    FOREIGN KEY (order_id)
+        REFERENCES order_details (order_id)
+);
+
 
 
 DROP TABLE IF EXISTS message;
