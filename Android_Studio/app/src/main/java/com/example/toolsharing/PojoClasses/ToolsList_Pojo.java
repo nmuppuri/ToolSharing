@@ -23,12 +23,24 @@ public class ToolsList_Pojo {
     @SerializedName("ToolAvailability")
     @Expose
     private Integer toolAvailability;
+    @SerializedName("ToolReturned")
+    @Expose
+    private Integer toolReturned;
     @SerializedName("ToolRating")
     @Expose
     private float toolRating;
+    @SerializedName("ToolPenalty")
+    @Expose
+    private float toolPenalty;
     @SerializedName("PostedStudentId")
     @Expose
     private Integer postedStudentId;
+    @SerializedName("BorrowStudentId")
+    @Expose
+    private Integer borrowStudentId;
+    @SerializedName("ToolOrderId")
+    @Expose
+    private Integer toolOrderId;
 
     public Integer getToolId() {
         return toolId;
@@ -78,6 +90,14 @@ public class ToolsList_Pojo {
         this.toolAvailability = toolAvailability;
     }
 
+    public Integer getToolReturned() {
+        return toolReturned;
+    }
+
+    public void setToolReturned(Integer toolReturned) {
+        this.toolReturned = toolReturned;
+    }
+
     public float getToolRating() {
         return toolRating;
     }
@@ -86,12 +106,37 @@ public class ToolsList_Pojo {
         this.toolRating = toolRating;
     }
 
+
+    public float getToolPenalty() {
+        return toolPenalty;
+    }
+
+    public void setToolPenalty(float toolPenalty) {
+        this.toolPenalty = toolPenalty;
+    }
+
     public Integer getPostedStudentId() {
         return postedStudentId;
     }
 
     public void setPostedStudentId(Integer postedStudentId) {
         this.postedStudentId = postedStudentId;
+    }
+
+    public Integer getBorrowStudentId() {
+        return borrowStudentId;
+    }
+
+    public void setBorrowStudentId(Integer borrowStudentId) {
+        this.borrowStudentId = borrowStudentId;
+    }
+
+    public Integer getToolOrderId() {
+        return toolOrderId;
+    }
+
+    public void setToolOrderId(Integer toolOrderId) {
+        this.toolOrderId = toolOrderId;
     }
 
 }

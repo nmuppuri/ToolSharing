@@ -59,6 +59,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="56dp" />
+
+
+
+
+        <TextView
+            android:id="@+id/fav_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:textSize="50sp"
+            android:text="No\nFavorites" />
     </FrameLayout>
 
 

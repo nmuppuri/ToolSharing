@@ -32,6 +32,12 @@ public class SearchToolsList_Pojo {
     @SerializedName("ToolRating")
     @Expose
     private float toolRating;
+    @SerializedName("StudentToolRating")
+    @Expose
+    private float studentToolRating;
+    @SerializedName("StudentToolComment")
+    @Expose
+    private String studentToolComment;
     @SerializedName("ToolAvailableTillInDays")
     @Expose
     private Integer toolAvailableTillInDays;
@@ -115,6 +121,22 @@ public class SearchToolsList_Pojo {
 
     public void setToolRating(float toolRating) {
         this.toolRating = toolRating;
+    }
+
+    public float getStudentToolRating() {
+        return studentToolRating;
+    }
+
+    public void setStudentToolRating(float studentToolRating) {
+        this.studentToolRating = studentToolRating;
+    }
+
+    public String getStudentToolComment() {
+        return studentToolComment;
+    }
+
+    public void setStudentToolComment(String studentToolComment) {
+        this.studentToolComment = studentToolComment;
     }
 
     public Integer getToolAvailableTillInDays() {

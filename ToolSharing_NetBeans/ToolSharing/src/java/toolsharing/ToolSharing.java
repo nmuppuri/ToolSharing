@@ -60,17 +60,17 @@ public class ToolSharing {
      * @return an instance of java.lang.String
      */
     
-    /********** ADMIN REGISTRATION *************/
+    /********** ADMIN REGISTRATION *************
     @GET
     @Path("NewAdmin&{id}&{passwd}&{fname}&{lname}&{email}")//&{phone}&{address}")
     @Produces("application/json")
     public String adminRegis(@PathParam("id") int id, @PathParam("passwd") String pwd, 
             @PathParam("fname") String fname, @PathParam("lname") String lname,
             @PathParam("email") String email/*, @PathParam("phone") long phone,
-            @PathParam("address") String addr*/) {
+            @PathParam("address") String addr*) {
         //TODO return proper representation object
            
-        System.out.println("/********** ADMIN REGISTRATION *************/");
+        System.out.println("/********** ADMIN REGISTRATION *************");
         
         try {
             createConnection();
@@ -113,7 +113,7 @@ public class ToolSharing {
         }
 
         return mainObj.toString();
-    }
+    }*/
     
     
     /********** STUDENT REGISTRATION *************/
@@ -426,7 +426,7 @@ public class ToolSharing {
             String sql1 = "delete from message where from_student_id = ?";
             String sql2 = "delete from order_details "
                     + "where posted_student_id = ? or borrowed_student_id = ?";
-            String sql3 = "delete from favorites "
+            String sql3 = "delete from favorite_tools "
                     + "where posted_student_id = ? or logged_student_id = ?";
             String sql4 = "delete from student_tools where posted_student_id = ?";
             String sql5 = "delete from student_registration "
@@ -443,13 +443,11 @@ public class ToolSharing {
             stm.setInt(1, student_id);
             stm.executeUpdate();
             stm.close();
-            stm.close();
             
             stm = con.prepareStatement(sql2);
             stm.setInt(1, student_id);
             stm.setInt(2, student_id);
             stm.executeUpdate();
-            stm.close();
             stm.close();
             
             stm = con.prepareStatement(sql3);
@@ -457,24 +455,20 @@ public class ToolSharing {
             stm.setInt(2, student_id);
             stm.executeUpdate();
             stm.close();
-            stm.close();
             
             stm = con.prepareStatement(sql4);
             stm.setInt(1, student_id);
             stm.executeUpdate();
-            stm.close();
             stm.close();
             
             stm = con.prepareStatement(sql5);
             stm.setInt(1, student_id);
             stm.executeUpdate();
             stm.close();
-            stm.close();
             
             stm = con.prepareStatement(sql6);
             stm.setInt(1, student_id);
             stm.executeUpdate();
-            stm.close();
             stm.close();
             
             stm = con.prepareStatement(sql7);
@@ -514,47 +508,63 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "select st.posted_student_id, t.*, od.return_date, od.from_date, st.rating,\n" +
+            /*String sql = "select st.posted_student_id, t.*, coalesce(od.to_date, ''), coalesce(od.from_date, ''), st.rating,\n" +
                 "DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,\n" +
-                "DATEDIFF(coalesce(od.return_date, current_date), current_date) availableIn,\n" +
+                "DATEDIFF(coalesce(od.to_date, current_date), current_date) availableIn,\n" +
                 "st.availability, f.favorite, f.logged_student_id\n" +
                 "from student_tools st left outer join order_details od on od.posted_student_id = st.posted_student_id\n" +
                 "and st.posted_tool_id = od.posted_tool_id\n" +
                 "right outer join tools t\n" +
                 "on st.posted_tool_id = t.tool_id\n" +
-                "left outer join favorites f\n" +
+                "left outer join favorite_tools f\n" +
                 "on f.posted_tool_id = t.tool_id\n" +
                 "and f.posted_student_id = st.posted_student_id\n" +
-                "order by tool_name";
+                "order by availability desc, tool_name";*/
+            String sql = "select distinct st.posted_student_id, t.*, coalesce(od.to_date, ''), coalesce(od.from_date, ''), st.rating avg_rating,  \n" +
+"                DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,  \n" +
+"                DATEDIFF(coalesce(od.to_date, current_date), current_date) availableIn,  \n" +
+"                st.availability, f.favorite, f.logged_student_id\n" +
+"                from student_tools st left outer join (select posted_tool_id, posted_student_id, borrowed_student_id, max(from_date) from_date, max(to_date) to_date, max(order_id) from order_details\n" +
+"				group by 1,2,3) od on od.posted_student_id = st.posted_student_id  \n" +
+"                and st.posted_tool_id = od.posted_tool_id  \n" +
+"                right outer join tools t  \n" +
+"                on st.posted_tool_id = t.tool_id  \n" +
+"                left outer join favorite_tools f  \n" +
+"                on f.posted_tool_id = t.tool_id  \n" +
+"                and f.posted_student_id = st.posted_student_id \n" +
+"               where DATEDIFF(coalesce(od.to_date, current_date), current_date) >= 0 \n" +
+"                order by availability desc, tool_name";
             
             stm = con.prepareStatement(sql);           
             ResultSet rs = stm.executeQuery();
             
             int psid, ptid, lsid, availabletill, availablefrom, availability, fav;
-            float trating;
-            String fd, rd, name, desc, img;
+            float trating, student_rating;
+            String fd, td, name, desc, img, student_comments;
             if(rs.next() == true){
                 do{
-                    psid = rs.getInt(1);
-                    ptid = rs.getInt(2);
-                    lsid = rs.getInt(13);
-                    name = rs.getString(3);
-                    desc = rs.getString(4);
-                    img = rs.getString(5);
-                    rd = rs.getString(6);                        
-                    System.out.println("return date: " + rd);
+                    psid = rs.getInt("posted_student_id");
+                    ptid = rs.getInt("tool_id");
+                    lsid = rs.getInt("logged_student_id");
+                    name = rs.getString("tool_name");
+                    desc = rs.getString("tool_desc");
+                    img = rs.getString("tool_img");
+                    td = rs.getString(6);                        
+                    //System.out.println("return date: " + rd);
                     fd = rs.getString(7);
-                    trating = rs.getFloat(8);
+                    trating = rs.getFloat("avg_rating");
                     availabletill = rs.getInt(9);
                     availablefrom = rs.getInt(10);
                     if(availablefrom < 0){
-                        String sql1 = "delete from order_details where return_date < current_date";
+                        String sql1 = "delete from order_details where to_date < current_date";
                         PreparedStatement stm1 = con.prepareStatement(sql1);
                         stm1.executeUpdate();
                         stm1.close();
                     }
                     availability = rs.getInt(11);
                     fav = rs.getInt(12);
+                    //student_rating = rs.getFloat("sid_rating");
+                    //student_comments = rs.getString("sid_comments");
                     
                     childObj.accumulate("PostedStudentId", psid);
                     childObj.accumulate("LoggedStudentId", lsid);
@@ -563,12 +573,14 @@ public class ToolSharing {
                     childObj.accumulate("ToolDesc", desc);
                     childObj.accumulate("ToolImg", img);
                     childObj.accumulate("FromDate", fd);
-                    childObj.accumulate("ReturnDate", rd);
+                    childObj.accumulate("ReturnDate", td);
                     childObj.accumulate("ToolRating", trating);
                     childObj.accumulate("ToolAvailableTillInDays", availabletill);
                     childObj.accumulate("ToolAvailableFromInDays", availablefrom);
                     childObj.accumulate("ToolAvailability", availability);
                     childObj.accumulate("ToolFavorite", fav);
+                    //childObj.accumulate("StudentToolRating", student_rating);
+                    //childObj.accumulate("StudentToolComment", student_comments);
                     jSONArray.add(childObj);  
                     childObj.clear();
                 }while(rs.next());
@@ -609,8 +621,8 @@ public class ToolSharing {
             createConnection();
 
             String sql = "INSERT INTO order_details(posted_tool_id, posted_student_id,"
-                    + " borrowed_student_id, from_date, to_date, return_date) "
-                    + "VALUES (?, ?, ?, ?, ?, ?)";
+                    + " borrowed_student_id, from_date, to_date, returned, penalty) "
+                    + "VALUES (?, ?, ?, ?, ?, 0, 0)";
             
             stm = con.prepareStatement(sql);
             stm.setInt(1, ptid);
@@ -618,7 +630,7 @@ public class ToolSharing {
             stm.setInt(3, bsid);
             stm.setString(4, fd);
             stm.setString(5, td);
-            stm.setString(6, td);
+            //stm.setString(6, td);
             
             stm.executeUpdate();
             stm.close();
@@ -857,24 +869,28 @@ public class ToolSharing {
                 "left outer join student_tools st\n" +
                 "on st.posted_tool_id = t.tool_id\n" +
                 "and od.posted_student_id = st.posted_student_id\n" +
-                "where borrowed_student_id = ?";
+                "where borrowed_student_id = ?"
+                    + " and returned = 0";
             
             stm = con.prepareStatement(sql);  
             stm.setInt(1,bsid);
             ResultSet rs = stm.executeQuery();
             
-            int id, psid;
-            float rating;
+            int id, order_id, psid, returned;
+            float rating, penalty;
             String name, desc, img, return_date;
             if(rs.next() == true){
                 do{
-                    id = rs.getInt(1);
-                    psid = rs.getInt(6);
-                    name = rs.getString(2);
-                    desc = rs.getString(3);
-                    img = rs.getString(4);
-                    return_date = rs.getString(10);
-                    rating = rs.getFloat(11);
+                    id = rs.getInt("tool_id");
+                    name = rs.getString("tool_name");
+                    desc = rs.getString("tool_desc");
+                    img = rs.getString("tool_img");
+                    order_id = rs.getInt("order_id");
+                    psid = rs.getInt("posted_student_id");
+                    return_date = rs.getString("to_date");
+                    returned = rs.getInt("returned");
+                    penalty = rs.getFloat("penalty");
+                    rating = rs.getFloat("rating");
                     
                     childObj.accumulate("ToolId", id);
                     childObj.accumulate("ToolName", name);                    
@@ -882,6 +898,88 @@ public class ToolSharing {
                     childObj.accumulate("ToolImg", img);
                     childObj.accumulate("ReturnDate", return_date);
                     childObj.accumulate("ToolRating", rating);
+                    childObj.accumulate("ToolPenalty", penalty);
+                    childObj.accumulate("ToolReturned", returned);
+                    childObj.accumulate("PostedStudentId", psid);
+                    childObj.accumulate("ToolOrderId", order_id);
+                    jSONArray.add(childObj);  
+                    childObj.clear();
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("ToolsList", jSONArray);
+            }  else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** BORROWED TOOLS LIST HISTORY *************/
+    @GET
+    @Path("BorrowedToolsListHistory&{bsid}")
+    @Produces("application/json")
+    public String getBorrowedToolsListHistory(@PathParam("bsid") int bsid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** BORROWED TOOLS LIST HISTORY *************/");
+        
+        try {
+            createConnection();
+
+            /*String sql = "select * from tools t inner join order_details od\n" +
+                        "on od.posted_tool_id = t.tool_id\n" +
+                        "where borrowed_student_id = ?";*/
+            String sql = "select t.*, od.*, st.rating from tools t inner join order_details od\n" +
+                "on od.posted_tool_id = t.tool_id\n" +
+                "left outer join student_tools st\n" +
+                "on st.posted_tool_id = t.tool_id\n" +
+                "and od.posted_student_id = st.posted_student_id\n" +
+                "where borrowed_student_id = ?"
+                    + " and returned = 2 "
+                    + "and penalty = 0";
+            
+            stm = con.prepareStatement(sql);  
+            stm.setInt(1,bsid);
+            ResultSet rs = stm.executeQuery();
+            
+            int id, psid, returned, order_id;
+            float rating, penalty;
+            String name, desc, img, return_date;
+            if(rs.next() == true){
+                do{                    
+                    id = rs.getInt("tool_id");
+                    name = rs.getString("tool_name");
+                    desc = rs.getString("tool_desc");
+                    img = rs.getString("tool_img");
+                    order_id = rs.getInt("order_id");
+                    psid = rs.getInt("posted_student_id");
+                    return_date = rs.getString("to_date");
+                    returned = rs.getInt("returned");
+                    penalty = rs.getFloat("penalty");
+                    rating = rs.getFloat("rating");
+                    
+                    childObj.accumulate("ToolId", id);
+                    childObj.accumulate("ToolName", name);
+                    childObj.accumulate("ToolOrderId", order_id);
+                    childObj.accumulate("ToolDesc", desc);
+                    childObj.accumulate("ToolImg", img);
+                    childObj.accumulate("ReturnDate", return_date);
+                    childObj.accumulate("ToolRating", rating);
+                    childObj.accumulate("ToolPenalty", penalty);
+                    childObj.accumulate("ToolReturned", returned);
                     childObj.accumulate("PostedStudentId", psid);
                     jSONArray.add(childObj);  
                     childObj.clear();
@@ -908,12 +1006,211 @@ public class ToolSharing {
     }
     
     
+    /********** BORROWED TOOLS LIST REVIEW *************/
+    @GET
+    @Path("BorrowedToolsListReview&{psid}")
+    @Produces("application/json")
+    public String getBorrowedToolsListReview(@PathParam("psid") int psid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** BORROWED TOOLS LIST REVIEW *************/");
+        
+        try {
+            createConnection();
+
+            /*String sql = "select * from tools t inner join order_details od\n" +
+                        "on od.posted_tool_id = t.tool_id\n" +
+                        "where borrowed_student_id = ?";*/
+            String sql = "select t.*, od.*, st.rating from tools t inner join order_details od\n" +
+                "on od.posted_tool_id = t.tool_id\n" +
+                "left outer join student_tools st\n" +
+                "on st.posted_tool_id = t.tool_id\n" +
+                "and od.posted_student_id = st.posted_student_id\n" +
+                "where st.posted_student_id = ?"
+                    + " and returned = 1";
+            
+            stm = con.prepareStatement(sql);  
+            stm.setInt(1,psid);
+            ResultSet rs = stm.executeQuery();
+            
+            int id, bsid, returned, order_id;
+            float rating, penalty;
+            String name, desc, img, return_date;
+            if(rs.next() == true){
+                do{
+                    id = rs.getInt("tool_id");
+                    name = rs.getString("tool_name");
+                    desc = rs.getString("tool_desc");
+                    img = rs.getString("tool_img");
+                    order_id = rs.getInt("order_id");
+                    bsid = rs.getInt("borrowed_student_id");
+                    return_date = rs.getString("to_date");
+                    returned = rs.getInt("returned");
+                    penalty = rs.getFloat("penalty");
+                    rating = rs.getFloat("rating");
+                    
+                    childObj.accumulate("ToolId", id);
+                    childObj.accumulate("ToolOrderId", order_id);
+                    childObj.accumulate("ToolName", name);                    
+                    childObj.accumulate("ToolDesc", desc);
+                    childObj.accumulate("ToolImg", img);
+                    childObj.accumulate("ReturnDate", return_date);
+                    childObj.accumulate("ToolRating", rating);
+                    childObj.accumulate("ToolPenalty", penalty);
+                    childObj.accumulate("ToolReturned", returned);
+                    childObj.accumulate("PostedStudentId", psid);
+                    childObj.accumulate("BorrowStudentId", bsid);
+                    jSONArray.add(childObj);  
+                    childObj.clear();
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("ToolsList", jSONArray);
+            } else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** BORROWED TOOLS PENALTY *************/
+    @GET
+    @Path("BorrowedToolsPenalty&{bsid}")
+    @Produces("application/json")
+    public String getBorrowedToolsPenalty(@PathParam("bsid") int bsid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** BORROWED TOOLS PENALTY *************/");
+        
+        try {
+            createConnection();
+
+            /*String sql = "select * from tools t inner join order_details od\n" +
+                        "on od.posted_tool_id = t.tool_id\n" +
+                        "where borrowed_student_id = ?";*/
+            String sql = "select t.*, od.*, st.rating from tools t inner join order_details od\n" +
+                "on od.posted_tool_id = t.tool_id\n" +
+                "left outer join student_tools st\n" +
+                "on st.posted_tool_id = t.tool_id\n" +
+                "and od.posted_student_id = st.posted_student_id\n" +
+                "where od.borrowed_student_id = ?"
+                    + " and penalty > 0";
+            
+            stm = con.prepareStatement(sql);  
+            stm.setInt(1,bsid);
+            ResultSet rs = stm.executeQuery();
+            
+            int id, psid, returned, order_id;
+            float rating, penalty;
+            String name, desc, img, return_date;
+            if(rs.next() == true){
+                do{
+                    id = rs.getInt("tool_id");
+                    name = rs.getString("tool_name");
+                    desc = rs.getString("tool_desc");
+                    img = rs.getString("tool_img");
+                    psid = rs.getInt("posted_student_id");
+                    return_date = rs.getString("to_date");
+                    returned = rs.getInt("returned");
+                    penalty = rs.getFloat("penalty");
+                    rating = rs.getFloat("rating");
+                    order_id = rs.getInt("order_id");
+                    
+                    childObj.accumulate("ToolId", id);
+                    childObj.accumulate("ToolName", name);                    
+                    childObj.accumulate("ToolDesc", desc);
+                    childObj.accumulate("ToolImg", img);
+                    childObj.accumulate("ReturnDate", return_date);
+                    childObj.accumulate("ToolRating", rating);
+                    childObj.accumulate("ToolPenalty", penalty);
+                    childObj.accumulate("ToolReturned", returned);
+                    childObj.accumulate("ToolOrderId", order_id);
+                    childObj.accumulate("PostedStudentId", psid);
+                    childObj.accumulate("BorrowStudentId", bsid);
+                    jSONArray.add(childObj);  
+                    childObj.clear();
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("ToolsList", jSONArray);
+            } else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** BORROW TOOL REVIEW *************/
+    @GET
+    @Path("BorrowToolReview&{order_id}")
+    @Produces("application/json")
+    public String getBorrowToolReview(@PathParam("order_id") int order_id) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** BORROW TOOL REVIEW *************/");
+        
+        try {
+            createConnection();
+
+            /*String sql = "delete from order_details "
+                    + "where posted_tool_id = ? and borrowed_student_id = ?";*/
+            
+            String sql = "update order_details "
+                    + "set returned = 1 "
+                    + "where order_id = ?";
+            
+            stm = con.prepareStatement(sql);
+            stm.setInt(1,order_id);
+            stm.executeUpdate();
+                
+            mainObj.accumulate("Status", "Ok");
+            mainObj.accumulate("Timestamp", epoc);
+            mainObj.accumulate("Message", "Tool under review for damage!");
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
     /********** BORROW TOOL RETURN *************/
     @GET
-    @Path("BorrowToolReturn&{bsid}&{ptid}")
+    @Path("BorrowToolReturn&{order_id}&{penalty}")
     @Produces("application/json")
-    public String getBorrowToolReturn(@PathParam("bsid") int bsid,
-            @PathParam("ptid") int ptid) {
+    public String getBorrowToolReturn(@PathParam("order_id") int order_id,
+            @PathParam("penalty") String penalty) {
         //TODO return proper representation object
            
         System.out.println("/********** BORROW TOOL RETURN *************/");
@@ -921,17 +1218,26 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "delete from order_details "
-                    + "where posted_tool_id = ? and borrowed_student_id = ?";
+            /*String sql = "delete from order_details "
+                    + "where posted_tool_id = ? and borrowed_student_id = ?";*/
             
-            stm = con.prepareStatement(sql);  
-            stm.setInt(2,bsid);
-            stm.setInt(1,ptid);
-            stm.executeUpdate();
-                
+            String sql = "update order_details "
+                    + "set returned = 2, "
+                    + "to_date = current_date, "
+                    + "from_date = current_date, "
+                    + "penalty = ? "
+                    + "where order_id = ? ";
+            
+            stm = con.prepareStatement(sql);
+            stm.setInt(2, order_id);
+            stm.setFloat(1, Float.parseFloat(penalty));
+            int n = stm.executeUpdate();
+            
+            if( n != 0){
             mainObj.accumulate("Status", "Ok");
             mainObj.accumulate("Timestamp", epoc);
-            mainObj.accumulate("Message", "Returned Successfully!");
+            mainObj.accumulate("Message", "Return Accepted!");
+            }
 
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
@@ -949,10 +1255,12 @@ public class ToolSharing {
     
     /********** UPDATE RATING *************/
     @GET
-    @Path("UpdateRating&{psid}&{ptid}&{rating}")
+    @Path("UpdateRating&{psid}&{ptid}&{rating}&{ord_id}&{s_rat}&{s_com}")
     @Produces("application/json")
-    public String getUpdateRating(@PathParam("psid") int psid
-            , @PathParam("ptid") int ptid, @PathParam("rating") String rating) {
+    public String getUpdateRating(@PathParam("psid") int psid,
+            @PathParam("ptid") int ptid, @PathParam("rating") String rating,
+            @PathParam("ord_id") int ord_id, @PathParam("s_rat") String s_rat,
+            @PathParam("s_com") String s_com) {
         //TODO return proper representation object
            
         System.out.println("/********** UPDATE RATING *************/");
@@ -964,12 +1272,22 @@ public class ToolSharing {
                 "set rating = ?\n" +
                 "where posted_student_id = ?\n" +
                 "and posted_tool_id = ?";
+            
+            String sql1 = "INSERT INTO tools_comment(order_id, rating, comments) VALUES (?, ?, ?)";
 
             stm = con.prepareStatement(sql);
             stm.setInt(2, psid);
             stm.setInt(3, ptid);
             stm.setFloat(1, Float.parseFloat(rating));
             stm.executeUpdate();
+            stm.close();
+            
+            stm = con.prepareStatement(sql1);
+            stm.setInt(1, ord_id);
+            stm.setFloat(2, Float.parseFloat(s_rat));
+            stm.setString(3, s_com);
+            stm.executeUpdate();
+            stm.close();
                 
             mainObj.accumulate("Status", "Ok");
             mainObj.accumulate("Timestamp", epoc);
@@ -1003,7 +1321,7 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "INSERT INTO favorites(posted_student_id, posted_tool_id, logged_student_id, favorite) VALUES (?, ?, ?, 1)";
+            String sql = "INSERT INTO favorite_tools(posted_student_id, posted_tool_id, logged_student_id, favorite) VALUES (?, ?, ?, 1)";
 
             stm = con.prepareStatement(sql);
             stm.setInt(1, psid);
@@ -1041,19 +1359,19 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "select st.posted_student_id, t.*, od.return_date, od.from_date, st.rating,\n" +
+            String sql = "select st.posted_student_id, t.*, coalesce(od.to_date, ''), coalesce(od.from_date, ''), st.rating,\n" +
                 "DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,\n" +
-                "DATEDIFF(coalesce(od.return_date, current_date), current_date) availableIn,\n" +
+                "DATEDIFF(coalesce(od.to_date, current_date), current_date) availableIn,\n" +
                 "st.availability, f.favorite\n" +
                 "from student_tools st left outer join order_details od on od.posted_student_id = st.posted_student_id\n" +
                 "and st.posted_tool_id = od.posted_tool_id\n" +
                 "right outer join tools t\n" +
                 "on st.posted_tool_id = t.tool_id\n" +
-                "left outer join favorites f\n" +
+                "left outer join favorite_tools f\n" +
                 "on f.posted_tool_id = t.tool_id\n" +
                 "and f.posted_student_id = st.posted_student_id\n" +
                 "where f.favorite = 1 and f.logged_student_id = ? "
-                    + "order by tool_name ";
+                    + "order by availability desc, tool_name ";
             
             stm = con.prepareStatement(sql); 
             stm.setInt(1, lsid);
@@ -1127,7 +1445,7 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "delete from favorites where "
+            String sql = "delete from favorite_tools where "
                     + "posted_student_id = ? and "
                     + "posted_tool_id = ? and "
                     + "logged_student_id = ?";
@@ -1438,6 +1756,64 @@ public class ToolSharing {
                 mainObj.accumulate("Status", "Ok");
                 mainObj.accumulate("Timestamp", epoc);
                 mainObj.accumulate("MessageDetails", jSONArray);
+            } else{
+                getError("None", 0, 0);                
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
+            return getError(ex.toString(), 0, 0);
+        } finally {
+            closeConnection();
+        }
+
+        return mainObj.toString();
+    }
+    
+    
+    /********** COMMENTS LIST *************/
+    @GET
+    @Path("CommentsList&{ptid}")
+    @Produces("application/json")
+    public String getCommentsList(@PathParam("ptid") int ptid) {
+        //TODO return proper representation object
+           
+        System.out.println("/********** COMMENTS LIST *************/");
+        
+        try {
+            createConnection();
+
+            String sql = "select * from tools_comment tc inner join order_details od\n" +
+                    "on tc.order_id = od.order_id\n" +
+                    "where posted_tool_id = ? "
+                    + "and trim(comments) <> 'No Comments'";
+            
+            stm = con.prepareStatement(sql);  
+            stm.setInt(1,ptid);
+            ResultSet rs = stm.executeQuery();
+            
+            int bsid;
+            String comment;
+            float rating;
+            if(rs.next() == true){
+                do{
+                    bsid = rs.getInt("borrowed_student_id");
+                    comment = rs.getString("comments");
+                    rating = rs.getFloat("rating");
+                    
+                    childObj.accumulate("CommentedStudentId", bsid);
+                    childObj.accumulate("Comment", comment);                    
+                    childObj.accumulate("GivenRating", rating);
+                    jSONArray.add(childObj);  
+                    childObj.clear();
+                }while(rs.next());
+                
+                mainObj.accumulate("Status", "Ok");
+                mainObj.accumulate("Timestamp", epoc);
+                mainObj.accumulate("CommentsList", jSONArray);
             } else{
                 getError("None", 0, 0);                
             }

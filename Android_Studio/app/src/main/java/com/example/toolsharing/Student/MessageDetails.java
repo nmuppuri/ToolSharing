@@ -34,7 +34,7 @@ import retrofit2.Response;
 
 public class MessageDetails extends Fragment {
     private View view;
-    private MessageDetailsRecyclerAdapter messageDetailsRecylerAdapter;
+    private MessageDetailsRecylerAdapter messageDetailsRecylerAdapter;
     private ArrayList<MessageDetails_Pojo> messageDetails_pojos;
     Toolbar msg_det_toolbar;
     TextView fsid_msg_title;
@@ -100,7 +100,7 @@ public class MessageDetails extends Fragment {
 
                 if(!status.equalsIgnoreCase("error")) {
                     messageDetails_pojos = new ArrayList<>(statusMessage_pojo.getMessageDetails());
-                    messageDetailsRecylerAdapter = new MessageDetailsRecyclerAdapter(messageDetails_pojos, getActivity().getApplicationContext());
+                    messageDetailsRecylerAdapter = new MessageDetailsRecylerAdapter(messageDetails_pojos, getActivity().getApplicationContext(), getArguments().getString("tsid"));
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
                     RecyclerView recyclerView = view.findViewById(R.id.recycler_message_details);
                     recyclerView.setLayoutManager(linearLayout);

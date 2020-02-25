@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RatingBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,12 +16,11 @@ import androidx.fragment.app.DialogFragment;
 import com.example.toolsharing.R;
 
 
-public class RatingDialog extends DialogFragment {
+public class PenaltyDialog extends DialogFragment {
 
-    RatingBar ratingBar;
-    EditText comment;
-    private RatingDialogListener listener;
-    String rat, coment;
+    EditText penalty_dam;
+    private PenaltyDialogListener listener;
+    String pen;
 
     @NonNull
     @Override
@@ -30,10 +28,10 @@ public class RatingDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater layoutInflater= getActivity().getLayoutInflater();
-        View view = layoutInflater.inflate(R.layout.rating_dialog, null);
+        View view = layoutInflater.inflate(R.layout.penalty_dialog, null);
 
         builder.setView(view)
-                .setTitle("Rate Tool")
+                .setTitle("Penalty")
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -43,20 +41,14 @@ public class RatingDialog extends DialogFragment {
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        rat = String.valueOf(ratingBar.getRating());
-                        if(String.valueOf(comment.getText()).isEmpty()){
-                            coment = "No Comments";
-                        } else {
-                            coment = String.valueOf(comment.getText());
-                        }
-                        //System.out.println("URL Rating: " + rat);
+                        pen = String.valueOf(penalty_dam.getText());
+                        //System.out.println("URL Rating: " + pen);
 
-                        listener.ratingVal(rat, coment);
+                        listener.penaltyAmt(pen);
                     }
                 });
 
-        ratingBar = view.findViewById(R.id.rating_dialog);
-        comment = view.findViewById(R.id.comment);
+        penalty_dam = view.findViewById(R.id.penalty_dam);
         return builder.create();
     }
 
@@ -65,13 +57,13 @@ public class RatingDialog extends DialogFragment {
         super.onAttach(context);
 
         try {
-            listener = (RatingDialogListener) getTargetFragment();
+            listener = (PenaltyDialogListener) getTargetFragment();
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement RatingDialogListener");
+            throw new ClassCastException(context.toString() + " must implement PenaltyDialogListener");
         }
     }
 
-    public interface RatingDialogListener{
-        void ratingVal(String rating, String comments);
+    public interface PenaltyDialogListener{
+        void penaltyAmt(String penalty);
     }
 }

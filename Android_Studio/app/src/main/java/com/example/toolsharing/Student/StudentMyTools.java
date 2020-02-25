@@ -32,6 +32,8 @@ public class StudentMyTools extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_student_my_tools, container, false);
 
+        bundle.putString("SID", getArguments().getString("sId"));
+
         fragment = new StudentOwned();
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -50,7 +52,10 @@ public class StudentMyTools extends Fragment {
 
         tabLayout = view.findViewById(R.id.tab_mytools);
         tabLayout.addTab(tabLayout.newTab().setText("Owned"));
-        tabLayout.addTab(tabLayout.newTab().setText("Borrowed"));
+        tabLayout.addTab(tabLayout.newTab().setText("Rented"));
+        tabLayout.addTab(tabLayout.newTab().setText("History"));
+        tabLayout.addTab(tabLayout.newTab().setText("Reviews"));
+        tabLayout.addTab(tabLayout.newTab().setText("Penalty"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         toolbar = view.findViewById(R.id.stu_tools);
@@ -80,6 +85,15 @@ public class StudentMyTools extends Fragment {
                         break;
                     case 1:
                         fragment = new StudentBorrowed();
+                        break;
+                    case 2:
+                        fragment = new StudentBorrowedHist();
+                        break;
+                    case 3:
+                        fragment = new StudentBorrowedReview();
+                        break;
+                    case 4:
+                        fragment = new StudentBorrowedPenalty();
                         break;
                     default:
                         fragment = new StudentOwned();

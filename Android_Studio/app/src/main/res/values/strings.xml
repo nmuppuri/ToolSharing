@@ -51,6 +51,7 @@
     <string name="admin"><u>Admin Register</u></string>
     <string name="student"><u>Register</u></string>
     <string name="forgot"><u>Forgot Password?</u></string>
+    <string name="comments"><u>Comments</u></string>
 
     <!-- String related to login -->
     <string name="login">Login</string>

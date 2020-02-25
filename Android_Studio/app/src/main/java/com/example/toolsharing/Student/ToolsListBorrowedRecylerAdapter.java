@@ -39,7 +39,26 @@ public class ToolsListBorrowedRecylerAdapter extends RecyclerView.Adapter<ToolsL
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
         Glide.with(c).asBitmap().load(toolsPojoArrayList.get(position).getToolImg()).into(holder.tool_img);
         holder.tool_name.setText(toolsPojoArrayList.get(position).getToolName());
-        holder.tool_return.setText("Return By: " + toolsPojoArrayList.get(position).getReturnDate());
+
+        if(toolsPojoArrayList.get(position).getToolReturned() == 0) {
+            holder.tool_return.setText("Return By: " + toolsPojoArrayList.get(position).getReturnDate());
+            holder.tool_psid.setText(String.valueOf(toolsPojoArrayList.get(position).getPostedStudentId()));
+        } else if(toolsPojoArrayList.get(position).getToolReturned() == 1){
+            holder.tool_psid.setText(String.valueOf(toolsPojoArrayList.get(position).getBorrowStudentId()));
+            holder.btn_borr_return.setText("Accept");
+            holder.tool_return.setText("Returned On: " + toolsPojoArrayList.get(position).getReturnDate());
+        } else if(toolsPojoArrayList.get(position).getToolPenalty() > 0 && toolsPojoArrayList.get(position).getToolReturned() == 2){
+            holder.tool_psid.setText(String.valueOf(toolsPojoArrayList.get(position).getPostedStudentId()));
+            holder.btn_borr_return.setText("Pay");
+            holder.tool_return.setText("Penalty: $" + toolsPojoArrayList.get(position).getToolPenalty());
+        }
+        else{
+            holder.btn_borr_return.setBackgroundResource(R.drawable.round_button_disable);
+            holder.btn_borr_return.setEnabled(false);
+            holder.btn_borr_return.setText("Returned");
+            holder.tool_return.setText("Returned On: " + toolsPojoArrayList.get(position).getReturnDate());
+            holder.tool_psid.setText(String.valueOf(toolsPojoArrayList.get(position).getPostedStudentId()));
+        }
     }
 
     public void setOnItemClickListener(View.OnClickListener itemClickListener){
@@ -55,7 +74,7 @@ public class ToolsListBorrowedRecylerAdapter extends RecyclerView.Adapter<ToolsL
 
 
         ImageView tool_img;
-        TextView tool_name, tool_return;
+        TextView tool_name, tool_return, tool_psid;
         Button btn_borr_return;
 
         Viewholder(@NonNull View itemView) {
@@ -64,6 +83,7 @@ public class ToolsListBorrowedRecylerAdapter extends RecyclerView.Adapter<ToolsL
             tool_img = itemView.findViewById(R.id.borr_tool_image);
             tool_name = itemView.findViewById(R.id.borr_tool_name);
             tool_return = itemView.findViewById(R.id.borr_return);
+            tool_psid = itemView.findViewById(R.id.borrow_psid);
 
 
             btn_borr_return = itemView.findViewById(R.id.btn_borr_return);

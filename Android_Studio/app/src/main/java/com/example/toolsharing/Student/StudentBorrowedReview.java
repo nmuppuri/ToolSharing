@@ -28,73 +28,57 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StudentBorrowed extends Fragment implements RatingDialog.RatingDialogListener {
+public class StudentBorrowedReview extends Fragment implements PenaltyDialog.PenaltyDialogListener{
     private View view;
     ToolsListBorrowedRecylerAdapter toolsListBorrowedRecylerAdapter;
     private ArrayList<ToolsList_Pojo> toolsList_pojos;
     int position;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
+    float pen;
 
-    float rat, tool_rating;
-    int bsid, psid, toolId, order_id;
-
+    int toolId, bsid, psid, order_id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_student_borrowed, container, false);
-        bsid = Integer.parseInt(getArguments().getString("SID"));
+
+        psid = Integer.parseInt(getArguments().getString("SID"));
         return view;
     }
 
     public void openDialog(){
 
-        RatingDialog ratingDialog = new RatingDialog();
-        ratingDialog.setTargetFragment(StudentBorrowed.this, 1);
-        ratingDialog.show(getFragmentManager(), null);
+        PenaltyDialog penaltyDialog = new PenaltyDialog();
+        penaltyDialog.setTargetFragment(StudentBorrowedReview.this, 1);
+        penaltyDialog.show(getFragmentManager(), null);
 
     }
 
     @Override
-    public void ratingVal(String rating, String comments) {
-        if(rating.isEmpty()){
-            rat = Float.parseFloat("0");
+    public void penaltyAmt(String penalty) {
+        if(penalty.isEmpty()){
+            pen = Float.parseFloat("0");
         } else{
-            rat = Float.parseFloat(rating);
+            pen = Float.parseFloat(penalty);
         }
+        System.out.println("URL Penalty: " + String.valueOf(pen));
+        System.out.println("URL OrderId: " + order_id);
 
-        if(comments.isEmpty()){
-            comments = "";
-        }
-
-        System.out.println("URL RATING: " + rat);
-        System.out.println("URL COMMENTS: " + comments);
-        if(tool_rating == 0.0){
-            updateToolRating(((5 + rat)/2), rat, comments);
-            /*System.out.println("URL PSID: " + psid);
-            System.out.println("URL BSID: " + bsid);
-            System.out.println("URL toolID: " + toolId);
-            System.out.println("URL Average toolRating: " + ((5 + rat)/2));
-            System.out.println("URL OrderId: " + order_id);
-            System.out.println("URL toolRating: " + rat);
-            System.out.println("URL toolComment: " + comments);*/
-        }else {
-            updateToolRating(((5 + rat)/2), rat, comments);
-        }
-        borrowToolReview();
+        borrowToolReturn(String.valueOf(pen));
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        borrowToolList();
+        borrowToolListRev();
     }
 
-    public void borrowToolList()
+    public void borrowToolListRev()
     {
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
-        Call<StatusMessage_Pojo> call = service.getborrowedToolList(bsid);
+        Call<StatusMessage_Pojo> call = service.getBorrowedToolsListRev(psid);
 
         System.out.println("URL Tools: " + call);
 
@@ -103,15 +87,14 @@ public class StudentBorrowed extends Fragment implements RatingDialog.RatingDial
             public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
                 final StatusMessage_Pojo statusMessage_pojo = response.body();
                 String status = statusMessage_pojo.getStatus();
-                System.out.println("URL borrowToolList Called!: " + status);
-                TextView borr_empty_view = view.findViewById(R.id.borr_empty_view);
-
+                System.out.println("URL Student recycler Called!: " + status);
+                TextView empty_view = getView().findViewById(R.id.borr_empty_view);
                 if(!status.equalsIgnoreCase("error")) {
                     toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());
                     toolsListBorrowedRecylerAdapter = new ToolsListBorrowedRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
                     RecyclerView recyclerView = view.findViewById(R.id.recycler_student_borrow_mytools);
-                    borr_empty_view.setVisibility(View.GONE);
+                    empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(toolsListBorrowedRecylerAdapter);
 
@@ -123,25 +106,22 @@ public class StudentBorrowed extends Fragment implements RatingDialog.RatingDial
                             int position = viewHolder.getAdapterPosition();
 
                             toolId = statusMessage_pojo.getToolsList().get(position).getToolId();
-                            psid = statusMessage_pojo.getToolsList().get(position).getPostedStudentId();
-                            String return_date = statusMessage_pojo.getToolsList().get(position).getReturnDate();
-                            tool_rating = statusMessage_pojo.getToolsList().get(position).getToolRating();
+                            bsid = statusMessage_pojo.getToolsList().get(position).getBorrowStudentId();
                             order_id = statusMessage_pojo.getToolsList().get(position).getToolOrderId();
+                            String return_date = statusMessage_pojo.getToolsList().get(position).getReturnDate();
 
                             System.out.println("URL toolId: " + toolId);
-                            System.out.println("URL psid: " + psid);
+                            System.out.println("URL bsid: " + bsid);
                             System.out.println("URL return: " + return_date);
-                            System.out.println("URL toolRating: " + tool_rating);
 
                             openDialog();
 
                         }
                     });
 
-                }
-                else {
-                    //recyclerView.setVisibility(View.INVISIBLE);
-                    borr_empty_view.setVisibility(View.VISIBLE);
+                } else{
+                    empty_view.setText("No Tools for Review");
+                    empty_view.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -154,11 +134,11 @@ public class StudentBorrowed extends Fragment implements RatingDialog.RatingDial
         });
     }
 
-    private void borrowToolReview() {
+    private void borrowToolReturn(String penal) {
 
         GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
 
-        Call<StatusMessage_Pojo> call = service.reviewBorrowTool(order_id);
+        Call<StatusMessage_Pojo> call = service.returnBorrowTool(order_id, penal);
 
 
         call.enqueue(new Callback<StatusMessage_Pojo>() {
@@ -167,46 +147,14 @@ public class StudentBorrowed extends Fragment implements RatingDialog.RatingDial
 
                 StatusMessage_Pojo statusMessage_pojo = response.body();
                 String status = statusMessage_pojo.getStatus();
-                System.out.println("URL borrowToolReview Called!: " + status);
+                System.out.println("URL borrowToolReturn Called!: " + status);
 
                 if(status.equalsIgnoreCase("error")){
-                    Toast.makeText(getActivity().getApplicationContext(),"Error!!", Toast.LENGTH_LONG).show();
-                }else{
-                    borrowToolList();
-                    Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<StatusMessage_Pojo> call, Throwable t) {
-
-                System.out.println("URL Failure Called! :" + t.getMessage());
-
-            }
-        });
-    }
-
-    private void updateToolRating(float tool_rat, float stu_rating, String com) {
-
-        GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
-
-        Call<StatusMessage_Pojo> call = service.updateToolRat(psid, toolId, String.valueOf(tool_rat), order_id, String.valueOf(stu_rating), com);
-
-
-        call.enqueue(new Callback<StatusMessage_Pojo>() {
-            @Override
-            public void onResponse(Call<StatusMessage_Pojo> call, Response<StatusMessage_Pojo> response) {
-
-                StatusMessage_Pojo statusMessage_pojo = response.body();
-                String status = statusMessage_pojo.getStatus();
-                System.out.println("URL Status Called!: " + status);
-
-                if(status.equalsIgnoreCase("error")){
-                    Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(),statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
                 }else{
                     Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
                 }
+                borrowToolListRev();
 
             }
 

@@ -55,6 +55,9 @@ public class StatusMessage_Pojo {
     @SerializedName("MessageDetails")
     @Expose
     private List<MessageDetails_Pojo> messageDetails = null;
+    @SerializedName("CommentsList")
+    @Expose
+    private List<CommentsList_Pojo> commentsList = null;
 
     public String getStatus() {
         return status;
@@ -182,6 +185,14 @@ public class StatusMessage_Pojo {
 
     public void setMessageDetails(List<MessageDetails_Pojo> messageDetails) {
         this.messageDetails = messageDetails;
+    }
+
+    public List<CommentsList_Pojo> getCommentsList() {
+        return commentsList;
+    }
+
+    public void setCommentsList(List<CommentsList_Pojo> commentsList) {
+        this.commentsList = commentsList;
     }
 
 

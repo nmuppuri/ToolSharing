@@ -69,13 +69,28 @@ public interface GetDataServiceInterface {
     @GET("BorrowedToolsList&{bsid}")
     Call<StatusMessage_Pojo> getborrowedToolList(@Path("bsid") int bsid);
 
+    @GET("BorrowedToolsListHistory&{bsid}")
+    Call<StatusMessage_Pojo> getborrowedToolListHist(@Path("bsid") int bsid);
 
-    @GET("BorrowToolReturn&{bsid}&{ptid}")
-    Call<StatusMessage_Pojo> returnBorrowTool(@Path("bsid") int bsid, @Path("ptid") int ptid);
+    @GET("BorrowedToolsPenalty&{bsid}")
+    Call<StatusMessage_Pojo> getborrowedToolPenalty(@Path("bsid") int bsid);
 
 
-    @GET("UpdateRating&{psid}&{ptid}&{rating}")
-    Call<StatusMessage_Pojo> updateToolRat(@Path("psid") int psid, @Path("ptid") int ptid, @Path("rating") String tool_rating);
+    @GET("BorrowedToolsListReview&{psid}")
+    Call<StatusMessage_Pojo> getBorrowedToolsListRev(@Path("psid") int psid);
+
+
+    @GET("BorrowToolReturn&{order_id}&{penalty}")
+    Call<StatusMessage_Pojo> returnBorrowTool(@Path("order_id") int order_id, @Path("penalty") String penalty);
+
+
+    @GET("BorrowToolReview&{order_id}")
+    Call<StatusMessage_Pojo> reviewBorrowTool(@Path("order_id") int order_id);
+
+
+    @GET("UpdateRating&{psid}&{ptid}&{rating}&{ord_id}&{s_rat}&{s_com}")
+    Call<StatusMessage_Pojo> updateToolRat(@Path("psid") int psid, @Path("ptid") int ptid, @Path("rating") String tool_rating,
+                                           @Path("ord_id") int ord_id, @Path("s_rat") String s_rat, @Path("s_com") String s_com);
 
 
     @GET("AddFavoriteTools&{psid}&{ptid}&{lsid}")
@@ -109,5 +124,9 @@ public interface GetDataServiceInterface {
 
     @GET("NewMessage&{fsid}&{tsid}&{message}")
     Call<StatusMessage_Pojo> getNewMessage(@Path("fsid") int fsid, @Path("tsid") int tsid, @Path("message") String message_text);
+
+
+    @GET("CommentsList&{ptid}")
+    Call<StatusMessage_Pojo> getComments(@Path("ptid") int ptid);
 
 }
