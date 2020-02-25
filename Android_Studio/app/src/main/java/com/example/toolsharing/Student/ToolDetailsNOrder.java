@@ -22,6 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
@@ -42,7 +44,7 @@ import retrofit2.Response;
 public class ToolDetailsNOrder extends Fragment {
 
     private TextView td_sid;
-    TextView td_tid;
+    TextView ratingscomments;
     private TextView td_name;
     private TextView td_desc;
     private TextView td_avail;
@@ -52,6 +54,7 @@ public class ToolDetailsNOrder extends Fragment {
     private RatingBar td_rat;
     private ImageButton btn_td_sd;
     private ImageButton btn_td_ed;
+    private ImageButton new_msg;
     CheckBox btn_favorite;
     private View view;
     private String psid;
@@ -87,6 +90,28 @@ public class ToolDetailsNOrder extends Fragment {
 
         tool_name_det = view.findViewById(R.id.tool_name_det);
         tool_name_det.setText(getArguments().getString("tN"));
+
+        ratingscomments = view.findViewById(R.id.ratingscomments);
+        ratingscomments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.startAnimation(buttonClick);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("ptid", getArguments().getString("tId", "NULL"));
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                final Comments comments = new Comments();
+                fragmentTransaction.replace(R.id.frag_stu, comments);
+                fragmentTransaction.addToBackStack(null);
+                comments.setArguments(bundle);
+                fragmentTransaction.commit();
+
+            }
+        });
+
+        new_msg = view.findViewById(R.id.new_msg);
+
 
         toolbar = view.findViewById(R.id.tool_det_toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -213,9 +238,31 @@ public class ToolDetailsNOrder extends Fragment {
             btn_td_borrow.setEnabled(false);
             btn_td_ed.setEnabled(false);
             btn_td_sd.setEnabled(false);
+            new_msg.setEnabled(false);
             btn_td_borrow.setBackgroundResource(R.drawable.round_button_disable);
 
         }
+
+        new_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.startAnimation(buttonClick);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("fsid", getArguments().getString("psId", "NULL"));
+                bundle.putString("tsid", String.valueOf(getArguments().getString("lsid")));
+
+
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                final MessageDetails messageDetails = new MessageDetails();
+                fragmentTransaction.replace(R.id.frag_stu, messageDetails);
+                fragmentTransaction.addToBackStack(null);
+                messageDetails.setArguments(bundle);
+                fragmentTransaction.commit();
+
+            }
+        });
 
         if(Integer.parseInt(getArguments().getString("availF")) > 0 /*&& Integer.parseInt(getArguments().getString("availT")) <= 0*/) {
             btn_td_borrow.setEnabled(false);
