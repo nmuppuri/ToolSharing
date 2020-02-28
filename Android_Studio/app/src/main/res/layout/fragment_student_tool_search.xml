@@ -4,9 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ts"
-    android:backgroundTint="#838A72B4"
-    android:backgroundTintMode="screen"
     tools:context=".Student.StudentToolSearch">
 
     <!-- TODO: Update blank fragment layout -->
@@ -34,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/stu_dash_tool"
+            android:id="@+id/stu_dash_tool_search"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#CE10316B"

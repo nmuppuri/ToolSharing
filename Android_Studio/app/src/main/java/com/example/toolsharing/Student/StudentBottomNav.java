@@ -99,8 +99,8 @@ public class StudentBottomNav extends AppCompatActivity {
         }
     };
 
-    /*@Override
+    @Override
     public void onBackPressed() {
         //super.onBackPressed();
-    }*/
+    }
 }

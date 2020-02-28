@@ -5,6 +5,9 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/ts"
+    android:backgroundTint="#838A72B4"
+    android:backgroundTintMode="screen"
     android:fitsSystemWindows="true"
     tools:context=".Student.StudentBottomNav">
 

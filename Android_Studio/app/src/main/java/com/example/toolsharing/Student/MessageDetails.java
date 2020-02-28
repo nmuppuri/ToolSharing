@@ -60,7 +60,10 @@ public class MessageDetails extends Fragment {
         msg_det_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                //getActivity().onBackPressed();
+                getFragmentManager().popBackStack();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
 
@@ -105,6 +108,8 @@ public class MessageDetails extends Fragment {
                     RecyclerView recyclerView = view.findViewById(R.id.recycler_message_details);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(messageDetailsRecylerAdapter);
+
+                    messageDetailsRecylerAdapter.notifyDataSetChanged();
 
                 }
             }

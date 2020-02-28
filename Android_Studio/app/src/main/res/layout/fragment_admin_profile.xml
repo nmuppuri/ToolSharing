@@ -4,9 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ts"
-    android:backgroundTint="#838A72B4"
-    android:backgroundTintMode="screen"
     tools:context=".Student.StudentProfile">
 
     <!-- TODO: Update blank fragment layout -->
@@ -42,9 +39,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="100"
+            android:layout_marginTop="56dp"
             android:orientation="vertical"
-            android:layout_marginTop="56dp">
+            android:weightSum="100">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,196 +52,204 @@
                     android:id="@+id/admin_pro_name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center"
                     android:text="FirstName LastName"
                     android:textSize="25sp"
-                    android:gravity="center"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="10">
+                android:layout_weight="10"
+                android:background="@drawable/rounded_edittext"
+                android:gravity="center">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_person_black_24dp" />
 
                 <EditText
                     android:id="@+id/a_pro_fn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="First Name"
-                    android:inputType="textPersonName"
+                    android:layout_marginStart="20dp"
                     android:layout_weight="9"
                     android:gravity="center|start"
-                    android:layout_marginStart="20dp"
-                    android:textColor="#BB000000"
-                    android:textSize="20sp"
-                    />
+                    android:hint="First Name"
+                    android:inputType="textPersonName"
+                    android:textColor="#F7E6AB"
+                    android:textColorHint="#80F8DE7E"
+                    android:textSize="22sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="10">
+                android:layout_weight="10"
+                android:background="@drawable/rounded_edittext"
+                android:gravity="center">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_person_black_24dp" />
 
                 <EditText
                     android:id="@+id/a_pro_ln"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Last Name"
-                    android:inputType="textPersonName"
+                    android:layout_marginStart="20dp"
                     android:layout_weight="9"
                     android:gravity="center|start"
-                    android:layout_marginStart="20dp"
-                    android:textColor="#BB000000"
-                    android:textSize="20sp"
-                    />
+                    android:hint="Last Name"
+                    android:inputType="textPersonName"
+                    android:textColor="#F7E6AB"
+                    android:textColorHint="#80F8DE7E"
+                    android:textSize="22sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="10">
+                android:layout_weight="10"
+                android:background="@drawable/rounded_edittext"
+                android:gravity="center">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_home_black_24dp" />
 
                 <EditText
                     android:id="@+id/a_pro_addr"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Address"
+                    android:layout_marginStart="20dp"
                     android:layout_weight="9"
                     android:gravity="center|start"
-                    android:layout_marginStart="20dp"
-                    android:textColor="#BB000000"
-                    android:textSize="20sp"
-                    />
+                    android:hint="Address"
+                    android:textColor="#F7E6AB"
+                    android:textColorHint="#80F8DE7E"
+                    android:textSize="22sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="10">
+                android:layout_weight="10"
+                android:background="@drawable/rounded_edittext"
+                android:gravity="center">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_phone_iphone_black_24dp" />
 
                 <EditText
                     android:id="@+id/a_pro_phone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Phone"
-                    android:inputType="phone"
+                    android:layout_marginStart="20dp"
                     android:layout_weight="9"
                     android:gravity="center|start"
-                    android:layout_marginStart="20dp"
-                    android:textColor="#BB000000"
-                    android:textSize="20sp"
-                    />
+                    android:hint="Phone"
+                    android:inputType="phone"
+                    android:textColor="#F7E6AB"
+                    android:textColorHint="#80F8DE7E"
+                    android:textSize="22sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="12">
+                android:layout_weight="12"
+                android:background="@drawable/rounded_edittext"
+                android:gravity="center">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_vpn_key_black_24dp" />
 
                 <EditText
                     android:id="@+id/a_pro_pwd"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Change Password"
-                    android:textStyle="bold"
-                    android:inputType="textPassword"
+                    android:layout_marginStart="20dp"
                     android:layout_weight="9"
                     android:gravity="center|start"
-                    android:layout_marginStart="20dp"
-                    android:textColor="#BB000000"
-                    android:textSize="20sp"
-                    />
+                    android:hint="Change Password"
+                    android:inputType="textPassword"
+                    android:textColor="#DAC8F8"
+                    android:textColorHint="#80F8DE7E"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="10">
+                android:layout_weight="10"
+                android:gravity="center">
 
                 <Button
                     android:id="@+id/btn_a_pro_update"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:background="@drawable/round_button"
-                    android:text="Save Changes"
-                    android:gravity="center"
-                    android:textColor="#DAC8F8"
                     android:layout_marginStart="20dp"
-                    android:textSize="20sp"
-                    />
+                    android:background="@drawable/round_button"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:text="Save Changes"
+                    android:textColor="#DAC8F8"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="10">
+                android:layout_weight="10"
+                android:gravity="center">
 
                 <Button
                     android:id="@+id/btn_a_pro_logout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:background="@drawable/round_button"
-                    android:text="Logout"
-                    android:gravity="center"
-                    android:textColor="#DAC8F8"
                     android:layout_marginStart="20dp"
-                    android:textSize="20sp"
-                    />
+                    android:background="@drawable/round_button"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:text="Logout"
+                    android:textColor="#DAC8F8"
+                    android:textSize="20sp" />
             </LinearLayout>
 
 

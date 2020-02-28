@@ -70,6 +70,7 @@ public class Message extends Fragment {
                     //empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(messageListRecylerAdapter);
+                    messageListRecylerAdapter.notifyDataSetChanged();
 
                     messageListRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
                         @Override

@@ -6,9 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_weight="10"
-    android:background="@drawable/ts"
-    android:backgroundTint="#838A72B4"
-    android:backgroundTintMode="screen"
     tools:context=".LoginScreen">
 
     <LinearLayout

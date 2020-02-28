@@ -34,7 +34,6 @@ public class AddTools extends Fragment {
     private AddToolsListRecylerAdapter addToolsListRecylerAdapter;
     private ToolsListRecylerAdapter toolsListRecylerAdapter;
     private ArrayList<ToolsList_Pojo> toolsList_pojos;
-    //RecyclerView recyclerView;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
 
     private int position;
@@ -59,8 +58,9 @@ public class AddTools extends Fragment {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.close) {//getActivity().getFragmentManager().popBackStack();
-                    getActivity().onBackPressed();
+                if (item.getItemId() == R.id.close) {
+                    getFragmentManager().popBackStack();
+                    //getActivity().onBackPressed();
                     return true;
                 }
                 return  false;

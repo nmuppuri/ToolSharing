@@ -54,7 +54,7 @@ public class StudentMyTools extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("Owned"));
         tabLayout.addTab(tabLayout.newTab().setText("Rented"));
         tabLayout.addTab(tabLayout.newTab().setText("History"));
-        tabLayout.addTab(tabLayout.newTab().setText("Reviews"));
+        tabLayout.addTab(tabLayout.newTab().setText("Review"));
         tabLayout.addTab(tabLayout.newTab().setText("Penalty"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

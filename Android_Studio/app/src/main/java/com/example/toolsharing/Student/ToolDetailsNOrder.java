@@ -117,7 +117,11 @@ public class ToolDetailsNOrder extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                //getActivity().onBackPressed();
+                //getActivity().getFragmentManager().beginTransaction().remove().commit();
+                //getFragmentManager().popBackStack();
+                Fragment fragment = new StudentToolSearch();
+                getFragmentManager().beginTransaction().replace(R.id.frag_stu, fragment).commit();
             }
         });
 
@@ -165,7 +169,12 @@ public class ToolDetailsNOrder extends Fragment {
             //td_img.setText(getArguments().getString("tImg", "NULL"));
             td_desc.setText(getArguments().getString("tD", "NULL"));
             //td_rat.setText(getArguments().getString("tr", "NULL"));
-            td_avail.setText(getArguments().getString("availF", "NULL") + " days");
+            if(Integer.parseInt(getArguments().getString("availF")) < 0 ) {
+                td_avail.setText("0 days");
+            } else{
+                td_avail.setText(getArguments().getString("availF", "NULL") + " days");
+            }
+            System.out.println("URL Available From: " + getArguments().getString("fromdate", null));
             Glide.with(getContext()).asBitmap().load(getArguments().getString("tImg", "NULL")).into(td_img);
         }
         td_rat.getProgressDrawable().setColorFilter(Color.parseColor("#B97D05"), PorterDuff.Mode.SRC_ATOP);
@@ -232,6 +241,9 @@ public class ToolDetailsNOrder extends Fragment {
             btn_td_borrow.setText("Not Available");
             btn_td_ed.setEnabled(false);
             btn_td_sd.setEnabled(false);
+            new_msg.setEnabled(false);
+            ratingscomments.setEnabled(false);
+            btn_favorite.setEnabled(false);
             btn_td_borrow.setBackgroundResource(R.drawable.round_button_disable);
         } else if(psid.trim().equals(getArguments().getString("lsid"))){
             btn_favorite.setEnabled(false);
@@ -278,6 +290,10 @@ public class ToolDetailsNOrder extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(), "Please Enter All Details!", Toast.LENGTH_LONG).show();
                 } else{
                     toolOrder();
+                    //getActivity().finish();
+                    Fragment fragment = new StudentToolSearch();
+                    getFragmentManager().beginTransaction().replace(R.id.frag_stu, fragment).commit();
+                    //getFragmentManager().popBackStack();
                     //getActivity().onBackPressed();
                 }
             }
@@ -293,8 +309,10 @@ public class ToolDetailsNOrder extends Fragment {
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), onDateSetListener, y, m ,d);
         if(fDate == null) {
             datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+            datePickerDialog.getDatePicker().setMaxDate(new Date().getTime() + (1000*60*60*24));
         } else{
             datePickerDialog.getDatePicker().setMinDate(fDate.getTime());
+            datePickerDialog.getDatePicker().setMaxDate(fDate.getTime() + (1000*60*60*24*7));
         }
         datePickerDialog.getWindow();
         datePickerDialog.show();

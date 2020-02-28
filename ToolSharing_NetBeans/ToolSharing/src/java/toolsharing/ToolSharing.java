@@ -532,7 +532,7 @@ public class ToolSharing {
 "                left outer join favorite_tools f  \n" +
 "                on f.posted_tool_id = t.tool_id  \n" +
 "                and f.posted_student_id = st.posted_student_id \n" +
-"               where DATEDIFF(coalesce(od.to_date, current_date), current_date) >= 0 \n" +
+"             --  where DATEDIFF(coalesce(od.to_date, current_date), current_date) >= 0 \n" +
 "                order by availability desc, tool_name";
             
             stm = con.prepareStatement(sql);           
@@ -555,12 +555,6 @@ public class ToolSharing {
                     trating = rs.getFloat("avg_rating");
                     availabletill = rs.getInt(9);
                     availablefrom = rs.getInt(10);
-                    if(availablefrom < 0){
-                        String sql1 = "delete from order_details where to_date < current_date";
-                        PreparedStatement stm1 = con.prepareStatement(sql1);
-                        stm1.executeUpdate();
-                        stm1.close();
-                    }
                     availability = rs.getInt(11);
                     fav = rs.getInt(12);
                     //student_rating = rs.getFloat("sid_rating");
@@ -1359,11 +1353,15 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "select st.posted_student_id, t.*, coalesce(od.to_date, ''), coalesce(od.from_date, ''), st.rating,\n" +
+            String sql = "select distinct st.posted_student_id, t.*, coalesce(od.to_date, ''), coalesce(od.from_date, ''), st.rating,\n" +
                 "DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,\n" +
                 "DATEDIFF(coalesce(od.to_date, current_date), current_date) availableIn,\n" +
                 "st.availability, f.favorite\n" +
-                "from student_tools st left outer join order_details od on od.posted_student_id = st.posted_student_id\n" +
+                "from student_tools st left outer join (select posted_tool_id, "
+                    + "posted_student_id, borrowed_student_id, max(from_date) from_date, "
+                    + "max(to_date) to_date, max(order_id) from order_details\n" +
+"				group by 1,2,3) od "
+                    + "on od.posted_student_id = st.posted_student_id\n" +
                 "and st.posted_tool_id = od.posted_tool_id\n" +
                 "right outer join tools t\n" +
                 "on st.posted_tool_id = t.tool_id\n" +

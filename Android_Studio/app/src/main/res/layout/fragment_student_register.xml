@@ -5,9 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="5"
-    android:background="@drawable/ts"
-    android:backgroundTint="#838A72B4"
-    android:backgroundTintMode="screen"
     android:orientation="vertical"
     android:gravity="top|center"
     tools:context=".Student.StudentRegister">

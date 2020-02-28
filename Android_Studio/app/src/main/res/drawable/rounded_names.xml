@@ -9,8 +9,9 @@
         android:topLeftRadius="50dp"
         android:topRightRadius="50dp"/>
     <gradient
-        android:startColor="#9A5AEE98"
-        android:endColor="#9A5AEE98"
+        android:startColor="#BFB787FA"
+        android:endColor="#BFB787FA"
+        android:angle="270"
         />
 
 

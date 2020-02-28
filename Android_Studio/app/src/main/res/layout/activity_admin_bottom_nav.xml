@@ -6,6 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@drawable/ts"
+    android:backgroundTint="#838A72B4"
+    android:backgroundTintMode="screen"
     tools:context=".Admin.AdminBottomNav">
 
     <FrameLayout

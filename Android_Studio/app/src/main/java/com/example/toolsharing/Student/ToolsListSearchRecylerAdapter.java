@@ -2,6 +2,7 @@ package com.example.toolsharing.Student;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,16 +23,16 @@ import com.example.toolsharing.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsListSearchRecylerAdapter.Viewholder> implements Filterable {
+public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsListSearchRecylerAdapter.Viewholder> implements Filterable{
     private List<SearchToolsList_Pojo> searchToolsList;
-    private List<SearchToolsList_Pojo> searchToolsListFull;
+    private List<SearchToolsList_Pojo> searchToolsListFilter;
     private Context c;
     private View.OnClickListener onClickListener;
     private View view;
 
     ToolsListSearchRecylerAdapter(List<SearchToolsList_Pojo> searchToolsList, Context c) {
         this.searchToolsList = searchToolsList;
-        searchToolsListFull = new ArrayList<>(searchToolsList);
+        searchToolsListFilter = searchToolsList;
         this.c = c;
     }
 
@@ -46,27 +47,27 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
     @Override
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
         view.setBackgroundColor(Color.parseColor("#cc9c9b9a"));
-        Glide.with(c).asBitmap().load(searchToolsList.get(position).getToolImg()).into(holder.tool_img);
-        holder.tool_name.setText(searchToolsList.get(position).getToolName());
+        Glide.with(c).asBitmap().load(searchToolsListFilter.get(position).getToolImg()).into(holder.tool_img);
+        holder.tool_name.setText(searchToolsListFilter.get(position).getToolName());
 
-        /*holder.ts_rat.getProgressDrawable().setColorFilter(Color.parseColor("#FCB637"), PorterDuff.Mode.SRC_ATOP);
-        holder.ts_rat.setRating(searchToolsList.get(position).getToolRating());
-        if(String.valueOf(searchToolsList.get(position).getToolFavorite()).trim().equals("1")){
+        holder.ts_rat.getProgressDrawable().setColorFilter(Color.parseColor("#FCB637"), PorterDuff.Mode.SRC_ATOP);
+        holder.ts_rat.setRating(searchToolsListFilter.get(position).getToolRating());
+        /*if(String.valueOf(searchToolsList.get(position).getToolFavorite()).trim().equals("1")){
             holder.btn_add_fav.setBackgroundResource(R.drawable.ic_turned_in_black_24dp);
         }*/
 
-        if(String.valueOf(searchToolsList.get(position).getPostedStudentId()).trim().equals("0") || String.valueOf(searchToolsList.get(position).getToolAvailability()).trim().equals("0")){
+        if(String.valueOf(searchToolsListFilter.get(position).getPostedStudentId()).trim().equals("0") || String.valueOf(searchToolsListFilter.get(position).getToolAvailability()).trim().equals("0")){
             holder.ts_sid.setText("_ _");
             holder.ts_avail.setBackgroundResource(R.drawable.ic_highlight_off_black_24dp);
-            System.out.println("URL name sid: " + searchToolsList.get(position).getToolName() + " : " + searchToolsList.get(position).getPostedStudentId());
+            System.out.println("URL name sid: " + searchToolsListFilter.get(position).getToolName() + " : " + searchToolsListFilter.get(position).getPostedStudentId());
 
             view.setFocusable(false);
-        } else if(searchToolsList.get(position).getToolAvailableFromInDays() > 0){
+        } else if(searchToolsListFilter.get(position).getToolAvailableFromInDays() > 0){
             holder.ts_avail.setBackgroundResource(R.drawable.ic_remove_circle_black_24dp);
-            holder.ts_sid.setText(String.valueOf(searchToolsList.get(position).getPostedStudentId()));
+            holder.ts_sid.setText(String.valueOf(searchToolsListFilter.get(position).getPostedStudentId()));
         } else{
             holder.ts_avail.setBackgroundResource(R.drawable.ic_check_circle_black_24dp);
-            holder.ts_sid.setText(String.valueOf(searchToolsList.get(position).getPostedStudentId()));
+            holder.ts_sid.setText(String.valueOf(searchToolsListFilter.get(position).getPostedStudentId()));
         }
     }
 
@@ -76,8 +77,50 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
 
     @Override
     public int getItemCount() {
-        return searchToolsList.size();
+        return searchToolsListFilter.size();
     }
+
+
+    @Override
+    public Filter getFilter() {
+
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+
+                String charString = charSequence.toString();
+
+                if (charString.isEmpty()) {
+
+                    searchToolsListFilter = searchToolsList;
+                } else {
+
+                    ArrayList<SearchToolsList_Pojo> filteredList = new ArrayList<>();
+
+                    for (SearchToolsList_Pojo searchToolsListPojo : searchToolsList) {
+
+                        if (searchToolsListPojo.getToolName().toLowerCase().contains(charString) || String.valueOf(searchToolsListPojo.getPostedStudentId()).contains(charString)) {
+
+                            filteredList.add(searchToolsListPojo);
+                        }
+                    }
+
+                    searchToolsListFilter = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = searchToolsListFilter;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                searchToolsListFilter = (ArrayList<SearchToolsList_Pojo>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
 
     public class Viewholder extends RecyclerView.ViewHolder{
 
@@ -104,39 +147,4 @@ public class ToolsListSearchRecylerAdapter extends RecyclerView.Adapter<ToolsLis
 
         }
     }
-
-    @Override
-    public Filter getFilter() {
-        return searchFilter;
-    }
-
-    private Filter searchFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            List<SearchToolsList_Pojo> filterList = new ArrayList<>();
-
-            if(charSequence == null || charSequence.length() == 0){
-                filterList.addAll(searchToolsListFull);
-            } else {
-                String filterPattern = charSequence.toString().toLowerCase().trim();
-
-                for(SearchToolsList_Pojo list_pojo : searchToolsListFull){
-                    if(list_pojo.getToolName().toLowerCase().contains(filterPattern)){
-                        filterList.add(list_pojo);
-                    }
-                }
-            }
-            FilterResults filterResults = new FilterResults();
-            filterResults.values = filterList;
-
-            return filterResults;
-        }
-
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            searchToolsList.clear();
-            searchToolsList.addAll((List) filterResults.values);
-            notifyDataSetChanged();
-        }
-    };
 }
