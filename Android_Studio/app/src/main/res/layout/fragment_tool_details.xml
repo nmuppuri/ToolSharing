@@ -181,7 +181,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
-                android:scrollbarFadeDuration="3"
+                android:layout_marginEnd="10dp"
                 android:scrollbarSize="5dp"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical"

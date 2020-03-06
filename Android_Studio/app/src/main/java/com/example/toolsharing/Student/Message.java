@@ -4,11 +4,13 @@ package com.example.toolsharing.Student;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -31,6 +33,7 @@ public class Message extends Fragment {
     private View view;
     private MessageListRecylerAdapter messageListRecylerAdapter;
     private ArrayList<MyMessages_Pojo> myMessagesPojos;
+    Toolbar toolbar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +47,20 @@ public class Message extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String tsid = getArguments().getString("sId");
+        final String tsid = getArguments().getString("sId");
+
+
+        toolbar = view.findViewById(R.id.stu_msg_tool);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.refresh) {
+                    myMessages(Integer.parseInt(tsid));
+                    return true;
+                }
+                return  false;
+            }
+        });
         myMessages(Integer.parseInt(tsid));
     }
 

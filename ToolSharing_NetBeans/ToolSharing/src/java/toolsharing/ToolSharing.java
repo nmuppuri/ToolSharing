@@ -153,6 +153,8 @@ public class ToolSharing {
             stm.setInt(1, id);
             stm.executeUpdate();
             stm.close();
+            
+            con.commit(); //
 
             mainObj.accumulate("Status", "OK");
             mainObj.accumulate("Timestamp", epoc);
@@ -163,13 +165,22 @@ public class ToolSharing {
                     null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
                     null, ex);
             return getError(ex.toString(), 0, 0);
         } finally {
             closeConnection();
         }
-
         return mainObj.toString();
     }
     
@@ -191,6 +202,7 @@ public class ToolSharing {
             stm.setInt(1, id);
             stm.executeUpdate();
             stm.close();
+            con.commit(); //
 
             mainObj.accumulate("Status", "OK");
             mainObj.accumulate("Timestamp", epoc);
@@ -201,6 +213,16 @@ public class ToolSharing {
                     null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
                     null, ex);
             return getError(ex.toString(), 0, 0);
@@ -270,7 +292,7 @@ public class ToolSharing {
             createConnection();
 
             String sql = "select passwd from person "
-                    + "where email = trim(?)";
+                    + "where trim(email) = trim(?)";
             
             stm = con.prepareStatement(sql); 
             stm.setString(1, email);
@@ -315,8 +337,8 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "SELECT student_id, concat(first_name, ' ', last_name) as name, email, passwd, delete_request FROM student_registration inner join person where student_id = id"
-                    + " and decision = 'Pending'";
+            String sql = "SELECT student_id, concat(first_name, ' ', last_name) as name, email, passwd, delete_request FROM student_registration inner join person ON student_id = id"
+                    + " WHERE decision = 'Pending'";
             
             stm = con.prepareStatement(sql);            
             ResultSet rs = stm.executeQuery();
@@ -389,6 +411,8 @@ public class ToolSharing {
             stm.setInt(1, student_id);
             stm.executeUpdate();
             stm.close();
+            
+            con.commit(); //
 
             mainObj.accumulate("Status", "OK");
             mainObj.accumulate("Timestamp", epoc);
@@ -399,6 +423,16 @@ public class ToolSharing {
                     null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
                     null, ex);
             return getError(ex.toString(), 0, 0);
@@ -422,8 +456,9 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "delete from message_recepient where to_student_id = ?";
+            String sql = "DELETE FROM message_recepient WHERE to_student_id = ? or message_id in (select message_id from message where from_student_id = ?)";
             String sql1 = "delete from message where from_student_id = ?";
+            String sql10 = "DELETE FROM tools_comment where order_id in (select order_id from order_details where posted_student_id = ? OR borrowed_student_id = ?)";
             String sql2 = "delete from order_details "
                     + "where posted_student_id = ? or borrowed_student_id = ?";
             String sql3 = "delete from favorite_tools "
@@ -436,11 +471,18 @@ public class ToolSharing {
 
             stm = con.prepareStatement(sql);
             stm.setInt(1, student_id);
+            stm.setInt(2, student_id);
             stm.executeUpdate();
             stm.close();
             
             stm = con.prepareStatement(sql1);
             stm.setInt(1, student_id);
+            stm.executeUpdate();
+            stm.close();
+            
+            stm = con.prepareStatement(sql10);
+            stm.setInt(1, student_id);
+            stm.setInt(2, student_id);
             stm.executeUpdate();
             stm.close();
             
@@ -475,6 +517,8 @@ public class ToolSharing {
             stm.setInt(1, student_id);
             stm.executeUpdate();
             stm.close();
+            
+            con.commit(); //
 
             mainObj.accumulate("Status", "OK");
             mainObj.accumulate("Timestamp", epoc);
@@ -485,6 +529,16 @@ public class ToolSharing {
                     null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
                     null, ex);
             return getError(ex.toString(), 0, 0);
@@ -628,6 +682,8 @@ public class ToolSharing {
             
             stm.executeUpdate();
             stm.close();
+            
+            con.commit(); //
 
             mainObj.accumulate("Status", "OK");
             mainObj.accumulate("Timestamp", epoc);
@@ -638,6 +694,16 @@ public class ToolSharing {
                     null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure *
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
                     null, ex);
             return getError(ex.toString(), 0, 0);
@@ -721,6 +787,8 @@ public class ToolSharing {
             stm.setInt(1, psid);
             stm.setInt(2, ptid);
             stm.executeUpdate();
+            
+            con.commit(); //
                 
             mainObj.accumulate("Status", "Ok");
             mainObj.accumulate("Timestamp", epoc);
@@ -731,6 +799,16 @@ public class ToolSharing {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure *
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } finally {
@@ -825,6 +903,8 @@ public class ToolSharing {
             stm.setInt(1,avail);
             stm.executeUpdate();
                 
+            con.commit(); //
+            
             mainObj.accumulate("Status", "Ok");
             mainObj.accumulate("Timestamp", epoc);
             mainObj.accumulate("Message", "Updated Successfully!");
@@ -833,6 +913,16 @@ public class ToolSharing {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } finally {
@@ -943,7 +1033,8 @@ public class ToolSharing {
                 "and od.posted_student_id = st.posted_student_id\n" +
                 "where borrowed_student_id = ?"
                     + " and returned = 2 "
-                    + "and penalty = 0";
+                    + "and penalty = 0 "
+                    + "order by od.to_date desc";
             
             stm = con.prepareStatement(sql);  
             stm.setInt(1,bsid);
@@ -1021,7 +1112,8 @@ public class ToolSharing {
                 "on st.posted_tool_id = t.tool_id\n" +
                 "and od.posted_student_id = st.posted_student_id\n" +
                 "where st.posted_student_id = ?"
-                    + " and returned = 1";
+                    + " and returned = 1 "
+                    + "order by od.to_date desc";
             
             stm = con.prepareStatement(sql);  
             stm.setInt(1,psid);
@@ -1180,6 +1272,8 @@ public class ToolSharing {
             stm = con.prepareStatement(sql);
             stm.setInt(1,order_id);
             stm.executeUpdate();
+            
+            con.commit(); //
                 
             mainObj.accumulate("Status", "Ok");
             mainObj.accumulate("Timestamp", epoc);
@@ -1189,6 +1283,16 @@ public class ToolSharing {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } finally {
@@ -1225,18 +1329,29 @@ public class ToolSharing {
             stm = con.prepareStatement(sql);
             stm.setInt(2, order_id);
             stm.setFloat(1, Float.parseFloat(penalty));
-            int n = stm.executeUpdate();
+            stm.executeUpdate();
             
-            if( n != 0){
+            con.commit(); //
+            
             mainObj.accumulate("Status", "Ok");
             mainObj.accumulate("Timestamp", epoc);
             mainObj.accumulate("Message", "Return Accepted!");
-            }
+            
 
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } finally {
@@ -1282,6 +1397,8 @@ public class ToolSharing {
             stm.setString(3, s_com);
             stm.executeUpdate();
             stm.close();
+            
+            con.commit(); //
                 
             mainObj.accumulate("Status", "Ok");
             mainObj.accumulate("Timestamp", epoc);
@@ -1292,6 +1409,16 @@ public class ToolSharing {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } finally {
@@ -1322,6 +1449,8 @@ public class ToolSharing {
             stm.setInt(2, ptid);
             stm.setInt(3, lsid);
             stm.executeUpdate();
+            
+            con.commit(); //
                 
             mainObj.accumulate("Status", "Ok");
             mainObj.accumulate("Timestamp", epoc);
@@ -1332,6 +1461,16 @@ public class ToolSharing {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure /
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } finally {
@@ -1454,6 +1593,8 @@ public class ToolSharing {
             stm.setInt(2, ptid);
             stm.setInt(3, lsid);
             stm.executeUpdate();
+            
+            con.commit(); //
                 
             mainObj.accumulate("Status", "Ok");
             mainObj.accumulate("Timestamp", epoc);
@@ -1464,6 +1605,16 @@ public class ToolSharing {
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE, null, ex);
             return getError(ex.toString(), 0, 0);
         } finally {
@@ -1562,6 +1713,8 @@ public class ToolSharing {
             stm.setString(5, addr);
             stm.executeUpdate();
             stm.close();
+            
+            con.commit(); //
 
             mainObj.accumulate("Status", "OK");
             mainObj.accumulate("Timestamp", epoc);
@@ -1572,6 +1725,16 @@ public class ToolSharing {
                     null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
                     null, ex);
             return getError(ex.toString(), 0, 0);
@@ -1614,6 +1777,8 @@ public class ToolSharing {
             stm.setInt(2, tsid);
             stm.executeUpdate();
             stm.close();
+            
+            con.commit(); //
 
             mainObj.accumulate("Status", "OK");
             mainObj.accumulate("Timestamp", epoc);
@@ -1624,6 +1789,16 @@ public class ToolSharing {
                     null, ex);
             return getError(ex.toString(), 0, 0);
         } catch (SQLException ex) {
+            /* Rollback on failure */
+            try{
+                if(con != null)
+                    con.rollback();
+            }catch(SQLException e){
+                Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
+                    null, e);
+                return getError(e.toString(), 0, 0);
+            }
+            /*      */
             Logger.getLogger(ToolSharing.class.getName()).log(Level.SEVERE,
                     null, ex);
             return getError(ex.toString(), 0, 0);
@@ -1838,27 +2013,30 @@ public class ToolSharing {
         con = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/toolsharing?autoReconnect=true&useSSL=false",
                 "root", "naren");
+        
+        con.setAutoCommit(false);   //New
     }
 
     private static void closeConnection() {
         if (rs != null) {
             try {
                 rs.close();
-            } catch (SQLException e) {
+            } catch (SQLException ex) {
                 /* ignored */
             }
         }
         if (stm != null) {
             try {
                 stm.close();
-            } catch (SQLException e) {
+            } catch (SQLException ex) {
                 /* ignored */
             }
         }
         if (con != null) {
             try {
+                con.setAutoCommit(true); //New
                 con.close();
-            } catch (SQLException e) {
+            } catch (SQLException ex) {
                 /* ignored */
             }
         }

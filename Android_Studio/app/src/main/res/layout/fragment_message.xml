@@ -35,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#CE10316B"
+            app:menu="@menu/refresh"
             android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
             <TextView

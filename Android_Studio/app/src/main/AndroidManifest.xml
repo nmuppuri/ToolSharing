@@ -12,6 +12,7 @@
         android:hardwareAccelerated="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:windowSoftInputMode="adjustPan"
         android:usesCleartextTraffic="true">
         <activity android:name=".Student.StudentBottomNav" />
         <activity android:name=".Admin.AdminBottomNav" />

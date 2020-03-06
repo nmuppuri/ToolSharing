@@ -36,7 +36,7 @@
                 android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="12"
+                android:ems="10"
                 android:layout_alignParentStart="@id/add_tool_image"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="@id/btn_add_tool"

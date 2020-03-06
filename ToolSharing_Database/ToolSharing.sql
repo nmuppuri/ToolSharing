@@ -1,3 +1,16 @@
+/*
+DROP TABLE message_recepient;
+DROP TABLE message;
+DROP TABLE order_details;
+DROP TABLE favorite_tools;
+DROP TABLE student_tools;
+DROP TABLE student_registration;
+DROP TABLE student;
+DROP TABLE admins;
+DROP TABLE person;
+
+*/
+
 /*	*****TEAM MEMBERS*****
 
 Narendra Kumar Muppuri
@@ -62,7 +75,7 @@ CREATE TABLE IF NOT EXISTS tools (
     tool_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     tool_name VARCHAR(50) NOT NULL,
     tool_desc VARCHAR(1000),
-    tool_img varchar(500)
+    tool_img VARCHAR(500)
 );
 
 ALTER TABLE tools AUTO_INCREMENT = 100;
@@ -73,7 +86,7 @@ CREATE TABLE IF NOT EXISTS student_tools (
 	posted_student_id INT NOT NULL,
     posted_tool_id INT NOT NULL,
     availability INT,
-    rating float,
+    rating FLOAT,
     PRIMARY KEY (posted_student_id, posted_tool_id),
     FOREIGN KEY (posted_student_id)
         REFERENCES student (student_id),
@@ -87,12 +100,10 @@ CREATE TABLE IF NOT EXISTS favorite_tools (
 	posted_student_id INT NOT NULL,
     posted_tool_id INT NOT NULL,
     logged_student_id INT NOT NULL,
-    favorite int,
+    favorite INT,
     PRIMARY KEY (posted_student_id, posted_tool_id, logged_student_id),
-    FOREIGN KEY (posted_student_id)
-        REFERENCES student_tools (posted_student_id),
-    FOREIGN KEY (posted_tool_id)
-        REFERENCES student_tools (posted_tool_id),
+    FOREIGN KEY (posted_student_id, posted_tool_id)
+        REFERENCES student_tools (posted_student_id, posted_tool_id),
     FOREIGN KEY (logged_student_id)
         REFERENCES student (student_id)
 );
@@ -102,21 +113,19 @@ CREATE TABLE IF NOT EXISTS favorite_tools (
 
 DROP TABLE IF EXISTS order_details;
 CREATE TABLE IF NOT EXISTS order_details (
-	order_id int not null auto_increment,
+	order_id INT NOT NULL AUTO_INCREMENT,
     posted_tool_id INT NOT NULL,
 	posted_student_id INT NOT NULL,
     borrowed_student_id INT NOT NULL,
     from_date DATE NOT NULL,
     to_date DATE NOT NULL,
     returned INT,
-    penalty float,
+    penalty FLOAT,
     PRIMARY KEY (order_id, returned),
-    FOREIGN KEY (posted_tool_id)
-        REFERENCES student_tools (posted_tool_id),
+    FOREIGN KEY (posted_student_id, posted_tool_id)
+        REFERENCES student_tools (posted_student_id, posted_tool_id),
     FOREIGN KEY (borrowed_student_id)
-        REFERENCES student (student_id),
-    FOREIGN KEY (posted_student_id)
-        REFERENCES student_tools (posted_student_id)
+        REFERENCES student (student_id)
 );
 
 ALTER TABLE order_details AUTO_INCREMENT = 1000;
@@ -127,7 +136,7 @@ ALTER TABLE order_details AUTO_INCREMENT = 1000;
 DROP TABLE IF EXISTS tools_comment;
 CREATE TABLE IF NOT EXISTS tools_comment (
 	order_id INT NOT NULL,
-    rating float,
+    rating FLOAT,
     comments VARCHAR(500),
     PRIMARY KEY (order_id),
     FOREIGN KEY (order_id)
