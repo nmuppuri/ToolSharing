@@ -108,33 +108,13 @@
                         android:id="@+id/new_msg"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
                         android:layout_marginEnd="10dp"
                         android:layout_weight=".2"
                         android:background="#9A5AEE98"
                         android:src="@drawable/ic_message_black_24dp" />
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/ratingscomments"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_names1"
-                    android:gravity="center"
-                    android:text="@string/comments"
-                    android:textColor="#920C3F97"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <RatingBar
-                    android:id="@+id/td_rat"
-                    style="?android:attr/ratingBarStyleIndicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="40dp"
-                    android:layout_weight="1"
-                    android:stepSize="0.25" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -157,6 +137,28 @@
                     android:text="availability"
                     android:textColor="#B3000000"
                     android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/ratingscomments"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/comments"
+                    android:textColor="#920C3F97"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <!--<RatingBar
+                    android:id="@+id/td_rat"
+                    style="?android:attr/ratingBarStyleIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_weight="1"
+                    android:stepSize="0.25" />-->
 
             </LinearLayout>
         </LinearLayout>

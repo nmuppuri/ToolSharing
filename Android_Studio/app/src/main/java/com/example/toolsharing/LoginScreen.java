@@ -119,7 +119,7 @@ public class LoginScreen extends Fragment {
                 System.out.println("URL Status Called!: " + status);
 
                 if(status.equalsIgnoreCase("error")){
-                    Toast.makeText(getActivity().getApplicationContext(),"Invalid Login!!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), statusMessage_pojo.getMessage(), Toast.LENGTH_LONG).show();
                 }else{
                     if(statusMessage_pojo.getAdminaccess().equalsIgnoreCase("y")){
                         Intent intent = new Intent(getActivity(), AdminBottomNav.class);

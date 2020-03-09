@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
@@ -53,8 +53,7 @@
             android:ems="10"
             android:hint="Write a message"
             android:inputType="text"
-            android:paddingHorizontal="10dp"
-            android:text="" />
+            android:paddingHorizontal="10dp" />
 
 
         <ImageButton

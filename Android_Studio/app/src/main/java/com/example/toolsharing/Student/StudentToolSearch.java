@@ -137,9 +137,6 @@ public class StudentToolSearch extends Fragment{
                             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-                            searchView.setQuery("", false);
-                            searchView.setIconified(true);
-
 
                             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                             int position = viewHolder.getAdapterPosition();

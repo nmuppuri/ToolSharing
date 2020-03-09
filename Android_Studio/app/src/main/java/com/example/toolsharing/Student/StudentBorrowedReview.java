@@ -89,11 +89,12 @@ public class StudentBorrowedReview extends Fragment implements PenaltyDialog.Pen
                 String status = statusMessage_pojo.getStatus();
                 System.out.println("URL Student recycler Called!: " + status);
                 TextView empty_view = getView().findViewById(R.id.borr_empty_view);
+                RecyclerView recyclerView = view.findViewById(R.id.recycler_student_borrow_mytools);
                 if(!status.equalsIgnoreCase("error")) {
                     toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());
                     toolsListBorrowedRecylerAdapter = new ToolsListBorrowedRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-                    RecyclerView recyclerView = view.findViewById(R.id.recycler_student_borrow_mytools);
+
                     empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(toolsListBorrowedRecylerAdapter);
@@ -120,6 +121,7 @@ public class StudentBorrowedReview extends Fragment implements PenaltyDialog.Pen
                     });
 
                 } else{
+                    recyclerView.setVisibility(View.INVISIBLE);
                     empty_view.setText("No Tools for Review");
                     empty_view.setVisibility(View.VISIBLE);
                 }

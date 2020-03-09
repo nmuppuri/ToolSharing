@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,7 @@ public class StudentOwned extends Fragment {
     private ArrayList<ToolsList_Pojo> toolsList_pojos;
     int position;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
-
+    TextView empty_view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +48,8 @@ public class StudentOwned extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        empty_view = view.findViewById(R.id.owned_empty_view);
 
         System.out.println("URL STUDENT OWNED: " + getArguments().getString("SID"));
         myToolList(Integer.parseInt(getArguments().getString("SID")));
@@ -72,6 +75,7 @@ public class StudentOwned extends Fragment {
                     toolsListOwnedRecylerAdapter = new ToolsListOwnedRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
                     RecyclerView recyclerView = view.findViewById(R.id.recycler_student_owned_mytools);
+
                     //empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(toolsListOwnedRecylerAdapter);
@@ -96,6 +100,10 @@ public class StudentOwned extends Fragment {
                             }
                         }
                     });
+
+                }
+                else{
+                    empty_view.setVisibility(View.VISIBLE);
 
                 }
             }

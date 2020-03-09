@@ -153,7 +153,7 @@ public class AdminDashboard extends Fragment {
 
                 }
                 else {
-                    //recyclerView.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.INVISIBLE);
                     empty_view.setVisibility(View.VISIBLE);
                 }
             }

@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -28,6 +30,7 @@ import com.example.toolsharing.Utils.GetDataServiceInterface;
 import com.example.toolsharing.Utils.RetrofitClientInstance;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +44,8 @@ public class MessageDetails extends Fragment {
     TextView fsid_msg_title;
     EditText msg_det_text;
     ImageButton btn_msg_det_text_send;
+    String msg;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
 
 
     @Override
@@ -54,6 +59,8 @@ public class MessageDetails extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         fsid_msg_title = view.findViewById(R.id.fsid_msg_title);
         fsid_msg_title.setText(getArguments().getString("fsid"));
@@ -84,13 +91,22 @@ public class MessageDetails extends Fragment {
         msg_det_text = view.findViewById(R.id.msg_det_text);
         btn_msg_det_text_send = view.findViewById(R.id.btn_msg_det_text_send);
 
+
+
         btn_msg_det_text_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                btn_msg_det_text_send.startAnimation(buttonClick);
 
-                if(!msg_det_text.getText().equals(null)){
+                msg = msg_det_text.getText().toString();
+                System.out.println("URL MESSAGE: " + "/" + msg + "/");
+
+                if(msg.isEmpty()) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Enter Message", Toast.LENGTH_LONG).show();
+                } else{
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    System.out.println("URL MESSAGE: " + "/" + msg_det_text.getText().toString() + "/");
                     sendNewMessage(getArguments().getString("tsid"), getArguments().getString("fsid"), String.valueOf(msg_det_text.getText()));
                     msg_det_text.getText().clear();
                 }
@@ -120,7 +136,7 @@ public class MessageDetails extends Fragment {
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(messageDetailsRecylerAdapter);
 
-                    messageDetailsRecylerAdapter.notifyDataSetChanged();
+                    //messageDetailsRecylerAdapter.notifyDataSetChanged();
 
                 }
             }

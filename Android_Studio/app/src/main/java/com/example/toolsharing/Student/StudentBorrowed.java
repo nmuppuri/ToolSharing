@@ -105,12 +105,13 @@ public class StudentBorrowed extends Fragment implements RatingDialog.RatingDial
                 String status = statusMessage_pojo.getStatus();
                 System.out.println("URL borrowToolList Called!: " + status);
                 TextView borr_empty_view = view.findViewById(R.id.borr_empty_view);
+                RecyclerView recyclerView = view.findViewById(R.id.recycler_student_borrow_mytools);
 
                 if(!status.equalsIgnoreCase("error")) {
                     toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());
                     toolsListBorrowedRecylerAdapter = new ToolsListBorrowedRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-                    RecyclerView recyclerView = view.findViewById(R.id.recycler_student_borrow_mytools);
+
                     borr_empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(toolsListBorrowedRecylerAdapter);
@@ -140,7 +141,7 @@ public class StudentBorrowed extends Fragment implements RatingDialog.RatingDial
 
                 }
                 else {
-                    //recyclerView.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.INVISIBLE);
                     borr_empty_view.setVisibility(View.VISIBLE);
                 }
             }

@@ -67,20 +67,23 @@
                     android:layout_marginBottom="5dp"
                     android:background="@drawable/approve_button"
                     android:text="approve"
+                    android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="#F8486854" />
 
-                <!-- <Button
+                <!--<Button
                     android:id="@+id/btn_reject"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
+                    android:layout_weight="3.5"
                     android:layout_gravity="center"
+                    android:visibility="gone"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_weight="5"
-                    android:background="@drawable/reject_button"
+                    android:background="@drawable/round_button"
                     android:text="reject"
-                    android:textColor="#F8486854" /> -->
+                    android:textSize="16sp"
+                    android:textColor="#F8486854" />-->
             </LinearLayout>
 
         </LinearLayout>

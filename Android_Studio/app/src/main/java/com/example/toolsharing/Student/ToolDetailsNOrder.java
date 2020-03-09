@@ -4,7 +4,6 @@ package com.example.toolsharing.Student;
 import android.app.DatePickerDialog;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,7 +119,11 @@ public class ToolDetailsNOrder extends Fragment {
                 //getActivity().onBackPressed();
                 //getActivity().getFragmentManager().beginTransaction().remove().commit();
                 //getFragmentManager().popBackStack();
+
+                Bundle b1 = new Bundle();
+                b1.putString("sId", getArguments().getString("lsid"));
                 Fragment fragment = new StudentToolSearch();
+                fragment.setArguments(b1);
                 getFragmentManager().beginTransaction().replace(R.id.frag_stu, fragment).commit();
             }
         });
@@ -130,7 +133,7 @@ public class ToolDetailsNOrder extends Fragment {
         td_img = view.findViewById(R.id.td_img);
         td_desc = view.findViewById(R.id.td_desc);
         td_name = view.findViewById(R.id.td_name);
-        td_rat = view.findViewById(R.id.td_rat);
+        //td_rat = view.findViewById(R.id.td_rat);
         td_avail = view.findViewById(R.id.td_avail);
         td_sd = view.findViewById(R.id.td_sd);
         td_ed = view.findViewById(R.id.td_ed);
@@ -177,8 +180,8 @@ public class ToolDetailsNOrder extends Fragment {
             System.out.println("URL Available From: " + getArguments().getString("fromdate", null));
             Glide.with(getContext()).asBitmap().load(getArguments().getString("tImg", "NULL")).into(td_img);
         }
-        td_rat.getProgressDrawable().setColorFilter(Color.parseColor("#B97D05"), PorterDuff.Mode.SRC_ATOP);
-        td_rat.setRating(Float.parseFloat(getArguments().getString("tr")));
+        //td_rat.getProgressDrawable().setColorFilter(Color.parseColor("#B97D05"), PorterDuff.Mode.SRC_ATOP);
+        //td_rat.setRating(Float.parseFloat(getArguments().getString("tr")));
 
         btn_td_sd.setOnClickListener(new View.OnClickListener() {
             @Override

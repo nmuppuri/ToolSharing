@@ -46,7 +46,9 @@ public class AdminRecyclerAdapter extends RecyclerView.Adapter<AdminRecyclerAdap
             holder.btn_approve.setText("Delete");
             holder.btn_approve.setBackgroundResource(R.drawable.round_button);
             holder.btn_approve.setTextColor(Color.parseColor("#DAC8F8"));
-        }
+        } /*else{
+            holder.btn_reject.setVisibility(View.VISIBLE);
+        }*/
     }
 
     public void setOnItemClickListener(View.OnClickListener itemClickListener){
@@ -61,7 +63,7 @@ public class AdminRecyclerAdapter extends RecyclerView.Adapter<AdminRecyclerAdap
     public class Viewholder extends RecyclerView.ViewHolder {
 
         TextView rsname, rsid;
-        Button btn_approve;
+        Button btn_approve, btn_reject;
 
         Viewholder(@NonNull View itemView) {
             super(itemView);
@@ -72,6 +74,10 @@ public class AdminRecyclerAdapter extends RecyclerView.Adapter<AdminRecyclerAdap
             btn_approve = itemView.findViewById(R.id.btn_approve);
             btn_approve.setTag(this);
             btn_approve.setOnClickListener(onClickListener);
+
+            /*btn_reject = itemView.findViewById(R.id.btn_reject);
+            btn_reject.setTag(this);
+            btn_reject.setOnClickListener(onClickListener);*/
 
         }
     }

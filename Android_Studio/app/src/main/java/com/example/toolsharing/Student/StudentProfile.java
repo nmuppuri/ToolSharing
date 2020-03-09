@@ -1,6 +1,7 @@
 package com.example.toolsharing.Student;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +28,8 @@ import com.example.toolsharing.R;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
 import com.example.toolsharing.Utils.RetrofitClientInstance;
 
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +46,12 @@ public class StudentProfile extends Fragment {
     private String pwd1, fn, ln, addr, phn, pwd;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.6F);
 
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,6 +63,8 @@ public class StudentProfile extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         stu_pro_name = view.findViewById(R.id.stu_pro_name);
         stu_pro_fn = view.findViewById(R.id.stu_pro_fn);
@@ -189,6 +201,7 @@ public class StudentProfile extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(), "Enter all details!", Toast.LENGTH_LONG).show();
                 } else{
                     updateProfile(pwd, fn, ln, addr, phn);
+                    stu_pro_pwd.setText(null);
                 }
             }
         });

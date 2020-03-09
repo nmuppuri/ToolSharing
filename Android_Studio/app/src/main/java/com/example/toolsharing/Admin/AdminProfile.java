@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +23,8 @@ import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
 import com.example.toolsharing.R;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
 import com.example.toolsharing.Utils.RetrofitClientInstance;
+
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,6 +52,8 @@ public class AdminProfile extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         a_pro_name = view.findViewById(R.id.admin_pro_name);
         a_pro_fn = view.findViewById(R.id.a_pro_fn);
@@ -184,6 +189,7 @@ public class AdminProfile extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(), "Enter all details!", Toast.LENGTH_LONG).show();
                 } else {
                     updateProfile(pwd, fn, ln, addr, phn);
+                    a_pro_pwd.setText(null);
                 }
             }
         });
