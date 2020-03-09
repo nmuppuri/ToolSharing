@@ -61,7 +61,7 @@ public class StudentBorrowedHist extends Fragment{
                 final StatusMessage_Pojo statusMessage_pojo = response.body();
                 String status = statusMessage_pojo.getStatus();
                 System.out.println("URL Student recycler Called!: " + status);
-                TextView empty_view = getView().findViewById(R.id.borr_empty_view);
+                TextView empty_view = view.findViewById(R.id.borr_empty_view);
 
                 if(!status.equalsIgnoreCase("error")) {
                     toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());

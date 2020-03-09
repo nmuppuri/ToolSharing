@@ -118,13 +118,13 @@ public class ToolDetailsNOrder extends Fragment {
             public void onClick(View view) {
                 //getActivity().onBackPressed();
                 //getActivity().getFragmentManager().beginTransaction().remove().commit();
-                //getFragmentManager().popBackStack();
+                getFragmentManager().popBackStack();
 
-                Bundle b1 = new Bundle();
+                /*Bundle b1 = new Bundle();
                 b1.putString("sId", getArguments().getString("lsid"));
                 Fragment fragment = new StudentToolSearch();
                 fragment.setArguments(b1);
-                getFragmentManager().beginTransaction().replace(R.id.frag_stu, fragment).commit();
+                getFragmentManager().beginTransaction().replace(R.id.frag_stu, fragment).commit();*/
             }
         });
 
