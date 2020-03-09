@@ -526,19 +526,19 @@ public class ToolSharing {
                 "on f.posted_tool_id = t.tool_id\n" +
                 "and f.posted_student_id = st.posted_student_id\n" +
                 "order by availability desc, tool_name";*/
-            String sql = "select distinct st.posted_student_id, t.*, coalesce(od.to_date, ''), coalesce(od.from_date, ''), st.rating avg_rating,   \n" +
-"                DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,   \n" +
-"                DATEDIFF(coalesce(od.to_date, current_date), current_date) availableIn,   \n" +
-"                st.availability, f.favorite, f.logged_student_id \n" +
-"                from student_tools st left outer join (select posted_tool_id, posted_student_id, borrowed_student_id, max(from_date) from_date, max(to_date) to_date, max(order_id) from order_details \n" +
-"				group by 1,2,3) od on od.posted_student_id = st.posted_student_id   \n" +
-"                and st.posted_tool_id = od.posted_tool_id   \n" +
-"                right outer join tools t   \n" +
-"                on st.posted_tool_id = t.tool_id   \n" +
-"                left outer join favorite_tools f   \n" +
-"                on f.posted_tool_id = t.tool_id   \n" +
-"                and f.posted_student_id = st.posted_student_id  \n" +
-"             --  where DATEDIFF(coalesce(od.to_date, current_date), current_date) >= 0  \n" +
+            String sql = "select distinct st.posted_student_id, t.*, coalesce(od.to_date, ''), coalesce(od.from_date, ''), st.rating avg_rating,    \n" +
+"                DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,    \n" +
+"                DATEDIFF(coalesce(od.to_date, current_date), current_date) availableIn,    \n" +
+"                st.availability, f.favorite, f.logged_student_id  \n" +
+"                from student_tools st left outer join (select posted_tool_id, posted_student_id, max(from_date) from_date, max(to_date) to_date, max(order_id) from order_details   \n" +
+"				group by 1,2) od on od.posted_student_id = st.posted_student_id    \n" +
+"                and st.posted_tool_id = od.posted_tool_id    \n" +
+"                right outer join tools t    \n" +
+"                on st.posted_tool_id = t.tool_id    \n" +
+"                left outer join favorite_tools f    \n" +
+"                on f.posted_tool_id = t.tool_id    \n" +
+"                and f.posted_student_id = st.posted_student_id   \n" +
+"             --  where DATEDIFF(coalesce(od.to_date, current_date), current_date) >= 0   \n" +
 "                order by availability desc, tool_name";
             
             stm = con.prepareStatement(sql);           
@@ -1293,6 +1293,8 @@ public class ToolSharing {
             stm.executeUpdate();
             stm.close();
             
+            con.close();
+            createConnection();
             stm = con.prepareStatement(sql1);
             stm.setInt(1, ord_id);
             stm.setFloat(2, Float.parseFloat(s_rat));
@@ -1374,21 +1376,18 @@ public class ToolSharing {
         try {
             createConnection();
 
-            String sql = "select distinct st.posted_student_id, t.*, coalesce(od.to_date, ''), coalesce(od.from_date, ''), st.rating,\n" +
-                "DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,\n" +
-                "DATEDIFF(coalesce(od.to_date, current_date), current_date) availableIn,\n" +
-                "st.availability, f.favorite\n" +
-                "from student_tools st left outer join (select posted_tool_id, "
-                    + "posted_student_id, borrowed_student_id, max(from_date) from_date, "
-                    + "max(to_date) to_date, max(order_id) from order_details\n" +
-"				group by 1,2,3) od "
-                    + "on od.posted_student_id = st.posted_student_id\n" +
-                "and st.posted_tool_id = od.posted_tool_id\n" +
-                "right outer join tools t\n" +
-                "on st.posted_tool_id = t.tool_id\n" +
-                "left outer join favorite_tools f\n" +
-                "on f.posted_tool_id = t.tool_id\n" +
-                "and f.posted_student_id = st.posted_student_id\n" +
+            String sql = "select distinct st.posted_student_id, t.*, coalesce(od.to_date, ''), coalesce(od.from_date, ''), st.rating avg_rating,    \n" +
+"                DATEDIFF(coalesce(od.from_date, current_date), current_date) availableTill,    \n" +
+"                DATEDIFF(coalesce(od.to_date, current_date), current_date) availableIn,    \n" +
+"                st.availability, f.favorite, f.logged_student_id  \n" +
+"                from student_tools st left outer join (select posted_tool_id, posted_student_id, max(from_date) from_date, max(to_date) to_date, max(order_id) from order_details   \n" +
+"				group by 1,2) od on od.posted_student_id = st.posted_student_id    \n" +
+"                and st.posted_tool_id = od.posted_tool_id    \n" +
+"                right outer join tools t    \n" +
+"                on st.posted_tool_id = t.tool_id    \n" +
+"                left outer join favorite_tools f    \n" +
+"                on f.posted_tool_id = t.tool_id    \n" +
+"                and f.posted_student_id = st.posted_student_id " +
                 "where f.favorite = 1 and f.logged_student_id = ? "
                     + "order by availability desc, tool_name ";
             
