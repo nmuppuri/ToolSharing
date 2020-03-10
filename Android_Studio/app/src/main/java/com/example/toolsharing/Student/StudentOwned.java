@@ -69,14 +69,14 @@ public class StudentOwned extends Fragment {
                 final StatusMessage_Pojo statusMessage_pojo = response.body();
                 String status = statusMessage_pojo.getStatus();
                 System.out.println("URL Student recycler Called!: " + status);
+                RecyclerView recyclerView = view.findViewById(R.id.recycler_student_owned_mytools);
 
                 if(!status.equalsIgnoreCase("error")) {
                     toolsList_pojos = new ArrayList<>(statusMessage_pojo.getToolsList());
                     toolsListOwnedRecylerAdapter = new ToolsListOwnedRecylerAdapter(toolsList_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-                    RecyclerView recyclerView = view.findViewById(R.id.recycler_student_owned_mytools);
 
-                    //empty_view.setVisibility(View.GONE);
+                    empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(toolsListOwnedRecylerAdapter);
 

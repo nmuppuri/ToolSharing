@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +38,7 @@ public class StudentToolFavorite extends Fragment {
     private RecyclerView recyclerView;
     Toolbar toolbar;
     String str;
+    TextView empty_view;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -56,6 +58,7 @@ public class StudentToolFavorite extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         favList(Integer.parseInt(getArguments().getString("sId")));
+        empty_view = view.findViewById(R.id.fav_empty_view);
     }
 
 
@@ -72,12 +75,12 @@ public class StudentToolFavorite extends Fragment {
                 final StatusMessage_Pojo statusMessage_pojo = response.body();
                 String status = statusMessage_pojo.getStatus();
                 System.out.println("URL Student recycler Called!: " + status);
-
+                recyclerView = view.findViewById(R.id.recycler_student_fav);
                 if(!status.equalsIgnoreCase("error")) {
                     searchToolsList_pojos = new ArrayList<>(statusMessage_pojo.getSearchToolsList());
                     toolsListFavRecylerAdapter = new ToolsListSearchRecylerAdapter(searchToolsList_pojos, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-                    recyclerView = view.findViewById(R.id.recycler_student_fav);
+
                     //empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     //toolsListFavRecylerAdapter.getFilter().filter(s);
@@ -134,8 +137,8 @@ public class StudentToolFavorite extends Fragment {
 
                 }
                 else {
-                    //recyclerView.setVisibility(View.INVISIBLE);
-                    //empty_view.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    empty_view.setVisibility(View.VISIBLE);
                 }
             }
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +35,7 @@ public class Message extends Fragment {
     private MessageListRecylerAdapter messageListRecylerAdapter;
     private ArrayList<MyMessages_Pojo> myMessagesPojos;
     Toolbar toolbar;
+    TextView empty_view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,7 +50,7 @@ public class Message extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         final String tsid = getArguments().getString("sId");
-
+        empty_view = view.findViewById(R.id.messages_empty_view);
 
         toolbar = view.findViewById(R.id.stu_msg_tool);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -120,7 +122,7 @@ public class Message extends Fragment {
                 }
                 else {
                     //recyclerView.setVisibility(View.INVISIBLE);
-                    //empty_view.setVisibility(View.VISIBLE);
+                    empty_view.setVisibility(View.VISIBLE);
                 }
             }
 

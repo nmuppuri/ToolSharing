@@ -75,16 +75,17 @@ public class AdminDashboard extends Fragment {
 
         service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
 
-        empty_view = getView().findViewById(R.id.empty_view);
+        empty_view = view.findViewById(R.id.empty_view);
+        recyclerView = view.findViewById(R.id.recycler_admin);
+
         toolbar = view.findViewById(R.id.dash_tool);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.refresh) {
                     studentRegisDetails();
-                    return true;
                 }
-                return  false;
+                return  true;
             }
         });
 
@@ -116,7 +117,7 @@ public class AdminDashboard extends Fragment {
                     studentRegisList_pojoArrayList = new ArrayList<>(statusMessage_pojo.getStudentRegis());
                     adminRecyclerAdapter = new AdminRecyclerAdapter(studentRegisList_pojoArrayList, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-                    recyclerView = getView().findViewById(R.id.recycler_admin);
+                    recyclerView.setVisibility(View.VISIBLE);
                     empty_view.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(linearLayout);
                     recyclerView.setAdapter(adminRecyclerAdapter);
