@@ -1681,8 +1681,20 @@ public class ToolSharing {
                     + "from message m inner join message_recepient mr "
                     + "on m.message_id = mr.message_id "
                     + "group by m.from_student_id, mr.to_student_id "
-                    + "having to_student_id = ? "
+                    + " having to_student_id = ? "
                     + ") order by sent_date desc";
+            /*String sql = "select m.message_id, m.message, \n" +
+"                     m.from_student_id, mr.to_student_id, m.sent_date \n" +
+"                     from message m inner join message_recepient mr \n" +
+"                     on m.message_id = mr.message_id \n" +
+"                     where sent_date in (select max(sent_date) \n" +
+"                     from message m inner join message_recepient mr \n" +
+"                     on m.message_id = mr.message_id \n" +
+"                     group by m.from_student_id, mr.to_student_id\n" +
+"                     -- having to_student_id = ? \n" +
+"                     )\n" +
+"                     and (from_student_id = ? or to_student_id = ?)\n" +
+"                     order by sent_date desc";*/
             
             stm = con.prepareStatement(sql);  
             stm.setInt(1,sid);
