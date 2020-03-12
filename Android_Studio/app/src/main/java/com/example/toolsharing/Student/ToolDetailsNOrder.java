@@ -1,6 +1,7 @@
 package com.example.toolsharing.Student;
 
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -25,6 +26,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.example.toolsharing.PojoClasses.SearchToolsList_Pojo;
 import com.example.toolsharing.PojoClasses.StatusMessage_Pojo;
 import com.example.toolsharing.R;
 import com.example.toolsharing.Utils.GetDataServiceInterface;
@@ -83,12 +85,17 @@ public class ToolDetailsNOrder extends Fragment {
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        System.out.println("URL Fav: " + getArguments().getString("lsid"));
+
+        final SearchToolsList_Pojo searchToolsList_pojo = (SearchToolsList_Pojo) getArguments().getSerializable("data");
+
         tool_name_det = view.findViewById(R.id.tool_name_det);
-        tool_name_det.setText(getArguments().getString("tN"));
+        tool_name_det.setText(searchToolsList_pojo.getToolName());
 
         ratingscomments = view.findViewById(R.id.ratingscomments);
         ratingscomments.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +104,7 @@ public class ToolDetailsNOrder extends Fragment {
                 view.startAnimation(buttonClick);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("ptid", getArguments().getString("tId", "NULL"));
+                bundle.putString("ptid", searchToolsList_pojo.getPostedToolId().toString());
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Comments comments = new Comments();
@@ -116,24 +123,14 @@ public class ToolDetailsNOrder extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //getActivity().onBackPressed();
-                //getActivity().getFragmentManager().beginTransaction().remove().commit();
                 getFragmentManager().popBackStack();
-
-                /*Bundle b1 = new Bundle();
-                b1.putString("sId", getArguments().getString("lsid"));
-                Fragment fragment = new StudentToolSearch();
-                fragment.setArguments(b1);
-                getFragmentManager().beginTransaction().replace(R.id.frag_stu, fragment).commit();*/
             }
         });
 
         td_sid = view.findViewById(R.id.td_sid);
-        //td_tid = view.findViewById(R.id.td_tid);
         td_img = view.findViewById(R.id.td_img);
         td_desc = view.findViewById(R.id.td_desc);
         td_name = view.findViewById(R.id.td_name);
-        //td_rat = view.findViewById(R.id.td_rat);
         td_avail = view.findViewById(R.id.td_avail);
         td_sd = view.findViewById(R.id.td_sd);
         td_ed = view.findViewById(R.id.td_ed);
@@ -141,7 +138,7 @@ public class ToolDetailsNOrder extends Fragment {
         btn_td_ed = view.findViewById(R.id.btn_td_ed);
         btn_favorite = view.findViewById(R.id.btn_favorite);
 
-        if(getArguments().getString("fav").trim().equals("1") && getArguments().getString("favor").trim().equals("1")){
+        if(searchToolsList_pojo.getToolFavorite() == 1 && getArguments().getString("favor").equals("1")){
             btn_favorite.setChecked(true);
             btn_favorite.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#D88F04")));
         }
@@ -151,11 +148,11 @@ public class ToolDetailsNOrder extends Fragment {
                 if(btn_favorite.isChecked()){
                     btn_favorite.setChecked(true);
                     btn_favorite.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#D88F04")));
-                    addFavorites(Integer.parseInt(getArguments().getString("psId")), Integer.parseInt(getArguments().getString("tId")), Integer.parseInt(getArguments().getString("lsid")));
+                    addFavorites(searchToolsList_pojo.getPostedStudentId(), searchToolsList_pojo.getPostedToolId(), Integer.parseInt(getArguments().getString("lsid")));
                 } else{
                     btn_favorite.setChecked(false);
                     btn_favorite.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#6F6F6F")));
-                    removeFavorites(Integer.parseInt(getArguments().getString("psId")), Integer.parseInt(getArguments().getString("tId")), Integer.parseInt(getArguments().getString("lsid")));
+                    removeFavorites(searchToolsList_pojo.getPostedStudentId(), searchToolsList_pojo.getPostedToolId(), Integer.parseInt(getArguments().getString("lsid")));
                 }
             }
         });
@@ -163,22 +160,22 @@ public class ToolDetailsNOrder extends Fragment {
 
 
         if (getArguments() != null) {
-            tid = getArguments().getString("tId", "NULL");
-            psid = getArguments().getString("psId", "NULL");
-            bsid = getArguments().getString("lsid", "NULL");
+            tid = String.valueOf(searchToolsList_pojo.getPostedToolId());
+            psid = String.valueOf(searchToolsList_pojo.getPostedStudentId());
+            bsid = getArguments().getString("lsid");
             td_sid.setText(psid);
             //td_tid.setText(tid);
-            td_name.setText(getArguments().getString("tN", "NULL"));
+            td_name.setText(searchToolsList_pojo.getToolName());
             //td_img.setText(getArguments().getString("tImg", "NULL"));
-            td_desc.setText(getArguments().getString("tD", "NULL"));
+            td_desc.setText(searchToolsList_pojo.getToolDesc());
             //td_rat.setText(getArguments().getString("tr", "NULL"));
-            if(Integer.parseInt(getArguments().getString("availF")) < 0 ) {
+            if(searchToolsList_pojo.getToolAvailableFromInDays() < 0 ) {
                 td_avail.setText("0 days");
             } else{
-                td_avail.setText(getArguments().getString("availF", "NULL") + " days");
+                td_avail.setText(searchToolsList_pojo.getToolAvailableFromInDays() + " days");
             }
-            System.out.println("URL Available From: " + getArguments().getString("fromdate", null));
-            Glide.with(getContext()).asBitmap().load(getArguments().getString("tImg", "NULL")).into(td_img);
+            //System.out.println("URL Available From: " + getArguments().getString("fromdate", null));
+            Glide.with(getContext()).asBitmap().load(searchToolsList_pojo.getToolImg()).into(td_img);
         }
         //td_rat.getProgressDrawable().setColorFilter(Color.parseColor("#B97D05"), PorterDuff.Mode.SRC_ATOP);
         //td_rat.setRating(Float.parseFloat(getArguments().getString("tr")));
@@ -239,7 +236,7 @@ public class ToolDetailsNOrder extends Fragment {
         };
 
         btn_td_borrow = view.findViewById(R.id.btn_td_borrow);
-        if(psid.trim().equalsIgnoreCase("0") || getArguments().getString("availability").equals("0")) {
+        if(psid.trim().equalsIgnoreCase("0") || searchToolsList_pojo.getToolAvailability() == 0) {
             btn_td_borrow.setEnabled(false);
             btn_td_borrow.setText("Not Available");
             btn_td_ed.setEnabled(false);
@@ -264,7 +261,7 @@ public class ToolDetailsNOrder extends Fragment {
                 view.startAnimation(buttonClick);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("fsid", getArguments().getString("psId", "NULL"));
+                bundle.putString("fsid", String.valueOf(searchToolsList_pojo.getPostedStudentId()));
                 bundle.putString("tsid", String.valueOf(getArguments().getString("lsid")));
 
 
@@ -279,7 +276,7 @@ public class ToolDetailsNOrder extends Fragment {
             }
         });
 
-        if(Integer.parseInt(getArguments().getString("availF")) > 0 /*&& Integer.parseInt(getArguments().getString("availT")) <= 0*/) {
+        if(searchToolsList_pojo.getToolAvailableFromInDays() > 0 /*&& Integer.parseInt(getArguments().getString("availT")) <= 0*/) {
             btn_td_borrow.setEnabled(false);
             btn_td_borrow.setBackgroundResource(R.drawable.round_button_disable);
             btn_td_ed.setEnabled(false);

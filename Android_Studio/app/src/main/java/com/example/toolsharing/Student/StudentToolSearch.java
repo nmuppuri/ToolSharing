@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -32,10 +33,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StudentToolSearch extends Fragment{
+public class StudentToolSearch extends Fragment implements ToolsListSearchRecylerAdapter.SelectedTool {
 
     private View view;
-    private GetDataServiceInterface service;
     private ToolsListSearchRecylerAdapter toolsListSearchRecylerAdapter;
     private ArrayList<SearchToolsList_Pojo> searchToolsList_pojos;
     private RecyclerView recyclerView;
@@ -61,30 +61,7 @@ public class StudentToolSearch extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         toolbar = view.findViewById(R.id.stu_dash_tool_search);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if(item.getItemId() == R.id.toolsearch){
-
-                    searchView = (SearchView) MenuItemCompat.getActionView(item);
-                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                        @Override
-                        public boolean onQueryTextSubmit(String query) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onQueryTextChange(String newText) {
-                            System.out.println("URL newText: " + newText);
-                            toolsListSearchRecylerAdapter.getFilter().filter(newText);
-                            return true;
-                        }
-                    });
-
-                }
-                return  true;
-            }
-        });
+        ((StudentBottomNav)getActivity()).setSupportActionBar(toolbar);
         initViews();
         searchToolList();
     }
@@ -98,13 +75,66 @@ public class StudentToolSearch extends Fragment{
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.sort, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.toolsearch);
+
+        searchView = (SearchView) menuItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                toolsListSearchRecylerAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.toolsearch) {
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void selectedTool(SearchToolsList_Pojo searchToolsList_pojo) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+        int favor;
+        if(searchToolsList_pojo.getLoggedStudentId() == Integer.parseInt(getArguments().getString("sId"))){
+            favor = 1;
+        } else{
+            favor = 0;
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString("lsid", getArguments().getString("sId"));
+        bundle.putString("favor", String.valueOf(favor));
+        bundle.putSerializable("data", searchToolsList_pojo);
+
+        Fragment fragment = new ToolDetailsNOrder();
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.frag_stu, fragment);
+        fragment.setArguments(bundle);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
     private void searchToolList()
     {
-        service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
+
+        GetDataServiceInterface service = RetrofitClientInstance.getRetrofitInstance().create(GetDataServiceInterface.class);
         Call<StatusMessage_Pojo> call = service.getSearchTools();
 
         System.out.println("URL Tools: " + call);
@@ -118,7 +148,7 @@ public class StudentToolSearch extends Fragment{
 
                 if(!status.equalsIgnoreCase("error")) {
                     searchToolsList_pojos = new ArrayList<>(statusMessage_pojo.getSearchToolsList());
-                    toolsListSearchRecylerAdapter = new ToolsListSearchRecylerAdapter(searchToolsList_pojos, getActivity().getApplicationContext());
+                    toolsListSearchRecylerAdapter = new ToolsListSearchRecylerAdapter(searchToolsList_pojos, StudentToolSearch.this, getActivity().getApplicationContext());
                     //@SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
                     //recyclerView = getView().findViewById(R.id.recycler_student_search);
                     //empty_view.setVisibility(View.GONE);
@@ -130,7 +160,7 @@ public class StudentToolSearch extends Fragment{
                     //System.out.println("URL newText1: " + newText1);
                     //toolsListSearchRecylerAdapter.getFilter().filter(newText1);
 
-                    toolsListSearchRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
+                    /*toolsListSearchRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             //view.startAnimation(buttonClick);
@@ -190,7 +220,7 @@ public class StudentToolSearch extends Fragment{
                             System.out.println("URL psid: " + psid);
                             System.out.println("URL toolImg: " + toolImg);
                         }
-                    });
+                    });*/
 
                 }
                 else {

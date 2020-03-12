@@ -3,7 +3,9 @@ package com.example.toolsharing.PojoClasses;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SearchToolsList_Pojo {
+import java.io.Serializable;
+
+public class SearchToolsList_Pojo implements Serializable {
 
     @SerializedName("PostedStudentId")
     @Expose

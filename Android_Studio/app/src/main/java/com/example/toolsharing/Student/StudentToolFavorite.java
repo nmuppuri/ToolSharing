@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,7 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StudentToolFavorite extends Fragment {
+public class StudentToolFavorite extends Fragment implements ToolsListSearchRecylerAdapter.SelectedTool {
 
     private View view;
     private GetDataServiceInterface service;
@@ -78,7 +79,7 @@ public class StudentToolFavorite extends Fragment {
                 recyclerView = view.findViewById(R.id.recycler_student_fav);
                 if(!status.equalsIgnoreCase("error")) {
                     searchToolsList_pojos = new ArrayList<>(statusMessage_pojo.getSearchToolsList());
-                    toolsListFavRecylerAdapter = new ToolsListSearchRecylerAdapter(searchToolsList_pojos, getActivity().getApplicationContext());
+                    toolsListFavRecylerAdapter = new ToolsListSearchRecylerAdapter(searchToolsList_pojos, StudentToolFavorite.this, getActivity().getApplicationContext());
                     @SuppressLint("WrongConstant") LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity().getApplicationContext(),LinearLayoutManager.VERTICAL,false);
 
                     //empty_view.setVisibility(View.GONE);
@@ -86,7 +87,7 @@ public class StudentToolFavorite extends Fragment {
                     //toolsListFavRecylerAdapter.getFilter().filter(s);
                     recyclerView.setAdapter(toolsListFavRecylerAdapter);
 
-                    toolsListFavRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
+                    /*toolsListFavRecylerAdapter.setOnItemClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             //view.startAnimation(buttonClick);
@@ -133,7 +134,7 @@ public class StudentToolFavorite extends Fragment {
                             System.out.println("URL psid: " + psid);
                             System.out.println("URL toolImg: " + toolImg);
                         }
-                    });
+                    });*/
 
                 }
                 else {
@@ -149,5 +150,24 @@ public class StudentToolFavorite extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void selectedTool(SearchToolsList_Pojo searchToolsList_pojo) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("lsid", getArguments().getString("sId"));
+        bundle.putString("favor" , "1");
+        bundle.putSerializable("data", searchToolsList_pojo);
+
+        Fragment fragment = new ToolDetailsNOrder();
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.frag_stu, fragment);
+        fragment.setArguments(bundle);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }
